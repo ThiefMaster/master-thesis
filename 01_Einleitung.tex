@@ -1,0 +1,100 @@
+\chapter{Einleitung}
+\pagenumbering{arabic}
+
+\todotext{Einleitung}
+
+
+\section{Zielsetzung}
+
+\todotext{Zielsetzung}
+
+
+\section{Aufbau der Arbeit}
+
+\todotext{Aufbau}
+
+
+\section{CERN}
+
+Beim CERN (Europäische Organisation für Kernforschung), handelt es sich um eine
+Forschungseinrichtung im Schweizer Kanton Genf. Der Hauptaufgabenbereich liegt in der Erforschung
+von Grundlagen der Physik, wobei der weltgrößte Teilchenbeschleuniger \emph{LHC} zum Einsatz kommt.
+
+Neben der physikalischen Forschung wird am CERN auch Software entwickelt, die zwar in erster Linie
+zur internen Nutzung dient, jedoch oftmals auch als \emph{Open Source} der Allgemeinheit zur Verfügung
+gestellt wird. Diese Software erstreckt sich über viele Bereiche der IT, so werden am CERN
+beispielsweise Steuersysteme für den Teilchenbeschleuniger, Business-Software für die Verwaltung des
+Personals, Grid-Lösungen für die verteilte Datenspeicherung und Webanwendungen für die Archivierung
+und Indizierung von Medien entwickelt.
+
+Die Abteilung \emph{IT-CIS-AVC}\footnote{Collaboration \& Information Services - AudioVisual and
+Collaborative Services} am CERN ist zuständig für die Verwaltung und Einrichtung von video- und
+telefonbasierten Konferenzsystemen, Aufzeichnung und Onlinestreaming von Vorträgen, Meetings und
+Konferenzen und die Software zu deren Planung. Ebenfalls im Zuständigkeitsbereich der Abteilung sind
+die Informationsbildschirme, die in verschiedenen Gebäuden des CERN aufgebaut sind und beispielsweise
+den Status des \emph{LHC}\footnote{Large Hadron Collider, der Teilchenbeschleuniger am CERN} und
+für die Mitarbeiter relevante Neuigkeiten anzeigen.
+
+
+\section{Indico}
+
+\subsection{Überblick}
+Indico\footnote{Integrated Digital Conference - \href{http://indico-software.org/}{http://indico-software.org/}}
+ist eine von der Abteilung \emph{IT-CIS-AVC} am CERN entwickelte Webapplikation, die zum Planen und
+Organisieren von Events dient. Diese Events können sowohl einfache Vorträge als auch Meetings und
+Konferenzen mit mehreren Sessions und Beiträgen sein. Die Applikation unterstützt außerdem externe
+Benutzerauthentifizierung, \emph{Paper Reviewing}\footnote{Im Rahmen eines \emph{Call for Papers}
+oder \emph{Call for Abstracts} bei einer Konferenz}, elektronische Sitzungsprotokolle und ein Archiv
+für die in einer Konferenz benutzten Materialien. \citep{indico}
+
+Im Laufe der Zeit wurden immer mehr Funktionen hinzugefügt, sodass diese Featureliste schon lange
+nicht mehr aktuell ist. Inzwischen enthält Indico u.a. ein Buchungs- und Reservierungssystem für
+Konferenzzimmer, sodass beim Erstellen eines Events sichergestellt werden kann, dass der gewünschte
+Raum auch verfügbar ist und nicht gerade anderweitig benutzt wird. Ebenfalls in Indico integriert
+sind die am CERN genutzten Audio- und Videokonferenzsysteme, sodass diese vollautomatisch
+eingerichtet und aktiviert werden können, sofern diese Systeme im gewählten Raum verfügbar sind.
+Eines der neuesten Features ist die Möglichkeit, sich die Konferenzzimmer auf einer
+\href{http://maps.google.com/}{\emph{Google Maps}}-basierten Karte anzeigen zu lassen und anhand der
+Nähe zu einem bestimmten Gebäude auszuwählen.
+
+\subsection{Aufbau}
+Events in Indico sind Teil einer Baumstruktur: Auf der Top-Level-Ebene finden sich ausschließlich
+Kategorien, die jeweils wieder Kategorien oder beliebige Events (Konferenzen, Meetings und
+Vorträge) enthalten können. Ein Event wiederum kann diverse Elemente enthalten; welche das sind,
+hängt vom Typ des Events ab, so kann z.B. nur eine Konferenz ein Registrierungsformular
+besitzen.
+
+\newpage
+Die folgende Auflistung beinhaltet die wichtigsten Bestandteile von Events:
+\begin{itemize}
+\item Audio-/Videokonferenzen
+\item \emph{Call for Abstracts}
+\item Chaträume
+\item Evaluation
+\item Materialien
+\item \emph{Paper Reviewing}
+\item Registrierung
+\item Zeitplan
+\end{itemize}
+
+\subsection{Architektur}
+Der serverseitige Code von Indico ist in Python geschrieben und nutzt
+ZODB\footnote{\href{http://www.zodb.org}{http://www.zodb.org}} als Datenbank. Der Code ist in einer
+Multi-Tier-Architektur organisiert: Die Anfrage des Webservers wird über
+WSGI\footnote{\href{http://www.python.org/dev/peps/pep-0333/}{Web Server Gateway Interface}} an die
+Applikation weitergegeben, in der die \emph{Request Handler (RH)}-Ebene die Geschäftlogik ausführt.
+Sie prüft die Zugangsberechtigung des Benutzers, verarbeitet GET- bzw. POST-Daten, baut die
+Datenbankverbindung auf und führt letztendlich auch die gewünschte Aktion aus. Um eine HTML-Seite
+auszugeben, nutzt der \emph{Request Handler} die \emph{Web Pages (WP)}-Ebene. Dort werden diverse
+Aktionen ausgeführt, welche die Anzeige der Daten beeinflussen - zum einen werden die benötigten
+JavaScript- bzw. CSS-Packages geladen, zum anderen werden, falls vorhanden, Tabs als aktiv markiert
+oder Daten sortiert. Die eigentliche Erzeugung der HTML-Datei übernimmt die \emph{Components
+(W)}-Ebene. Jede Klasse dieser Ebene repräsentiert ein Template mit demselbem Namen. In der Regel
+werden in dieser Ebene nur die aus der WP-Ebene übergebenen Daten an das Template weitergereicht und
+falls nötig aufbereitet.
+
+Wie \autoref{img.indico-layers.png} verdeutlicht, hat sich Indico im Laufe der Zeit verändert: Statt
+des obsoleten \emph{mod\_python}\footnote{\href{http://www.modpython.org}{http://www.modpython.org}}
+wird inzwischen WSGI verwendet.
+
+\img{indico-layers.png}{200px}{Die Architektur von Indico \citep{indicoarch}}{Indico-Architektur}

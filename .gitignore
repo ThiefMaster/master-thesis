@@ -1,0 +1,12 @@
+*.swp
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.lo?
+Thesis.pdf
+Slides.nav
+Slides.pdf
+Slides.snm
