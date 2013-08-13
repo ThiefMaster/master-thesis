@@ -1,17 +1,74 @@
 \chapter{Einleitung}
 \pagenumbering{arabic}
 
-\todotext{Einleitung}
+Ein Webframework ist aus einer modernen Webanwendung nicht mehr wegzudenken. Während vor einigen
+Jahren noch Technologien wie \emph{CGI}\footnote{Common Gateway Interface -
+\href{http://www.ietf.org/rfc/rfc3875}{RFC 3875}\citep{rfc3875}} oder die Nutzung von PHP in seiner
+einfachsten Form, d.h. eine Datei pro Seite, die sowohl HTML als auch Geschäftslogik enthält, weit
+verbreitet waren, so setzen inzwischen immer mehr Entwickler sowohl von komplexen Webanwendungen als
+auch von einfachen Websites mit wenigen dynamischen Elementen auf ein Framework. Dabei stellt sich
+natürlich die Frage, welche Vorteile ein Framework bietet - schließlich macht es keinen Sinn, ein
+Framework zu nutzen, nur weil Frameworks \enquote{in} sind.
+
+Ein gutes Framework ermöglicht es dem Entwickler, sich vollständig auf die Anwendungslogik zu
+konzentrieren, während das Framework alle Aufgaben übernimmt, die in der Regel für jede Anwendung
+identisch sind, wenn man von Konfigurationseinstellungen absieht. Beispiele für solche Aufgaben sind
+Sessions, Templates oder der Aufbau einer Datenbankverbindung - keine dieser Bereiche benötigt
+normalerweise anwendungsspezifischen Code sondern ausschließlich Konfigurationsdaten wie z.B. die
+Logindaten für die Datenbank oder die Lebensdauer einer Session.
+
+Ein weiterer Vorteil der meisten Frameworks ist die Entkopplung von URLs und dem Dateisystem.
+Während in den zuvor erwähnten CGI- oder PHP-Lösungen der Pfad in der URL so gut wie immer einem
+Pfad im Dateisystem entspricht, erlauben Frameworks normalerweise ein Mapping von URLs
+(einschließlich dynamischer Elemente) zu Funktionen oder Klassen, sodass der Code der Anwendung
+unabhängig von der Struktur der URLs sauber strukturiert werden kann.
 
 
 \section{Zielsetzung}
 
-\todotext{Zielsetzung}
+Die \emph{Indico}-Software nutzt WSGI\footnote{\href{http://www.python.org/dev/peps/pep-0333/}{Web
+Server Gateway Interface} \citep{wsgi}} zur Kommunikation mit dem Webserver. Da jedoch ursprünglich
+das inzwischen veraltete \emph{mod\_python} eingesetzt wurde, und der für die Implementierung von
+WSGI zuständige Entwickler darauf aufbauenden Code nicht verändern wollte, enthält Indico noch immer
+eine Kompatibilitätsschickt, die die von \emph{mod\_python} bereitgestellten APIs emuliert. Diese
+APIs sind weder entwicklerfreundlich noch unterstützen sie performancerelevante Funktionen wie
+beispielsweise das Übergeben eines Dateideskriptors an den Webserver, ohne den kompletten
+Dateiinhalt in den Speicher einzulesen. Bei der Migration zu einem modernen Framework bietet es sich
+an, diese Schicht vollständig zu entfernen und den Code, der sie nutzt, einem Refactoring zu
+unterziehen.
+
+Vor der Auswahl eines neuen Frameworks muss zuerst analysiert werden, welche Funktionalität das
+bestehende Framework zur Verfügung stellt und welche Probleme es dort gibt, damit beim neuen
+Framework darauf geachtet werden kann, dass diese Probleme dort nicht ebenfalls vorhanden sind.
+Sofern das Framework eine eigene Datenbankschicht enthält muss geprüft werden, inwiefern diese mit
+der in Indico genutzten Objektdatenbank kompatibel ist.
+
+Nachdem ein Framework ausgewählt wurde, muss dieses in die Software integriert werden. Der erste
+Schritt danach ist, die Anwendung wieder in einen vollständig lauffähigen Zustand zu bringen und
+Konflikte zwischen dem Framework und bestehendem Code zu beheben. Ab diesem Zeitpunkt kann
+analysiert werden, welche Elemente des alten Frameworks neben dem WSGI-Kern ebenfalls durch das neue
+Framework ersetzt werden können bzw. ob es Teile der Anwendung gibt, in denen es sinnvoll ist,
+bereits vorhandenen Code zu nutzen statt sie durch eine entsprechende Lösung des neuen Frameworks zu
+ersetzen.
 
 
 \section{Aufbau der Arbeit}
 
-\todotext{Aufbau}
+Im Einleitungskapitel wird kurz auf die Aufgabenstellung eingegangen und die groben Schritte zum
+Ziel beschrieben. Desweiteren wird kurz auf die Firma eingegangen, an der das Projekt durchgeführt
+wurde.
+Ebenfalls wird die Software, die im Rahmen dieser Arbeit modifiziert wurde, kurz vorgestellt, sodass
+man sich einen Überblick darüber verschaffen kann.
+
+Im Grundlagenkapitel werden die genutzen Technologien und ihre Besonderheiten näher betrachtet und
+erläutert. Nach einem kurzen Überblick über die Programmiersprache Python werden ihre Besonderheiten
+kurz vorgestellt und das WSGI-Interface näher betrachtet.
+
+Auf die Funktionen des bestehenden Frameworks wird im dritten Kapitel kurz eingegangen. Desweiteren
+werden dort die in Frage kommenden Frameworks vorgestellt, anhand von verschiedenen Gesichtspunkten
+analysiert und mit dem aktuellen Framework verglichen.
+
+\todotext{Aufbau fertigschreiben}
 
 
 \section{CERN}
