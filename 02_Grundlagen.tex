@@ -70,7 +70,7 @@ kompilierten Bibliothek aufzurufen. Dazu bietet Python mit dem in der Standardbi
 Entwickler in reinem Python-Code beliebige Funktionen aus \emph{Shared Libraries} aufrufen und sogar
 Python-Funktionen als Callback übergeben kann.
 
-\lstinputlisting[language=Python,caption=ctypes-Beispiel]{code/ffi-ctypes.py}
+\lstinputlisting[caption=ctypes-Beispiel]{code/ffi-ctypes.py}
 
 Auch wenn die Python-Erweiterung performancekritische Operationen enthält und deshalb nicht in
 Python implementiert werden soll, gibt es eine Möglichkeit, fast reinen Python-Code dafür zu
@@ -113,7 +113,31 @@ der Einschränkungen einfacher Mikrocontroller funktioniert.
 
 
 \subsection{Lesbarkeit}
-\todotext{Lesbarkeit, sauberer Code}
+
+Die Sprache legt großen Wert auf lesbaren Code, was insbesondere daran zu erkennen ist, dass Blöcke
+nicht wie in den meisten anderen Sprachen durch geschweifte Klammern oder
+\emph{begin}/\emph{end}-Statements definiert werden sondern einzig und allein durch die Einrückung.
+Dementsprechend führt inkonsistente Einrückung auch zu einer entsprechenden Fehlermeldung wie man in
+\autoref{lst:python-ident} sehen kann.
+
+Während die erzwungene Einrückung insbesondere bei Python-Anfängern oftmals negativ aufgenommen
+wird, ist der Sinn dahinter klar zu erkennen: Gerade bei Projekten mit mehreren Entwicklern wird so
+eine einheitliche Einrückung erzwungen, was die Lesbarkeit des Codes stark erhöht.
+
+Allgemein legt Python großen wert auf \enquote{schönen} Code, was auch im - unter anderem über das
+Easter-Egg \lstinline{import this} abrufbaren - \emph{Zen of Python} festgeschrieben ist:
+\enquote{Beautiful is better than ugly.} und \enquote{Readability counts.} \citep{zenofpython}
+
+\begin{lstlisting}[caption=Fehlerhafte Einrückung,label=lst:python-ident]
+>>> def fail():
+...     a = 'b'
+...       b = 'c'
+  File "<stdin>", line 3
+    b = 'c'
+    ^
+IndentationError: unexpected indent
+\end{lstlisting}
+
 
 
 \subsection{First-Class-Objekte}
