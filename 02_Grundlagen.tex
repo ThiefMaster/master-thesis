@@ -26,7 +26,58 @@ schreiben. \citep{pep:414}
 
 
 \subsection{Anwendungsgebiete}
-\todotext{Anwendungsgebiete}
+
+Bei Python handelt es sich um eine höhere \emph{general-purpose}-Programmiersprache mit der sich
+nahezu beliebige Anwendungen einfach realisieren lassen. Es existieren diverse Frameworks sowohl für
+Webanwendungen als auch für Desktopanwendungen mit grafischer Oberfläche, sodass man als Entwickler
+in der Regel nur wenig nicht-anwendungsspezifischen Code schreiben muss.
+
+Während es sich bei den Webframeworks in der Regel um reine Python-Frameworks handelt, so sind die
+GUI-Frameworks meist Bindings für in C oder C++ geschriebene Frameworks wie \emph{Qt}, \emph{GTK+}
+oder \emph{wxWidgets}, was natürlich den großen Vorteil hat, dass diese Frameworks bereits außerhalb
+der Python-Community häufig genutzt werden und dementsprechend stabil sind.
+
+Ein weiteres Gebiet, in dem Python häufig verwendet wird, ist das Scripting von diversen Tools.
+Beispielsweise unterstützen populäre Editoren wie \emph{Vim} Python-Scripting, um Aufgaben zu
+automatisieren oder beliebige andere Aktionen im Editor auszufühen.
+
+Wie die meisten Open-Source-Programmiersprachen ist Python insbesondere in der Linux-Welt weit
+verbreitet und wird dort auch oftmals für einfache Systemtools eingesetzt, wo eine Implementierung
+in C deutlich aufwändiger wäre. Beispielsweise ist der Paketmanager \emph{Portage} der
+Linux-Distribution \emph{Gentoo} fast vollständig in Python geschrieben; nur einige Bibliotheken
+sind in C implementiert, da C-Code deutlich performanter ist als interpretierter Code einer
+Scriptsprache.
+
+
+\subsection{Erweiterbarkeit}
+
+Anders als beispielsweise in PHP, wo Erweiterungen ausschließlich in C geschrieben werden können,
+bietet Python verschiedene Möglichkeiten, mit nicht-Python-Code zu interagieren. Natürlich können
+native Erweiterungen für Python in C oder einer anderen Sprache, die zu einer \emph{Shared Library}
+kompiliert werden kann, implementiert werden und haben dadurch vollen Zugriff auf alle Lowlevel-APIs
+von Python. Dies ist allerdings oftmals nicht notwendig und führt nur zu unnötig komplexem Code, da
+die C-APIs auf einer sehr niedrigen Ebene arbeiten und beispielsweise die \emph{Reference Counts}
+des Garbage Collectors vom Entwickler penibel aktualisiert werden müssen, um Speicherlecks zu
+vermeiden.
+
+Ein häufiger Grund für native Erweiterungen ist das Zugänglichmachen von existierenden Bibliotheken,
+die in C geschrieben sind. Auf den ersten Blick würde man vermuten, dass es in diesem Fall sinnvoll
+ist, eine native Erweiterung zu schreiben. Wenn man bedenkt, was das Ziel eines solchen Interfaces
+ist, merkt man jedoch schnell, dass meist weder Lowlevel-APIs noch die erhöhte Performance von
+C-Code notwendig ist - alles was benötigt wird ist eine Möglichkeit, Funktionen aus einer
+kompilierten Bibliothek aufzurufen. Dazu bietet Python mit dem in der Standardbibliothek enthaltenen
+\emph{ctypes}-Paket ein einfach nutzbares FFI\footnote{Foreign Function Interface}, mit welchem ein
+Entwickler in reinem Python-Code beliebige Funktionen aus \emph{Shared Libraries} aufrufen und sogar
+Python-Funktionen als Callback übergeben kann.
+
+\lstinputlisting[language=Python,caption=ctypes-Beispiel]{code/ffi-ctypes.py}
+
+Auch wenn die Python-Erweiterung performancekritische Operationen enthält und deshalb nicht in
+Python implementiert werden soll, gibt es eine Möglichkeit, fast reinen Python-Code dafür zu
+schreiben. \emph{Cython}\footnote{\href{http://cython.org}{http://cython.org}} ist eine mit
+C-Elementen erweiterte Abwandlung von Python, die zu nativem Code kompiliert wird. Insbesondere um
+Python-Klassen zu erstellen ist Cython ideal geeignet, da die Cython-Syntax dabei große Ähnlichkeit
+mit der Python-Syntax hat und man nicht die unintuitive C-API nutzen muss.
 
 
 \subsection{Programmierparadigmen}
