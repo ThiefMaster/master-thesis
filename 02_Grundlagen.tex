@@ -80,6 +80,34 @@ Python-Klassen zu erstellen ist Cython ideal geeignet, da die Cython-Syntax dabe
 mit der Python-Syntax hat und man nicht die unintuitive C-API nutzen muss.
 
 
+\subsection{Implementationen}
+
+Wenn die Rede von \enquote{Python} ist, ist in den meisten Fällen die Referenzimplementation
+\emph{CPython} gemeint. Dabei handelt es sich um den ersten und auch am weitesten verbreiteten
+Python-Interpreter def, wie der Name schon erahnen lässt, in C geschrieben ist. Er ist Open Source
+und wird unter anderem von dem Python-Erfinder Guido van Rossum entwickelt.
+
+Neben CPython existierten weitere Python-Implementationen. Eine der bekanntesten ist das
+Java-basierte \emph{Jython}, welches Python-Code zu Java-Bytecode kompiliert und in einer JVM
+ausführt. Dadurch lässt sich Python-Code einfach in eine existierende Java-Infrastruktur integrieren
+und kann auf beliebige Java-Packages zugreifen.
+
+Insbesondere für Windows-Desktopanwendungen interessant ist das von Microsoft als Open Source
+veröffentlichte \emph{IronPython}. Ähnlich wie Jython läuft auch IronPython in einer
+sprachunabhängigen Runtime-Umgebung - allerdings nutzt IronPython Microsofts .NET-Framework oder
+alternativ das plattformunabhängige \emph{Mono} und kann damit unter anderem auf das
+WinForms-GUI-Framework und andere .NET-APIs zugreifen.
+
+Neben diesen Implementierungen existieren noch weitere, die auf spezielle Anwendungen zugeschnitten
+sind. Beispielsweise ermöglicht \emph{Stackless Python} extrem speicherschonende Pseudo-Threads und
+\emph{PyPy} ist ein in Python selbst geschriebener Python-Interpreter, der einen
+JIT-Maschinencode-Compiler enthält und somit teilweise bessere Performance als CPython erzielen
+kann. Ein eher unbekannter Python-Interpreter ist \emph{PyMite}, bei dem es sich um eine für
+8-Bit-Mikrocontroller optimierte Python-Version handelt, die zwar weder die
+Python-Standardbibliothek noch den vollen Funktionsumfang von Python unterstützt, aber dafür trotz
+der Einschränkungen einfacher Mikrocontroller funktioniert.
+
+
 \subsection{Programmierparadigmen}
 \todotext{Paradigmen}
 
