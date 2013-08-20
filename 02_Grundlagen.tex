@@ -161,6 +161,54 @@ beispielsweise \lstinline{lambda} und partielle Funktionsapplikation.
 
 
 
+\subsection{First-Class-Objekte}
+
+Eines der Designziele bei der Entwicklung von Python war, allen Objekten \emph{First-Class}-Status
+\citep{pyhist:firstclass} zu geben. Dieses Ziel wurde bei allen Sprachelementen konsequent beachtet,
+sodass neben Funktionen auch Klassen, Datentypen und Module diesen Status haben und dementsprechend
+Attribute und damit auch Methoden besitzen können. Details zu den verschiedenen Objekttypen finden
+sich in der Python-Dokumentation\footnote{\href{http://docs.python.org/2/reference/datamodel.html}{http://docs.python.org/2/reference/datamodel.html}}.
+
+\emph{First-Class} beschreibt Eigenschaften die man bei Objekten, d.h. meist Instanzen von Klassen,
+im Allgemeinen erwartet, im Zusammenhang mit Funktionen, Klassen und anderen Datentypen allerdings
+durchaus ungewöhnlich sind:
+
+\begin{itemize}
+\item Sie können in Variablen und anderen Datenstrukturen (beispielsweise Arrays) gespeichert werden.
+\begin{lstlisting}[caption=Zuweisung einer Funktion an eine Variable]
+def func():
+    pass
+something = func
+\end{lstlisting}
+
+\item Sie können Funktionsparameter sein.
+\begin{lstlisting}[caption=Erstellen einer neuen Liste mittels einer Transformationsfunktion]
+roots = map(math.sqrt, [4, 9, 16])
+\end{lstlisting}
+
+\item Sie können Rückgabewert einer Funktion sein.
+
+\item Sie können zur Laufzeit erstellt werden.
+\begin{lstlisting}[caption=Eine Funktion\, die eine neue Klasse erstellt und zurückgibt]
+def make_class(cls=object):
+    class _extended(cls):
+        foo = 'bar'
+    return _extended
+\end{lstlisting}
+
+\item Sie sind nicht an einen Namen gebunden.
+\begin{lstlisting}[caption=Erstellen einer anonymen Funktion]
+def make_power(power):
+    return lambda num: num ** power
+\end{lstlisting}
+\end{itemize}
+
+
+
+\subsection{Klassen und Metaklassen}
+\todotext{Klassen und Metaklassen}
+
+
 
 \subsection{Lesbarkeit}
 
@@ -187,9 +235,3 @@ Easter-Egg \lstinline{import this} abrufbaren - \emph{Zen of Python} festgeschri
     ^
 IndentationError: unexpected indent
 \end{lstlisting}
-
-
-
-\subsection{First-Class-Objekte}
-\todotext{Firstclass}
-
