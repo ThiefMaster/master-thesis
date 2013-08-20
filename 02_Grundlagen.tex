@@ -109,7 +109,57 @@ der Einschränkungen einfacher Mikrocontroller funktioniert.
 
 
 \subsection{Programmierparadigmen}
-\todotext{Paradigmen}
+
+Das Programmierparadigma einer Programmiersprache ist \enquote{die Sichtweise auf und den Umgang mit
+den zu verarbeiteten Daten und Operationen}. \citep[Kap. 1.3.1]{progsprachen} In Python kann man
+man sich zwischen drei verschiedenen Paradigmen entscheiden.
+
+\begin{description}
+\item[Imperative/prozedurale Programmierung] \hfill \\
+Bei der imperativen Programmierung wird eine Folge von Anweisungen sequentiell abgearbeitet. Zur
+Kapselung und Wiederverwendung von Funktionalität werden Funktionen genutzt.
+\citep[Kap. 1.3.1]{progsprachen}
+
+Abgesehen von diversen Modulen in Pythons Standardbibliothek und Exceptions, die, um eine Hierarchie
+zu ermöglichen, als Klassen realisiert sind, kann ein Python-Programm komplett imperativ geschrieben
+werden. Dies hat den großen Vorteil, dass insbesondere kleine Kommendozeilenprogramme oftmals sehr
+einfach realisiert werden können, da man nicht von der Programmiersprache dazu gezwungen wird,
+Klassen einzusetzen ohne dass sie für die Strukturierung der Anwendung nützlich sind.
+
+
+
+\item[Objektorientierte Programmierung] \hfill \\
+Eine objektorientierte Programmiersprache unterstützt Klassen und Objekte, wobei anders als bei
+einer nur objekt\emph{basierenden} Programmiersprache auch komplexere Konzepte wie Vererbung und
+Polymorphie genutzt werden können.
+\citep[Kap. 1.3.1]{progsprachen}
+
+Wie zuvor schon erwähnt, nutzt Python unter anderem in Teilen der Standardbibliothek und für
+Exceptions Klassen. Dementsprechend ist es nur logisch, dass in Python objektorientiert entwickelt
+werden kann. Dazu bietet Python bietet dem Entwickler ein ausgereiftes Klassensystem, das neben der
+in objektorientierten Sprachen üblichen Vererbung auch Mehrfachvererbung und sogenannte
+\emph{Metaclasses} unterstützt. Da es sich gerade bei letzterem um ein in Python einzigartiges
+Feature handelt, wird im Verlauf dieses Kapitels näher darauf eingegangen.
+
+
+
+\item[Funktionale Programmierung] \hfill \\
+Eine rein funktionale Programmiersprache basiert nicht auf Wertzuweisungen sondern benutzt
+ausschließlich Funktionsdefinitionen, die eine Eingabe in eine Ausgabe transformieren.
+\citep[Kap. 1.3.1]{progsprachen}
+
+Python ist allerdings nicht direkt eine funktionale Programmiersprache und damit erst recht keine
+rein funktionale Programmiersprache. Dadurch, dass Funktionen \emph{First-Class-Objekte} sind und
+sowohl Lambdafunktionen als auch Closures unterstützt werden, kann man in Python sehr einfach
+funktionale Elemente mit objektorientierten bzw. prozeduralen Elementen mischen. Die prominentesten
+aus anderen funktionalen Programmiersprachen bekannten Methoden sind \lstinline{map()}, um eine
+Liste mittels einer Funktion in eine neue Liste zu transformieren, \lstinline{filter()}, um nur die
+Elemente aus einer Liste zu übernehmen, die von der Filter-Funktion durch die Rückgabe von
+\lstinline{True} akzeptiert wurden, und diverse Werkzeuge für Funktionen höherer Ordnung wie
+beispielsweise \lstinline{lambda} und partielle Funktionsapplikation.
+\end{description}
+
+
 
 
 \subsection{Lesbarkeit}
