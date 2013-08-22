@@ -182,14 +182,14 @@ something = func
 \end{lstlisting}
 
 \item Sie können Funktionsparameter sein.
-\begin{lstlisting}[caption=Erstellen einer neuen Liste mittels einer Transformationsfunktion]
+\begin{lstlisting}[caption=Funktion als Funktionsparameter]
 roots = map(math.sqrt, [4, 9, 16])
 \end{lstlisting}
 
 \item Sie können Rückgabewert einer Funktion sein.
 
 \item Sie können zur Laufzeit erstellt werden.
-\begin{lstlisting}[caption=Eine Funktion\, die eine neue Klasse erstellt und zurückgibt]
+\begin{lstlisting}[caption=Klasse wird zur Laufzeit erstellt]
 def make_class(cls=object):
     class _extended(cls):
         foo = 'bar'
@@ -197,7 +197,7 @@ def make_class(cls=object):
 \end{lstlisting}
 
 \item Sie sind nicht an einen Namen gebunden.
-\begin{lstlisting}[caption=Erstellen einer anonymen Funktion]
+\begin{lstlisting}[caption=Anonyme lambda-Funktion]
 def make_power(power):
     return lambda num: num ** power
 \end{lstlisting}
