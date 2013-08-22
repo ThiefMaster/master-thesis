@@ -206,7 +206,59 @@ def make_power(power):
 
 
 \subsection{Klassen und Metaklassen}
-\todotext{Klassen und Metaklassen}
+Die Grundfunktionen des Klassensystems in Python sind mit denen anderer objektorientierter
+Programmiersprachen vergleichbar. Eine Klasse kann von beliebig vielen Klassen erben
+(Mehrfachvererbung) und Methoden dieser Klassen überschreiben, wobei diese Methoden mittels der
+\lstinline{super()}-Funktion weiterhin erreichbar sind.
+
+Insbesondere für einen Java- oder C++-Entwickler sehr ungewohnt sein dürfte die Tatsache, dass in
+Python keine \lstinline{private}- oder \lstinline{protected}-Schlüsselwörter existieren. Dies liegt
+daran, dass in Python das Motto \enquote{we're all consenting adults here} \citep{pymail:adults}
+gilt und dementsprechend private Elemente einer Klasse nicht technisch erzwungen sondern alleine
+anhand des Namens als privat markiert werden. So gilt eine Variable oder Methode, die mit einem
+einzelnen Untersprich beginnt (\lstinline{_foo}), als Teil der internen API der Klasse. Dies
+bedeutet in der Regel, dass sie nicht Teil der Dokumentation ist und die Nutzung auf eigene Gefahr
+geschieht - man muss damit rechnen, dass sie in einer beliebigen neuen Version wegfällt oder sich
+ihr Verhalten anderweitig ändert. Da es aber durchaus auch einen technischen Grund für private
+Variablem gibt - nämlich die Vermeidung von Konflikten in Subklassen - kann durch die Verwendung von
+zwei Unterstrichen (\lstinline{__foo}) das sogenannte \emph{name mangling} aktiviert werden. Dies
+führt dazu, dass bei jedem Zugriff auf die Variable bzw. Methode der Name in
+\lstinline{_ClassName__foo} umgeschrieben wird und somit eine Subklasse denselben Namen nutzen kann,
+ohne Konflikte zu verursachen. Es ist aber jederzeit möglich, direkt auf \lstinline{_ClassName__foo}
+zuzugreifen.
+
+Eine ähnliche Namensgebung wird für den Konstruktor \lstinline{__init__} und die Überladung von
+Operatoren wie beispielsweise \lstinline{__add__} für den binären Plus-Operator verwendet. Der
+Python-Styleguide empfielt daher, niemals eigene Namen zu verwenden, die mit zwei Unterstrichen
+beginnen und enden, sofern sie nicht bereits dokumentiert sind und dementsprechend eine besondere
+Bedeutung haben.
+
+Eines dieser \enquote{magischen} Attribute ist \lstinline{__metaclass__}, mit dem die Metaklasse
+einer Klasse beeinflusst werden kann. Um das Konzept von Metaklassen zu verstehen ist zunächst ein
+Einblick nötig, wie Python eine Klasse erstellt. Also Beispiel soll dazu die sehr einfache Klasse in
+\autoref{lst:python-class} dienen. Sie erbt von der internen Klasse \lstinline{object} und enthält
+eine einzige Variable \lstinline{a} mit dem Standardwert \lstinline{1}.
+
+\begin{lstlisting}[caption=Python-Klassendefinition,label=lst:python-class]
+class Test(object):
+    a = 1
+\end{lstlisting}
+
+Wie zuvor schon erwähnt sind Klassen in Python First-Class-Objekte und können zur Laufzeit erstellt
+werden. Dies ist natürlich auch bei unserer Beispielklasse möglich, der Code dazu ist
+\lstinline{type('Test', (object,), dict(a=1))}.
+Auch ohne Blick in die Dokumentation ist die Funktionsweise von \lstinline{type()} offensichtlich;
+die Funktion erwartet als Parameter den Namen der Klasse, die Liste der Superklassen und das
+\emph{dict} der Klasse, d.h. ein Mapping, welches alle Variablen und Methoden der Klasse enthält.
+
+Bekanntermaßen sind die meisten Objekte Instanzen von Klassen. Dies trifft in Python auch für
+Klassen selbst zu, die ebenfalls Objekte sind. Jede Klasse ist eine Instanz ihrer Metaklasse; im
+Standardfall ist dies \lstinline{type}, allerdings kann eine beliebige andere Klasse oder Funktion
+als \lstinline{__metaclass__} angegeben werden, solange sie dieselben Parameter wie
+\lstinline{type()} akzeptiert. Dies ermöglicht es einem fortgeschrittenen Entwickler, die Definition
+einer Klasse beliebig zu beeinflussen und somit beispielsweise eine deklarative Syntax für ein
+ORM\footnote{Object Relational Mapper} zu ermöglichen oder alle Subklassen einer bestimmten Klasse
+einer Liste hinzuzufügen.
 
 
 
