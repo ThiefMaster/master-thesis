@@ -253,11 +253,8 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Paket um Listings sauber zu formatieren    %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\usepackage[savemem]{listings}
-\definecolor{lightgray}{rgb}{0.98, 0.98, 0.98}
-\definecolor{darkgray}{rgb}{0.4, 0.4, 0.4}
-\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
-\definecolor{darkgreen}{cmyk}{0.7, 0, 1, 0.5}
+\usepackage{textcomp}
+\usepackage{listings}
 
 \lstdefinelanguage{diff}
 {
@@ -265,37 +262,38 @@
     sensitive=false,
     morecomment=[l]{//},
     morecomment=[s]{/*}{*/},
-    morecomment=[l][\color{darkgreen}]{+},
+    morecomment=[l][\color[cmyk]{0.7, 0, 1, 0.5}]{+},
     morecomment=[l][\color{red}]{-},
     morestring=[b]",
 }
 
 
 \lstset{
-  language=Python,                % choose the language of the code
-  basicstyle=\ttfamily,       % the size of the fonts that are used for the code
-  numbers=left,                   % where to put the line-numbers
-  numberstyle=\small,      % the size of the fonts that are used for the line-numbers
-  numbersep=5pt,                  % how far the line-numbers are from the code
-  backgroundcolor=\color{lightgray} ,% choose the background color. You must add \usepackage{color}
-  showspaces=false,               % show spaces adding particular underscores
-  showstringspaces=false,         % underline spaces within strings
-  showtabs=false,                 % show tabs within strings adding particular underscores
-  frame=lines,                    % adds a frame around the code
+  language=Python,
+  basicstyle=\ttfamily,
+  numbers=left,
+  numberstyle=\small,
+  numbersep=5pt,
+  backgroundcolor=\color[rgb]{0.98, 0.98, 0.98},
+  showspaces=false,
+  showstringspaces=false,
+  showtabs=false,
+  frame=lines,
   framesep=2mm,
-  tabsize=4,                      % sets default tabsize to 2 spaces
-  captionpos=b,                   % sets the caption-position to bottom
-  breaklines=true,                % sets automatic line breaking
-  breakatwhitespace=true,         % sets if automatic breaks should only happen at whitespace
+  tabsize=4,
+  captionpos=b,
+  breaklines=true,
+  breakatwhitespace=true,
   numberbychapter=false,
   aboveskip=0.75cm,
   belowskip=0.5cm,
+  upquote=true,
   inputencoding=utf8,
-  keywordstyle=\color{blue}\bfseries,
-  ndkeywordstyle=\color{darkgray}\bfseries,
+  keywordstyle=\color[rgb]{0, 0, 0.75},
+  ndkeywordstyle=\color[rgb]{0.4, 0.4, 0.4},
   identifierstyle=\color{black},
-  commentstyle=\color{purple}\ttfamily,
-  stringstyle=\color{red}\ttfamily
+  commentstyle=\color[rgb]{0.13, 0.55, 0.13}\ttfamily,
+  stringstyle=\color[rgb]{0.64, 0.08, 0.08}\ttfamily
 }
 
 
