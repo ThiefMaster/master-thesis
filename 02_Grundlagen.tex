@@ -295,7 +295,57 @@ IndentationError: unexpected indent
 
 \subsection{Motivation}
 
-\todotext{Beispiel CGI, Webserverzwang, Standard benötigt}
+Um den Nutzen eines standardisierten, auf die Programmiersprache zugeschnittenen, Interfaces
+zwischen Webserver und Anwendung deutlich zu machen, ist zunächst ein Blick auf die älteste und
+einfachste Methode zum Ausführen interaktiver Scripts innerhalb eines Webservers angebracht: Das
+Common Gateway Interface\footnote{CGI, \href{http://www.ietf.org/rfc/rfc3875}{RFC 3875}
+\citep{rfc3875}}).
+
+Bei der Nutzung von CGI wird für jeden Aufruf einer entsprechenden URL ein neuer Prozess gestartet;
+Metadaten wie die IP-Adresse des Clients oder die abgerufene URL werden via Umgebungsvariablen
+weitergegeben. Die Standarddatenströme \emph{stdin} und \emph{stdout} dienen der Übergabe von
+Request-Bodies (beispielsweise bei \emph{HTTP POST}) bzw. dazu, die Antwort des Programms an den
+Webserver zu übergeben.
+
+CGI ist daher sehr einfach zu implementieren. Python bietet mit dem \lstinline{cgi}-Modul
+Hilfsfunktionen an, die die Kommunikation über das Common Gateway Interface abstrahieren und
+beispielsweise Formulardaten parsen können, sodass man komfortabel auf sie zugreifen kann.
+Allerdings muss für jeden Request ein neuer Prozess gestartet und jeglicher Initialisierungscode
+erneut ausgeführt werden. Dieser Overhead ist außer bei sehr einfachen Anwendungen mit wenigen
+Benutzern problematisch und selbst dort würde er zu unangenehm langen Ladezeiten führen, wenn
+beispielsweise ein ORM-Framework initialisiert werden müsste.
+
+\autoref{lst:python-cgi} zeigt ein kleines Beispielscript, welches einen GET-Parameter bzw. einen
+Standardtext ausgibt. Man erkennt an dem manuell ausgegebenen \emph{Content-type}-Header gut, dass
+CGI sehr simpel ist und das HTTP-Protokoll nur minimalst abstrahiert.
+
+\begin{lstlisting}[caption=Python-CGI-Script,label=lst:python-cgi]
+#!/usr/bin/env python
+
+import cgi
+
+form = cgi.FieldStorage()
+print 'Content-type: text/plain'
+print
+print 'Hello %s' % form.getfirst('name', 'World')
+\end{lstlisting}
+
+Um die CGI-typischen Probleme zu vermeiden, wurde vor etwa dreizehn Jahren das Module
+\emph{mod\_python} für den weit verbreiteten Apache-Webserver veröffentlicht. Es ermöglichte
+Entwicklern erstmals, Python ähnlich komfortabel wie PHP zu nutzen, aber ohne die Nachteile von CGI
+in Kauf nehmen zu müssen. Der große Nachteil bei \emph{mod\_python} ist jedoch, dass es
+ausschließlich für den Apache-Webserver verfügbar ist und auch die zur Verfügung gestellten APIs
+sehr Apache-spezifisch sind. Dies bedeutet, dass man bei der Nutzung von \emph{mod\_python} die in
+CGI vorhandene Plattformunabhängigkeit verliert und der Umstieg auf einen anderen Webserver nur mit
+viel Aufwand möglich ist.
+
+Im Gegensatz zum sprachunabhängigen CGI und \emph{mod\_python} bietet Java mit der \emph{Servlet}-API
+eine saubere und gut dokumentierte Schnittstelle für Webanwendungen, sodass man ein beliebiges
+Framework und einen beliebigen Webserver nutzen kann, sofern beide die Servlet-API implementieren.
+Daher wurde mit dem \emph{Web Server Gateway Interface} ein Python-Standard verabschiedet, der für
+das Zusammenspiel zwischen Webserver und Webanwendung eine einfach zu implementierende Schnittstelle
+definiert.
+
 
 \subsection{Interface}
 
@@ -303,4 +353,19 @@ IndentationError: unexpected indent
 
 \subsection{Verbreitung}
 
-\todotext{Unterstützung in Frameworks, Webservern}
+Jedes aktuelle Python-Webframework basiert inzwischen auf WSGI, wobei oftmals entsprechende Wrapper
+für CGI und FastCGI zur Verfügung gestellt werden, von deren Nutzung allerdings in der Regel
+abgeraten wird, sofern es irgendwie möglich ist, WSGI direkt zu nutzen.
+
+Seitens der Webserver ist WSGI ebenfalls verbreitet, wobei dort verschiedene Ansätze genutzt werden:
+Der Apache-Webserver integriert mit \emph{mod\_wsgi} einen WSGI-Container direkt im Webserver, was
+eine sehr einfache Konfiguration über die bereits existierenden Webserver-Konfigurationsdateien zur
+Folge hat. Nichtsdestotrotz unterstützt \emph{mod\_wsgi} alle wichtigen Features - insbesondere
+separate Prozesse für den Python-Interpreter.
+Andere Webserver wie \emph{nginx} setzen auf einen externen WSGI-Container wie \emph{uWSGI} oder
+sind wie \emph{Gunicorn} direkt in Python geschrieben und unterstützen WSGI nativ.
+Der große Vorteil eines Containers wie \emph{uWSGI} ist die strikte Trennung zwischen Webserver und
+Python, sodass jeglicher interaktive Code problemlos unter einem anderen Systemuser laufen kann als
+der Webserver selbst und unabhängig voneinander sind. Letzteres hat den Vorteil, dass besseres
+Performance-Tuning möglich ist als wenn Webserver und Python-Interpreter eng miteinander verknüpft
+sind.
