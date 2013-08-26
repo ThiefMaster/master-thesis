@@ -349,7 +349,61 @@ definiert.
 
 \subsection{Interface}
 
-\todotext{Beispiel Plain WSGI, WSGI-Interface}
+Der grundlegende Aufbau von WSGI lässt sich am Einfachsten anhand eines Beispiels beschreiben.
+\autoref{lst:wsgi-app} zeigt eine sehr einfache \emph{Hello World}-WSGI-Anwendung, an der man aber
+dennoch gut erkennen kann, wie das Interface aufgebaut ist.
+
+\begin{lstlisting}[caption=Einfache WSGI-Applikation,label=lst:wsgi-app]
+def application(environ, start_response):
+    start_response('200 OK', [('Content-Type', 'text/plain')])
+    yield 'Hello World!'
+\end{lstlisting}
+
+Eine WSGI-Anwendung enthält ein globales \emph{callable object}, das typischerweise den Namen
+\lstinline{application} besitzt. Dieses Objekt kann wie im Beispiel eine einfache Funktion sein,
+aber auch eine Klasse oder eine Klasseninstanz, die \lstinline{__call__} implementiert. Letzteres
+ist dabei die insbesondere in größeren Frameworks bevorzugte Methode, da das Objekt alle
+frameworkspezifischen Daten wie beispielsweise eine Routingtabelle für URLs enthalten kann.
+
+Alle für WSGI nötigen Daten werden als Parameter übergeben. \lstinline{environ} enthält dabei die
+bereits aus CGI bekannten Umgebungsvariablen wie \emph{REQUEST\_METHOD} für die HTTP-Methode
+(\emph{GET}, \emph{POST}, \ldots) und \emph{QUERY\_STRING} für die GET-Parameter in der URL. Neben
+diesen Variablen sind weitere, WSGI-spezifische, Variablen enthalten. Diese übermitteln unter
+Anderem die verwendete Version der WSGI-Spezifikation und die Datenstreams für den
+\emph{Request Body} (in CGI: \emph{stdin}) und Fehlermeldungen (in CGI: \emph{stderr}).
+
+Beim zweiten Parameter, \lstinline{start_response}, handelt es sich genau wie beim
+Applikationsobjekt um ein \emph{callable}. Bei einem erfolgreichen Request wird es von der Anwendung
+bzw. dem Framework genau einmal aufgerufen; als Parameter werden der HTTP-Statuscode (in der
+Regel \emph{200 OK}) und eine Liste mit den HTTP-Antwortheadern übergeben. Sofern bei der
+Abarbeitung des Requests ein Fehler auftritt, kann die Funktion erneut aufgerufen werden, um einen
+anderen Statuscode (meist \emph{500 Internal Server Error}) und die Details des aufgetretenen
+Fehlers (insbesondere den Stacktrace) zurückzugeben.
+
+Zu diesem Zeitpunkt stellt sich oftmals die Frage, wieso Statuscode und Header nicht einfach mittels
+\lstinline{return} zurückgegeben werden, statt den Umweg über einen separaten Funktionsaufruf zu
+gehen. Dazu ist ein Blick auf den Aufbau einer HTTP-Antwort notwendig: Statuscode und Header stehen
+immer am Anfang der Antwort. Danach folgt der durch eine Leerzeile von den Headern abgegrenzte Body,
+der die eigentliche Antwort enthält - beispielsweise ein HTML-Dokument. Während es bei einer
+typischen Webseite kein Problem wäre, diesen Body komplett in einer Variable zu speichern und am
+Ende zusammen mit den Headern zurückzugeben, so würde es bei größeren Daten unnötig viel
+Arbeitsspeicher verbrauchen und es könnten erst Daten an den Client gesendet werden, wenn die
+Antwort vollständig vorhanden ist. Um dieses Problem zu vermeiden, ist der Rückgabewert beim Aufruf
+des Applikationsobjekts ein \emph{iterable}. Dabei kann es sich einfach um eine Liste handeln, deren
+einziges Element ein String mit der kompletten Antwort ist, aber alternativ auch um einen
+\enquote{echten} Generator, der die Daten erst beim Iterieren erzeugt - letzteres bietet sich gerade
+bei größeren Daten oder Archiven an, die in diesem Fall blockweise gelesen und gesendet bzw.
+on-the-fly erzeugt werden können. Aufgrund dieser Funktionsweise könnte die Antwort in
+\autoref{lst:wsgi-app} auch mit \lstinline{return ['Hello World!']} zurückgegeben werden, statt das
+für Generatorfunktionen typische \lstinline{yield} zu benutzen.
+
+Um bestehende Anwendungen, die eine \lstinline{write(data)}-Funktion erwarten, ebenfalls ohne
+größeren Aufwand WSGI-kompatibel machen zu können, gibt die Funktion \lstinline{start_response()}
+eine solche Funktion zurück. Die WSGI-Spezifikation rät allerdings von der Nutzung dieser Funktion
+ab, da sie diverse Nachteile mit sich bringt. Beispielsweise kann der Webserver anders als bei einer
+Generatorfunktion nicht jederzeit die Abarbeitung unterbrechen sondern es ist alleine der Anwendung
+überlassen, wann sie Daten sendet.
+
 
 \subsection{Verbreitung}
 
