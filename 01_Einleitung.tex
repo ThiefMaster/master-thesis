@@ -136,7 +136,8 @@ Die folgende Auflistung beinhaltet die wichtigsten Bestandteile von Events:
 
 \subsection{Architektur}
 Der serverseitige Code von Indico ist in Python geschrieben und nutzt
-ZODB\footnote{\href{http://www.zodb.org}{http://www.zodb.org}} als Datenbank. Der Code ist in einer
+ZODB\footnote{Zope Object Database, \href{http://www.zodb.org}{http://www.zodb.org}} als Datenbank.
+Der Code ist in einer
 Multi-Tier-Architektur organisiert: Die Anfrage des Webservers wird über
 WSGI\footnote{\href{http://www.python.org/dev/peps/pep-0333/}{Web Server Gateway Interface}} an die
 Applikation weitergegeben, in der die \emph{Request Handler (RH)}-Ebene die Geschäftlogik ausführt.
