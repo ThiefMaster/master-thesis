@@ -5,6 +5,12 @@ Um die Frameworks miteinander vergleichen zu können, müssen einige Kriterien f
 anhand derer sich alle Frameworks messen lassen.
 
 \begin{description}
+\item[Modularität] \hfill \\
+Gerade bei einer großen Anwendung wie Indico gibt es diverse Bereiche, die relativ unabhängig
+voneinander sind. Ein Framework, das es dem Entwickler erlaubt, die Anwendung in einzelne Module
+aufzuteilen, ist hilfreich, um den Code besser zu strukturieren. Sofern diese Module auch
+verschiedene Namespaces bereitstellen, wird zudem das Risiko von Namenskollisionen verhindert.
+
 \item[URL-Routing] \hfill \\
 In modernen Webanwendungen erwartet man in der Regel saubere, semantische URLs. Dabei handelt es
 sich um URLs, aus deren Pfad weder Rückschlüsse auf die verwendete Technologie (z.B. \emph{help.php}
