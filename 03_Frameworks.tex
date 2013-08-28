@@ -5,6 +5,81 @@ Um die Frameworks miteinander vergleichen zu können, müssen einige Kriterien f
 anhand derer sich alle Frameworks messen lassen.
 
 \begin{description}
+\item[URL-Routing] \hfill \\
+In modernen Webanwendungen erwartet man in der Regel saubere, semantische URLs. Dabei handelt es
+sich um URLs, aus deren Pfad weder Rückschlüsse auf die verwendete Technologie (z.B. \emph{help.php}
+oder \emph{conferenceDisplay.py}) gezeogen werden können noch ausschließlich nichtssagende Parameter
+enthalten sind. Ein einfaches Beispiel für solche Parameter ist eine URL dieser Form:
+\emph{/view.py?type=3\&id=12345}. Während \emph{view} zwar aussagt, dass irgendein Objekt angezeigt
+wird und dieses Objekt die interne Identifikationsnummer \emph{12345} besitzt, kann man der URL
+nicht ansehen, worum es sich jetzt genau handelt. Im Gegensatz dazu steht eine URL der Form
+\emph{/view/event/12345-welcome}. An dieser sieht man sofort, dass es sich um ein Event handelt,
+welches höchstwahrscheinlicht den Titel \enquote{welcome} hat.
+
+Um solche URLs zu realisieren, arbeiten Frameworks normalerweise mit einer Routingtabelle, die URLs
+auf Funktionen, Klassen, o.ä. mappt. Der Aufbau der URLs, insbesondere wenn dynamische Parameter
+enthalten sind, variiert von Framework zu Framework. So bieten sich reguläre Ausdrücke für maximale
+Flexibilität an, allerdings sind einfache Platzhalter in den meisten Fällen ausreichend und sorgen
+für lesbarere URLs im Code.
+
+\item[Template-Engine] \hfill \\
+Trotz der Nutzung von AJAX besteht Bedarf an dynamisch generierten HTML-Seiten. Eine Templateengine
+bietet dazu eine spezielle Syntax, mit deren Hilfe sowohl HTML-Dateien als auch beliebige andere
+textbasierte Dateiformate durch Variablen und einfache Kontrollstrukturen erweitert werden können.
+Während es prinzipiell möglich ist, die Templateengine zu wechseln und die meisten Templates
+automatisiert in die Syntax der neuen Engine zu konvertieren, hat es Vorteile, wenn das Framework
+mit einer beliebigen Templateengine benutzt werden kann.
+
+\item[Datenbankanbindung] \hfill \\
+Viele Framework benötigen eine Datenbank, um frameworkspezifische Daten abzuspeichern oder um für
+den möglicherweise vorhandenen Administrationsbereich eine Benutzer- und Rechteliste zu führen. Da
+die in Indico genutzte ZODB, nicht sehr verbreitet ist, ist insbesondere darauf zu achten, ob zur
+Nutzung des Frameworks eine separate Datenbank benötigt wird.
+
+\item[Sessions] \hfill \\
+Sowohl beim Login eines Benutzers als auch bei der Nutzung diverser Funktionen von Indico müssen
+Daten zwischengespeichert werden. Dazu ist es praktisch, wenn das Framework bereits ein
+Sessionsystem bietet.
+
+\item[Caching] \hfill \\
+Insbesondere bei häufig aufgerufenen Seiten und komplexen Datenbankzugriffen kann die Performance
+einer Anwendung massiv gesteigert werden, indem entweder ganze Seiten oder Teile der zur Generierung
+selbiger notwendigen Daten in einem Cache abgelegt werden. Ein Framework mit einer integrierten
+Caching-Lösung kann dabei behilflich sein, indem es beispielsweise bestimmte Seiten automatisch
+cacht und dabei Parameter und evtl. vorhandene Berechtigungen des Benutzers beachtet.
+
+\item[Integrierbarkeit] \hfill \\
+Bei Indico handelt es sich um eine komplexe Anwendung mit vielen Funktionen, sodass es nicht
+praktikabel ist, wenn der gesamte Code geändert oder in großen Teilen neu geschrieben werden muss.
+Daher ist bei dem neuen Framework darauf zu achten, dass es möglichst leicht in eine bestehende
+Anwendung integriert werden kann.
+
+\item[Erweiterbarkeit] \hfill \\
+Unter Umständen ist es notwendig, das Framework durch zusätzliche Funktionalität zu erweitern oder
+bestehende Funktionen anzupassen. Dies kann über eine Plugin-API, durch Subclassing oder aber durch
+Forking des Frameworks geschehen. Letzteres bedeutet, den Code des Frameworks selbst zu verändern
+und regelmäßig auf den aktuellen Stand der offiziellen Versionen zu bringen.
+
+\item[Sonstige Features] \hfill \\
+Viele Frameworks haben neben den üblichen Features zusätzliche Funktionen, die in anderen Frameworks
+nicht vorhanden sind. Je nach Feature können diese für Indico nützlich sein.
+
+\item[Performance] \hfill \\
+Die unterschiedlichen Frameworks sind bei der Abarbeitung von Requests möglicherweise
+unterschiedlich schnell. Dies ist darauf zurückzuführen, dass komplexere Frameworks mehr Dinge
+implizit bei jedem Request tun, während dieselbe Funktionalität in einem kompakten Framework
+entweder überhaupt nicht enthalten ist oder optional ist. Allerdings spielt dieser Performanceaspekt
+im Rahmen dieser Arbeit nur eine untergeordnete Rolle, da Indico zwar große Datenmengen enthält und
+dabei performant sein muss, jedoch der Overhead des Frameworks verglichen mit Datenbankzugriffen
+minimal ist und somit für den Endbenutzer in der Regel nicht spürbar ist.
+
+\item[Dokumentation] \hfill \\
+Da mehrere Entwickler mit dem Framework arbeiten müssen und starke Fluktuation herrscht, da oftmals
+Studenten für 3 bis 12 Monate an Indico arbeiten, ist eine gute Dokumentation wichtig, da es nicht
+sehr produktiv ist, wenn man erst den Quellcode des Frameworks lesen und verstehen muss, um es
+benutzen zu können. Insbesondere ist es hilfreich, wenn die Dokumentation Beispielcode enthält und
+\emph{Best Practices} beschreibt, statt nur die APIs zu dokumentieren.
+
 \item[Lizenz] \hfill \\
 Die meisten Frameworks sind unter einer OpenSource-Lizenz verfügbar.
 Da Indico unter der
