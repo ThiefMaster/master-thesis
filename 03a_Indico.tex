@@ -1,0 +1,59 @@
+\section{Indico}
+
+Das derzeit in Indico verwendete System kann zwar grob als Framework betrachtet werden, ist jedoch
+nicht wirklich ein Framework, da sehr viele Dinge speziell auf die Anwendung zugeschnitten sind,
+statt generischen bzw. wiederverwendbaren zu sein. Dies ist bereits daran zu erkennen, dass sich der
+Frameworkcode nicht in einem separaten Modul oder Package befindet sondern Teil der Indico-Codebasis
+ist.
+
+Den Kern des Frameworks bildet das Package \lstinline{indico.web.wsgi}, welches das in
+\autoref{wsgi-interface} beschriebene WSGI-Interface implementiert und Emulationsschicht für
+\emph{mod\_python} bereitstellt. Neben dem Bereitstellen der entsprechenden APIs und Objekte ist due
+wichtigste Aufgabe dieser Schicht, Requests auf die entsprechenden Python-Dateien zu mappen.
+Beispielsweise führt ein Aufruf von \emph{/index.py/foo} zum Aufruf der Function \lstinline{foo()}
+in der Datei \emph{index.py} im \emph{htdocs}-Ordner. Da diese Dateien jedoch - um das Verhalten von
+\emph{mod\_python} beizubehalten - erst dann geladen werden, wenn ein entsprechender Request
+empfangen wird, können sie nicht beim Initialisierung der Anwendung importiert und in einem Mapping
+abgelegt werden. Stattdessen wird der gesamte Code der entsprechenden Datei in einen String geladen
+und danach ausgeführt. \autoref{lst:mp-emulation} zeigt eine vereinfachte Version des dafür
+zuständigen Codes.
+
+\begin{lstlisting}[caption=Laden der Legacy-Python-Dateien,label=lst:mp-emulation]
+def mp_legacy_publisher(req, module, handler):
+    the_module = open(module).read()
+    module_globals = {}
+    exec(the_module, module_globals)
+    return module_globals[handler](req, **req.form)
+\end{lstlisting}
+
+Bekanntermaßen ist es schlechter Stil, Code aus Strings auszuführen. In Python hat es darüberhinaus
+noch den Nachteil, dass Debugger keinen Zugriff auf den Code haben, da sie nicht wissen, aus welcher
+Datei der Code stammt, und Python den Quelltext selbst nicht zusammen mit dem Bytecode im Speicher
+hält. In Indico ist dies allerdings kein größeres Problem, da die Dateien keine Logik enthalten
+sondern nur die entsprechende Handlerfunktion aufrufen, allerdings ist es dennoch unsauber.
+
+Neben diesen Legacy-Handlern, die jedoch für fast alle Bestandteile von Indico genutzt werden,
+existiert ein sehr einfaches Routingsystem, das Anfragen anhand des ersten Pfadsegments der URL an
+eine Handler-Funktion übergibt. Dies ist zwar prinzipiell besser, da so die Nutzung von
+\lstinline{exec} vermieden werden könnte, allerdings wird letzendlich genau dieselbe zuvor schon
+beschriebene Funktion verwendet, was leicht dazu verleitet, in der in \autoref{lst:lame-routing}
+gezeigten Routingtabelle direkt auf die Handlerfunktion mit der eigentlichen Logik zu verweisen.
+Dies führt dann allerdings dazu, dass das mit \lstinline{exec} verbundene Debuggingproblem plötzlich
+auch relevanten Code betrifft statt nur einen einfachen Funktionsaufruf. Umgangen werden kann das
+zum Glück sehr einfach, indem eine separate Python-Datei nur den Aufruf der eigentlichen
+Handler-Funktion enthält und diese Datei in der Routingtabelle referenziert wird.
+
+\begin{lstlisting}[caption=Einfaches URL-Routing,label=lst:lame-routing]
+{'': ((self.htdocs_dir, 'index.py'), 'index', '', None),
+ 'services': ((DIR_SERVICES, 'handler.py'), 'handler', '', None),
+ 'export': ((DIR_MODULES, 'wsgi_handler.py'), 'handler', '', None),
+ 'api': ((DIR_MODULES, 'wsgi_handler.py'), 'handler', '', None)
+}
+\end{lstlisting}
+
+Für die eigentliche Anwendungslogik sind die \lstinline{RH}-Klassen zuständig. Die Basisklasse
+enthält dabei die Logik für die Datenbankverbindung und zum Abfangen von Fehlern, während die
+Subklassen davon die eigentliche Anwendungslogik implementieren. Die Abgrenzung zwischen Framework
+und Anwendung wird teilweise verwässert, da Teile der Basisklasse auf Anwendungscode zugreifen
+während diverse andere nur Frameworkcode (in der Regel das \lstinline{req}-Objekt mit den
+\emph{mod\_python})-Daten nutzen.
