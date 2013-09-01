@@ -57,3 +57,28 @@ Subklassen davon die eigentliche Anwendungslogik implementieren. Die Abgrenzung 
 und Anwendung wird teilweise verwässert, da Teile der Basisklasse auf Anwendungscode zugreifen
 während diverse andere nur Frameworkcode (in der Regel das \lstinline{req}-Objekt mit den
 \emph{mod\_python})-Daten nutzen.
+
+\begin{description}
+\item[Modularität] \hfill \\
+Indico enthält ein Modulsystem, welches sowohl für Code, der ein fester Bestandteil von Indico ist,
+als auch für externen Code genutzt werden kann. In beiden Fällen bietet das Modulsystem einen
+Namespace in der Datenbank, der ausschließlich vom jeweiligen Modul genutzt wird, und einen
+Menüpunkt in der Administrationsoberfläche, über den das Modul aktiviert bzw. deaktiviert und
+konfiguriert werden kann. Dies hat den großen Vorteil, dass die Konfiguration bei den meisten
+Modulen sehr einfach ist - sowohl für die Administratoren als auch für den Entwickler.
+
+Einige Module, beispielsweise das Interface zum CERN-Paymentsystem und zur CERN-Suchmaschine, sind
+nicht Teil des Open-Source-Projekts. Daher muss es für solche Module eine Möglichkeit geben, auch
+ohne direkt im Indico-Code referenziert zu werden, auf Datenstrukturen zugreifen und bei bestimmten
+Ereignissen Code ausführen zu können. Dies wurde in Indico mithilfe von \emph{entry points}
+realisiert. Dabei handelt es sich um ein Feature des Paketsystems von Python, über das ein Paket
+Objekte für einen bestimmten \emph{entry point} zentral registrieren kann. Indico dann dann mit der
+Funktion \lstinline{pkg_resources.iter_entry_points('indico.ext')} über diese Objekte iterieren und
+die entsprechenden Plugins laden.
+
+Plugins können über reguläre Ausdrücke Code für bestimmte URLs ausführen, sodass sie auch eigene
+Seiten hinzufügen können; in der Regel folgt die URL-Struktur dabei den \emph{mod\_python}-URLs,
+d.h. \emph{something.py} bzw. \emph{something.py/someAction}. Daneben können Plugins sowohl
+Funktionen für die JSON-RPC-API als auch Endpoints für die REST-basierte Export-API registrieren.
+
+\end{description}
