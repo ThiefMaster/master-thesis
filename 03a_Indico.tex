@@ -1,4 +1,4 @@
-\section{Indico}
+\section{Indico}\label{frameworks-indico}
 
 Das derzeit in Indico verwendete System kann zwar grob als Framework betrachtet werden, ist jedoch
 nicht wirklich ein Framework, da sehr viele Dinge speziell auf die Anwendung zugeschnitten sind,
@@ -80,5 +80,55 @@ Plugins können über reguläre Ausdrücke Code für bestimmte URLs ausführen, 
 Seiten hinzufügen können; in der Regel folgt die URL-Struktur dabei den \emph{mod\_python}-URLs,
 d.h. \emph{something.py} bzw. \emph{something.py/someAction}. Daneben können Plugins sowohl
 Funktionen für die JSON-RPC-API als auch Endpoints für die REST-basierte Export-API registrieren.
+
+
+\item[URL-Routing] \hfill \\
+Wie bereits in \autoref{frameworks-indico} beschrieben emuliert Indico \emph{mod\_python} und
+verwendet daher das bereits aus CGI-Anwendungen Mapping zwischen URLs und Dateisystem. Der WSGI-Kern
+von Indico kann Anfragen anhand des ersten Pfadsegments routen, allerdings ist dies für die
+wenigsten Use-Cases ausreichend - für \emph{clean URLs} sind in der Regel alle Pfadsegmente relevant
+und es müssen dynamische Segmente unterstützt werden, um beispielsweise IDs in den Pfad einbauen zu
+können.
+
+Indico-Plugins haben die Möglichkeit, über einen regulären Ausdruck beliebige URLs zu mappen und
+über Regex-Gruppen auch auf einzelne Pfadelemente zuzugreifen, um beispielsweise eine ID zu
+extrahieren. Dieses Feature ist allerdings ausschließlich in Plugins verfügbar und nicht für Code,
+der Teil des Indico-Kerns ist. Darüberhinaus müssen die regulären Ausdrücke jeweils in der
+\lstinline{RH}-Klasse definiert werden, wodurch die URL-Mappings über den gesamten Plugincode
+verstreut sind statt übersichtlich in einer einzelnen Datei aufgelistet zu sein.
+
+Die Export-API nutzt ebenfalls reguläre Ausdrücke, um URLs unterhalb von \emph{/export/} und
+\emph{/api/} auf die jeweiligen Klassen zu mappen. Allerdings ist dieses Routing speziell auf die
+Struktur der API zugeschnitten und weder Teil des eigentlichen Indico-Frameworks noch ohne Weiteres
+für andere Bereiche von Indico nutzbar.
+
+
+\item[Template-Engine] \hfill \\
+Indico nutzt die Mako-Templateengine\footnote{\href{http://www.makotemplates.org}{http://www.makotemplates.org}}.
+Dabei handelt es sich um eine von Indico unabhängige Open-Source-Templateengine unter der
+MIT-Lizenz. Sie unterstützt alle von einer modernen Templateengine erwarteten Features wie
+Vererbung, Includes, Makros, Blöcke, Variablen, Filter und Kontrollstrukturen. Daneben erlaubt sie
+auch, beliebigen Python-Code in einem Template zu verwenden.
+
+Mako wird in Indico unverändert verwendet, allerdings wird der Templatekontext um diverse
+Hilfsfunktionen und -variablen erweitert, sodass häufig genutzte Funktionenin jedem Template
+verfügbar sind.
+
+\lstinputlisting[caption=Mako-Template]{code/mako.tpl}
+
+
+\item[Datenbankanbindung] \hfill \\
+Indico enthält ein einfaches Interface zum Zugriff auf die ZODB-Datenbank. Dieses wird unter anderem
+in den \lstinline{RH}-Klassen und den verschiedenen APIs genutzt, um eine Datenbankverbindung
+aufzubauen und im Fehlerfall die Ausführung des Requests zu wiederholen. Während man das
+Datenbankinterface selbst definitiv zum Framework zählen kann, ist der Code für die Wiederholungen
+stark mit Anwendungscode vermischt.
+
+Das Modulsystem von Indico nutzt die Datenbank sowohl zum Speichern der Konfigurationseinstellungen
+als auch für die Metadaten der verschiedenen Module, sodass sie nicht bei jedem Aufruf neu über die
+\emph{entry points} geladen werden müssen. Dabei wird massiv darauf gesetzt, dass es sich bei ZODB
+um eine Python-Objektdatenbank handelt - dies erlaubt es beispielsweise, ein Python-Modul direkt in
+der Datenbank zu speichern statt explizit den Pfad zur dazugehörigen Python-Datei abzulegen.
+
 
 \end{description}
