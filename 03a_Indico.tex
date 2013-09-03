@@ -152,4 +152,25 @@ Während eines Requests, wird die Session als Eigenschaft im \emph{mod\_python}-
 gespeichert. Das für Sessions notwendige Cookie wird ebenfalls mithilfe von diesem Objekt gesetzt.
 Dies hat zur Folge, dass das Sessionsystem stark von der \emph{mod\_python}-Emulation abhängig ist.
 
+
+\item[Caching] \hfill \\
+Indico bietet ein generisches Cache-Interface, das verschiedene Backends nutzen kann.
+Standardmäßig werden Memcached, Redis und Dateien unterstützt, wobei es für den Entwickler auch
+einfach ist, weitere Backends hinzuzufügen. Das Interface beschränkt sich auf die am häufigsten
+genutzten Methoden \lstinline{get}, \lstinline{set} und \lstinline{delete}, wobei jeweils auch
+eine \lstinline{_multi}-Variante existiert, die je nach Backend performanter ist sofern mehrere
+Einträge auf einmal verändert bzw. ausgelesen werden sollen. Ebenfalls unabhängig vom Backend kann
+für jeden Cache-Eintrag eine Expire-Zeit angegeben werden. Dies hat bei der Nutzung des
+Datei-Backends jedoch zur Folge, dass abgelaufene Einträge nur gelöscht werden, wenn versucht wird,
+auf sie zuzugreifen.
+
+Zur besseren Strukturierung des Codes kann jeder Instanze des \lstinline{GenericCache}-Objekts ein
+Namespace zugewiesen werden, der automatisch mit dem jeweiligen Cache-Key kombiniert wird. Dies hat
+ebenfalls den Vorteil, dass nicht eine einzelne Instanz der Klasse global verfügbar sein muss
+sondern beispielsweise in einer Klasse, die den Cache nutzen will, eine neue Instanz erstellt wird.
+Bei nicht-lokalen Caches wie Redis und Memcached wird dabei instanzübergreifend eine bestehende
+Verbindung verwendet, sodass auch bei vielen Instanzen nicht übermäßig viele Verbindungen aufgebaut
+werden müssen.
+
+
 \end{description}
