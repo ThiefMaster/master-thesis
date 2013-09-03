@@ -131,4 +131,25 @@ um eine Python-Objektdatenbank handelt - dies erlaubt es beispielsweise, ein Pyt
 der Datenbank zu speichern statt explizit den Pfad zur dazugehörigen Python-Datei abzulegen.
 
 
+\item[Sessions] \hfill \\
+Indico speichert Sessions in der ZODB-Datenbank ab. Dies erlaubt es, neben beliebigen anderen
+Objekten, auch bereits in der Datenbank gespeicherte Objekte in der Session abzulegen, ohne
+zusätzlichen Speicher zu benötigen. Um Daten in der Session zu speichern, gibt es zwei
+Möglichkeiten. Häufig genutzte Elemente wie beispielsweise der aktuelle User sind direkt im
+Sessionobjekt abgelegt und dementsprechend über ihre Gettermethode oder direkt über die
+darunterliegende Eigenschaft des Objekts abrufbar. Darüberhinaus können beliebige Daten ähnlich wie
+in einem \lstinline{dict} abgelegt werden. Dies geschieht über die Methoden \lstinline{setVar()},
+\lstinline{getVar()} und \lstinline{removeVar()}.
+
+Eine Session wird nur dann in der Datenbank abgespeichert, wenn sie auch Daten enthält. Dies hat den
+Vorteil, dass insbesondere für nicht eingeloggte Benutzer kein Sessionobjekt in der Datenbank
+abgespeichert werden muss. Nichsdestotrotz sammeln sich mit der Zeit sehr viele alte Session an;
+mangels einer Möglichkeit, einzelne Objekte in der ZODB automatisch nach einer gewissen Zeit zu
+verwerfen, müssen alte Sessions regelmäßig manuell bzw. über ein zeitgesteuertes Script aus der
+Datenbank gelöscht zu werden.
+
+Während eines Requests, wird die Session als Eigenschaft im \emph{mod\_python}-Request-Objekt
+gespeichert. Das für Sessions notwendige Cookie wird ebenfalls mithilfe von diesem Objekt gesetzt.
+Dies hat zur Folge, dass das Sessionsystem stark von der \emph{mod\_python}-Emulation abhängig ist.
+
 \end{description}
