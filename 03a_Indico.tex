@@ -173,4 +173,34 @@ Verbindung verwendet, sodass auch bei vielen Instanzen nicht übermäßig viele 
 werden müssen.
 
 
+\item[Integrierbarkeit] \hfill \\
+Da das derzeitige Framework ein Teil von Indico ist, ist dieser Punkt nicht relevant. Der
+Vollständigkeit halber ist allerdings zu erwähnen, dass es nicht praktikabel wäre, das
+Indico-Framework von der Indico-Anwendung zu trennen um es beispielsweise in einer anderen Anwendung
+nutzen zu können.
+
+
+\item[Sonstige Features] \hfill \\
+Indico bietet mit dem \lstinline{ContextManager} eine Möglichkeit, threadsicher Daten ähnlich wie in
+einer globalen Variable abzuspeichern. Diese werden jeweils zu Beginn eines neuen Requests gelöscht,
+sodass dort temporäre Daten abgelegt werden können, ohne sie als Funktionsparameter übergeben zu
+müssen. Insbesondere für Dinge wie das aktuelle Request-Objekt hat dies den Vorteil, dass es falls
+benötigt jederzeit verfügbar ist, ohne immer nicht explizit übergeben zu werden.
+
+
+\item[Dokumentation] \hfill \\
+Es existiert keine echte externe Dokumentation. Der Code ist teilweise kommentiert, wobei der
+Kommentarstil nicht einheitlich ist und man kann deutlich erkennen, dass mehrere Entwickler daran
+gearbeitet haben. Dementsprechend sind einige Teile sehr ausführlich kommentiert, während andere
+fast überhaupt nicht kommentiert sind.
+
+Die Dokumention im Indico-Wiki\footnote{\href{http://indico-software.org/wiki/Dev}{http://indico-software.org/wiki/Dev}}
+geht hauptsächlich auf anwendungsspezifische Dinge ein, weshalb sie insbesondere auch für einen
+neuen Entwickler, der etwas am Framework selbst ändern muss, nicht sehr hilfreich ist.
+
+
+\item[Lizenz] \hfill \\
+Da das Framework Teil von Indico ist und auch nicht \emph{standalone} verfügbar ist, steht es genau
+wie Indico selbst unter der GPL.
+
 \end{description}
