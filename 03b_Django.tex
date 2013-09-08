@@ -1,0 +1,48 @@
+\section{Django}\label{frameworks-django}
+
+\emph{Django}\footnote{\href{https://www.djangoproject.com}{https://www.djangoproject.com}} ist das
+wohl bekannteste und funktionsreichste Full-Stack-Webframework für Python. \emph{Full-Stack}
+bedeutet dabei, dass alle für eine typische Webanwendung wichtigen Komponenten wie Datenbankzugriff,
+Routing, Templates und Sessions vom Framework bereitgestellt werden.
+
+Es ist primär auf \emph{Rapid Application Development} ausgelegt und wird daher von den Entwicklern
+auch mit dem Slogan \enquote{for perfectionists with deadlines} beworben. Wie für RAD-Frameworks
+typisch bietet Django über das Management-Tool \emph{django-admin.py} diverse
+Scaffolding-Funktionen, d.h. die Möglichkeit, die Grundstruktur für ein neues Projekt bzw. neue
+Module innerhalb eines Projekts automatisch zu generieren.
+
+Die Entwicklung von Django begann 2003, wobei die erste Open-Source-Version 2005 veröffenlicht
+wurde. Seitdem wurde das Framework konstant weiterentwickelt und ist derzeit in der Version 1.6
+verfügbar, die unter anderem Kompatibilität mit Python 3 bietet.
+
+
+\begin{description}
+\item[Modularität] \hfill \\
+Django bietet Modularität in verschiedenen Schichten. Bei der Webanwendung, die der Benutzer sieht
+handelt es sich - um bei der in der Django-Dokumentation genutzten Terminologie zu bleiben - um das
+\emph{Project}. Dabei handelt es sich um ein in der Regel in sich abgeschlossenes Projekt, das die
+Konfiguration sowohl für Django selbst, die genutzte Datenbank und die Anwendung enthält. Ein
+\emph{Project} enthält eine oder mehrere \emph{Apps}, wobei es sich bei jeder App um ein
+Python-Paket handelt, das Datenbankmodelle, View-Funktionen, Templates und Anwendungslogik enthält.
+Der Vorteil darin, viele kleine Apps statt einer großen zu nutzen, liegt darin, dass in sich
+abgeschlossene Funktionalität wie beispielsweise Tagging oder auch ein Loginsystem sauber von dem
+restlichen Projekt abgegrenzt ist und damit in der Regel wiederverwendbar ist. Dies wird von Django
+insofern unterstützt, dass auch problemlos Apps aus anderen Projekten eingebunden werden können und
+jede App in der Regel unabhängig von ihrem \emph{Project} ist sofern die nötigen Konfigurationsdaten
+vorhanden sind. Django selbst enthält diverse Apps für optionale Zusatzfunktionen wie beispielsweise
+eine Benutzerverwaltung und eine Kommentarfunktion.
+
+Unabhängig von den installierten Apps bietet Django den Middleware-Stack, über den auf einer relativ
+niedrigen Ebene in die Abarbeitung von Requests eingegriffen werden kann.
+\lstinline{process_request} ermöglicht es der Middleware, vor dem Routing eines Requests
+einzugreifen und entweder die reguläre Verarbeitung fortsetzen oder sie mit einer HTTP-Antwort
+vorzeitig beenden. Dies bietet sich beispielsweise an, um Seiten anhand der aufgerufenen URL zu
+cachen. \lstinline{process_view} verhält sich ähnlich, allerdings ist zu dem Zeitpunkt, wo dieser
+Middleware-Hook ausgeführt wird, bereits bekannt, welche View-Funktion den Request abarbeiten wird.
+
+Middleware hat außerdem die Möglichkeit, nach der Verarbeitung eines Requests einzugreifen. Dazu
+stehen die Methoden \lstinline{process_response} und \lstinline{process_exception} zur Verfügung.
+Diese könnten beispielsweise einen Cache aktualisieren oder einen webbasierten Debugger starten.
+
+
+\end{description}
