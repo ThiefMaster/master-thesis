@@ -92,4 +92,51 @@ beliebige Methoden von übergebenen Python-Objekten ausgeführt werden.
 
 \lstinputlisting[caption=Django-Template]{code/django.tpl}
 
+
+\item[Datenbankanbindung] \hfill \\
+Django enthält ein ORM-System, welches die meisten verbreiteten relationalen Datenbanksysteme wie
+PostgreSQL, MySQL, Oracle und SQLite offiziell unterstützt und über inoffizielle Zusatzmodule auch
+weitere Datenbanken wie den Microsoft SQL Server nutzen kann.
+
+Während es bei einer neuen Anwendung üblich ist, die Model-Klassen für die Datenbanktabellen manuell
+zu erstellen und im Anschluss auf diesen basierend die Tabellen zu erstellen, bietet Django auch die
+Möglichkeit, eine existierende Datenbank zu analysieren und die dazu passenden Klassen zu
+generieren.
+
+Teile von Django selbst benötigen eine mit dem Django-ORM kompatibel SQL-Datenbank. Allerdings gibt
+es beispielsweise die Django-Erweiterung \emph{Django-ZODB} um die ZODB für Anwendungsdaten nutzen
+zu können.
+
+
+\item[Sessions] \hfill \\
+Das Session-System von Django ist zwar Teil des \lstinline{django}-Pakets, allerdings ist es nicht
+Teil des Django-Kerns sondern als App und Middleware realisiert, was ein gutes Beispiel für die
+Modularität des Frameworks ist. Wenn es aktiviert ist stellst es in \lstinline{request.session} ein
+\lstinline{dict}-artiges Objekt bereit, über das auf die Daten der Session zugegriffen werden kann.
+Bei \lstinline{request} handelt es sich um den an jede View-Funktion übergebenen Parameter, über den
+auf alle zum aktuellen Request gehörenden Daten zugegriffen werden kann.
+
+Die meisten Eigenschaften der Session-App können konfiguriert werden was sie sehr flexibel macht.
+Insbesondere können verschiedene Storage-Backends verwendet werden - u.a. einen Cache wie
+\emph{memcached}, signierte Cookies oder eine Tabelle in der Datenbank - und man hat die Wahl
+zwischen \emph{Pickle}, \emph{JSON} oder einer eigenen Implementierung bei der Serialisierung der
+Sessiondaten. Letzteres ist insbesondere bei clientseitigen Cookie-Sessions wichtig, da es sich bei
+\emph{Pickle} zwar um ein sehr mächtiges Format handelt, das fast jeden Python-Datentyp
+serialisieren kann, diese Flexibilität jedoch zur Folge hat, dass beim Deserialisieren auch
+beliebiger Code ausgeführt werden kann. Durch die kryptografische Signatur kann ein Benutzer zwar
+prinzipiell keine bösartigen Daten als gültiges Sessioncookie übermitteln, allerdings führt ein Leak
+des geheimen Schlüssels sofort auch zu einer \emph{Remote Code Execution}-Lücke, da mit diesem
+Schlüssel gültige Cookiesignaturen erstellt werden können.
+
+Seitens der Entwickler wird das Cache-Backend empfohlen; in diesem Fall bietet sich der
+Pickle-Serializer an, da bei dieser Kombination sowohl die hohe Performance des Caches als auch die
+Flexibilität von Pickle zur Verfügung stehen und der Client niemals mit den Sessiondaten in
+Berührung kommt und somit keine Möglichkeit hat, sie zu manipulieren.
+
+Das Sessionmodul nutzt unabhängig vom Backend ein Cookie; entweder zum Speichern des einzigartigen
+Session-Identifiers oder für die Daten selbst. Dies hat zur Folge, dass das Session-System bei
+deaktivierten Cookies nicht funktioniert. Dies ist heutzutage allerdings kein relevantes Problem
+mehr, da fast jede Website spätestens beim Login Cookies voraussetzt.
+
+
 \end{description}
