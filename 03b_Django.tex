@@ -45,4 +45,36 @@ stehen die Methoden \lstinline{process_response} und \lstinline{process_exceptio
 Diese könnten beispielsweise einen Cache aktualisieren oder einen webbasierten Debugger starten.
 
 
+\item[URL-Routing] \hfill \\
+Django legt großen Wert auf saubere URLs, die weder Dateiendungen noch kryptische Elemente wie
+beispielsweise \emph{/0,2097,1-1-1928,00} enthalten. Aus diesem Grund bietet Django ein flexibles
+und mächtiges Routingsystem. Da der Kern des Routingsystems der Vergleich von definierten Mustern
+mit der aufgerufdenen URL ist bieten sich reguläre Ausdrücke perfekt dazu an und werden
+dementsprechend auch dazu verwendet.
+
+Der Entwickler definiert in seiner App dazu eine Liste mit \emph{Patterns}, wobei jedes Element aus
+einem regulären Ausdruck und der View-Funktion, wobei es sich bei letzterem entweder direkt um die
+Funktion handeln kann oder aber um einen String der Form \lstinline{'myapp.views.somefunc'}. Für
+dynamische Elemente in der URL wird das Gruppierungs-Feature der Regex-Engine verwendet. Dies
+bedeutet, dass beispielsweise \lstinline{r'news/(\d+)'} eine URL nach dem Schema \emph{news/123}
+matchen würde und die Zahl als positionalen Parameter an die View-Funktion übergibt. Da dies gerade
+in komplexeren URLs mit mehreren Parametern schnell unübersichtlich würde, können auch Namen für die
+Parameter in der Form \lstinline{r'news/(?P<id>\d+)'} vergeben werden. Diese werden dann als Keyword
+Arguments an die View-Funktion übergeben.
+
+Es ist zu erwähnen, dass das Routing ausschließlich die regulären Ausdrücke benutzt und somit nur
+den Pfad in der URL berücksichtigt. Das HTTP-Verb, also meist \emph{GET} oder \emph{POST} und der
+Domainname sind also nicht Teil des Routings.
+
+Insbesondere mit Apps, die zusätzliche Funktionalität wie beispielsweise eine Kommentarfunktion
+bereitstellen, würde es dem Prinzip der sauberen URLs widersprechen, alle URLs auf der Rootebene zu
+registrieren. Dazu bietet Django die \lstinline{include()}-Funktion mit der eine anstelle auf eine
+View-Funktion auch auf eine andere URL-Routingtabelle verwiesen werden kann.
+
+Um anhand der View-Funktion oder eines optionalen Identifiers eine URL zu generieren bietet Django
+sowohl die Python-Funktion \lstinline{reverse()} als auch eine spezielle Syntax für Templates. Ganz
+im Sinne von DRY führt dies dazu, dass URLs niemals manuell erzeugt werden müssen und Änderungen
+keine toten internen Links zur Folge haben, da Dispatching und URL-Generierung beide auf dieselben
+Routingtabellen zugreifen.
+
 \end{description}
