@@ -77,4 +77,19 @@ im Sinne von DRY führt dies dazu, dass URLs niemals manuell erzeugt werden müs
 keine toten internen Links zur Folge haben, da Dispatching und URL-Generierung beide auf dieselben
 Routingtabellen zugreifen.
 
+
+\item[Template-Engine] \hfill \\
+Django verwendet eine eigene Templateengine, die speziell für das Framework entwickelt wurde und
+dementsprechend gut integriert ist. Sie unterstützt alle von einer modernen Templateengine
+erwarteten Features und ermöglicht direkten Zugriff auf das Routingsystem bzw. die dazu gehörende
+URL-Generierung von Django. Aus Sicherheitsgründen werden alle dynamischen Daten in HTML-Templates
+escaped, sofern es nicht explizit deaktiviert wird.
+
+Da es sich bei Templates offensichtlich um die Präsentationsschicht handelt und dort höchstens
+ausgabespezifische Logik vorhanden sein soll, ist es in Django-Templates nicht möglich, Python-Code
+direkt einzubinden. Allerdings können Python-Funktionen in Templates zugänglich gemacht werden und
+beliebige Methoden von übergebenen Python-Objekten ausgeführt werden.
+
+\lstinputlisting[caption=Django-Template]{code/django.tpl}
+
 \end{description}
