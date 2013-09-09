@@ -102,6 +102,14 @@ Die Export-API nutzt ebenfalls reguläre Ausdrücke, um URLs unterhalb von \emph
 Struktur der API zugeschnitten und weder Teil des eigentlichen Indico-Frameworks noch ohne Weiteres
 für andere Bereiche von Indico nutzbar.
 
+Unabhängig davon, wie eine bestimmte URL auf den dazugehörigen Code gemappt wird, bietet Indico mit
+den \lstinline{URLHandler}-Klassen eine Möglichkeit, URLs zentral zu definieren und zu generieren.
+Dabei können beliebige GET-Parameter hinzugefügt werden, wobei die jeweilige
+\lstinline{URLHandler}-Klasse diese modifizieren kann, bevor sie an die URL angehängt werden. Die
+Änderung einer URL im \lstinline{URLHandler} wirkt sich jedoch logischerweise nur auf die
+Generierung von URLs und nicht auf das Routing auf, was dem DRY-Konzept\footnote{Don't Repeat
+Yourself} widerspricht.
+
 
 \item[Template-Engine] \hfill \\
 Indico nutzt die Mako-Templateengine\footnote{\href{http://www.makotemplates.org}{http://www.makotemplates.org}}.
