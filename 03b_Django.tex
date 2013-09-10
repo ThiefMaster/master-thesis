@@ -179,5 +179,20 @@ sich den Aufwand, die Model-Klassen zu erstellen, und kann sich darauf konzentri
 Anwendungslogik neu zu implementieren.
 
 
+\item[Sonstige Features] \hfill \\
+RAD-typisch kann Django für einfache CRUD-Aufgaben in der Administration einer Website sowohl die
+Logik als auch das Benutzerinterface dynamisch generieren. Dabei handelt es sich anders als um das
+in vielen Frameworks übliche Scaffolding, bei dem der entsprechende Code einmalig generiert und
+danach falls nötig modifiziert wird. Stattdessen werden die Formulare anhang der Datenbankmodelle
+dynamisch generiert, wobei dieser Vorgang vom Entwickler beeinflusst werden kann, um auch komplexere
+Elemente wie One-To-Many-Beziehungen in der gewünschten Art und Weise in einem Formular
+repräsentieren zu können.
+
+Auch das wohl wichtigste Feature in den meisten Webapplikationen - Authentifikation von Benutzern -
+wird von Django standardmäßig unterstützt, sofern man die entsprechende App aktiviert. Neben der
+Benutzerverwaltung selbst und der Authentifikation mittels eines Passworts oder über einen
+Drittanbieter enthält das Benutzersystem ein Gruppen- und Rechtesystem und diverse Decorators um
+den Zugriff auf einzelne Views zu beschränken.
+
 
 \end{description}
