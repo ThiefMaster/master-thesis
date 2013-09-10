@@ -139,4 +139,30 @@ deaktivierten Cookies nicht funktioniert. Dies ist heutzutage allerdings kein re
 mehr, da fast jede Website spätestens beim Login Cookies voraussetzt.
 
 
+\item[Caching] \hfill \\
+Wie zuvor schon erwähnt, eignet sich Djangos Middleware-System unter anderem ideal dafür, ganze
+Seiten zu cachen. Dementsprechend ist es nur logisch, dass Django eine entsprechende Middleware
+mitliefert.  Diese realisiert Caching erwartetermaßen auf Seitenebene, d.h. jede via GET aufgerufene
+Seite wird gecacht sofern es nicht durch entsprechende Header unterbunden wird. Insbesondere auf
+Seiten, deren Content nicht extrem oft aktualisiert wird, bietet sich diese Cachemethode an, da sie
+mit minimalem Aufwand realisierbar ist.
+
+Eine flexiblere Cachemethode ist der Decorator-basierte View-Cache. Dieser ermöglicht es, einzelne
+Views zu cachen, sodass beispielsweise die Startseite gecacht werden kann aber andere, häufiger
+aktualisierte, Seiten wie beispielsweise ein Gästebuch nicht gecacht werden. Sofern die Granularität
+immernoch nicht ausreicht erlaubt Django es auch, einzelne Templatefragmente zu cachen. Dies bietet
+sich an, wenn Teile eines Templates zu dynamisch zum cachen sind, andere jedoch nur relativ selten
+aktualisiert werden.
+
+Neben diesen Methoden bietet Django auch eine Low-Level-API, die direkten Cachezugriff ermöglicht.
+Diese unterstützt mehrere Caches, die auch verschiedene Backends nutzen können, und bietet neben den
+üblichen Methoden \lstinline{get}, \lstinline{set}, \lstinline{delete} und den Varianten für mehrere
+Keys auch \lstinline{incr} und \lstinline{decr} zum Inkrementieren bzw. Dekrementieren von
+numerischen Werten. Dabei handelt es sich sofern es vom Backend unterstützt wird um atomare
+Operationen.
+
+Standardmäßig werden Memcached, Datenbanktabellen, Dateien und - insbesondere während der
+Entwicklung hilfreich - ein prozess-lokaler In-Memory-Cache unterstützt, allerdings kann auch ein
+benutzerdefiniertes Cache-Backend benutzt werden.
+
 \end{description}
