@@ -165,4 +165,19 @@ Standardmäßig werden Memcached, Datenbanktabellen, Dateien und - insbesondere 
 Entwicklung hilfreich - ein prozess-lokaler In-Memory-Cache unterstützt, allerdings kann auch ein
 benutzerdefiniertes Cache-Backend benutzt werden.
 
+
+\item[Integrierbarkeit] \hfill \\
+Da es sich bei Django um ein Full-Stack-Framework handelt ist es darauf ausgelegt, von Anfang an
+verwendet zu werden. Es ist zwar prinzipiell möglich, Teile von Django wie das Routingsystem zu
+nutzen ohne die fortgeschritteneren Features wie das ORM zu verwenden, allerdings muss man dabei in
+der Regel auf viele Vorteile des Frameworks verzichten. Beispielsweise müssten alle Templates der
+bestehenden Anwendung angepasst werden, um die URL-Generierung des Routingsystems zu verwenden.
+
+Explizit unterstützt wird jedoch die Nutzung einer bereits existierenden Datenbank: Wie zuvor
+erwähnt kann Django die Model-Klassen anhand des Schemas der Datenbank generieren. Somit spart man
+sich den Aufwand, die Model-Klassen zu erstellen, und kann sich darauf konzentrieren, die
+Anwendungslogik neu zu implementieren.
+
+
+
 \end{description}
