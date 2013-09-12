@@ -138,7 +138,17 @@ Funktion nur aus, wenn das Ergebnis noch nicht im Cache vorhanden ist.
 
 
 \item[Sonstige Features] \hfill \\
-\todotext{Sonstiges}
+Flask nutzt Proxy-Objekte um \lstinline{request}, \lstinline{session} und \lstinline{g} global
+verfügbar zu machen und trotzdem jeweils - auch bei mehreren Threads - auf das richtige Objekt zu
+verweisen. Dadurch müssen diese Objekte niemals als Funktionsparameter übergeben werden sondern
+können einfach aus dem \lstinline{flask}-Package importiert werden.
+
+Während \lstinline{request} und \lstinline{session} relativ selbsterklärend sind, handelt es sich
+bei \lstinline{g} um ein von Flask selbst nicht genutztes Objekt, welches allerdings sowohl
+Anwendungscode als auch Flask-Erweiterung eine Möglichkeit bietet, requestspezifische Daten
+abzulegen. Beispielsweise ist der aktuell eingeloggte User meist in \lstinline{g.user} gespeichert
+und oftmals nutzen Datenbank-Extensions das Objekt, um die gerade aufgebaute Datenbankverbindung
+beim nächsten Zugriff nicht erneut aufbauen zu müssen.
 
 
 \item[Dokumentation] \hfill \\
