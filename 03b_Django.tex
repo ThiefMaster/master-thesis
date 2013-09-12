@@ -179,6 +179,17 @@ sich den Aufwand, die Model-Klassen zu erstellen, und kann sich darauf konzentri
 Anwendungslogik neu zu implementieren.
 
 
+\item[Erweiterbarkeit] \hfill \\
+Der einfachste Weg, Django zu erweitern, ist mithilfe von Middleware. Sofern es nicht ausreicht,
+vor und nach der Abarbeitung eines Requests Code auszuführen, bietet Django mit \emph{Signals} ein
+Callback-System, welches insbesondere eine Reaktion auf verschiedene Datenbankereignisse ermöglicht.
+
+Um das Verhalten des Django-Kerns selbst zu verändern, ist es jedoch in der Regel notwendig, den
+Framework-Code zu modifizieren. Dies bedeutet, dass entweder ein Fork notwendig ist oder aber dass
+die Änderungen allgemein genug sind, um eine Chance zu haben, von den Django-Entwicklern in die
+offizielle Django-Version übernommen zu werden.
+
+
 \item[Sonstige Features] \hfill \\
 RAD-typisch kann Django für einfache CRUD-Aufgaben in der Administration einer Website sowohl die
 Logik als auch das Benutzerinterface dynamisch generieren. Dabei handelt es sich anders als um das
