@@ -84,7 +84,34 @@ Flask folgt, entsprechend lizenziert ist und eine entsprechend hochwertige Dokum
 
 
 \item[Sessions] \hfill \\
-\todotext{Sessions}
+Flask stellt über das \lstinline{session}-Objekt ein spezielles \lstinline{dict} bereit, welches
+sich für den Entwickler wie ein normales \lstinline{dict} verhält, jedoch Veränderungen automatisch
+registriert. Daher kann es in der Regel ohne Weiteres modifiziert werden und die Daten werden
+automatisch in der Session abgespeichert. Neben den Standardmethoden enthält das Objekt diverse
+Eigenschaften, um den Status der Session auszulesen bzw. zu verändern. \lstinline{new} und
+\lstinline{modified} geben an, ob die Session noch nie gespeichert wurde bzw. ob sie seit dem
+letzten Speichern verändert wurde. Die \lstinline{permanent}-Eigenschaft setzt die Ablaufzeit des
+Session-Cookies; standardmäßig ist es nur bis zum Schließen des Browsers gültig.
+
+Da Flask weder eine Datenbank noch einen Cache voraussetzt, werden Sessions standardmäßig
+clientseitig als signiertes Cookie gespeichert. Dies ist eine sehr einfache aber oftmals
+ausreichende Lösung, sofern man weder geheime noch größere Daten abspeichern will, da Cookies
+oftmals auf 4096 Bytes beschränkt sind und die Signatur zwar vor Veränderungen schützt, nicht jedoch
+vor Auslesen.
+
+Aus Sicherheitsgründen werden Sessiondaten standardmäßig als \emph{JSON} serialisiert statt das
+mächtigere \emph{Pickle} zu nutzen. Während die Signatur die Sessiondaten schützt, würde die Nutzung
+von Pickle im Falle eines Leaks des geheimen Schlüssels nicht nur die Manipulation der Sessiondaten
+ermöglichen sondern auch das Ausführen beliebigen Codes.
+
+Sofern cookiebasierte Sessions nicht ausreichen, kann das \lstinline{session_interface} des
+Anwendungsobjekts auf eine benutzerdefinierte Klasse verweisen, die die Sessiondaten beispielsweise
+in Redis oder einer SQL-Datenbank abspeichert. Das Interface ist dabei sehr einfach gehalten; eine
+Redis-basierende Implementierung ist beispielsweise mit weniger als 70 Zeilen Code möglich.
+
+Standardmäßig enthält Flask jedoch nur das Cookie-Interface, allerdings hat der Maintainer von Flask
+mit dem \lstinline{RedisSessionInterface} ein entsprechendes Interface für serverseitige Sessions
+als Erweiterung veröffentlicht.
 
 
 \item[Caching] \hfill \\
