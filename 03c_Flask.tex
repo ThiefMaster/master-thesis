@@ -67,7 +67,20 @@ dass der entsprechende Decorator in Flask weiterhin benutzt werden kann.
 
 
 \item[Datenbankanbindung] \hfill \\
-\todotext{Datenbankanbindung}
+Flask selbst nutzt keine Datenbank und enthält Microframework-typisch keinen Datenbankcode. Es gibt
+mit \emph{Flask-SQLAlchemy} jedoch eine offizielle Flask-Erweiterung, die das SQLAlchemy-ORM-System
+in Flask integriert und dabei denselben Komfort bietet wie er auch bei allen anderen Features von
+Flask üblich ist. Neben den ORM-Features kann alternativ auch nur die Datenbankabstraktionsschicht
+von SQLAlchemy genutzt werden.
+
+Mit \emph{Flask-MongoKit}, \emph{Flask-PyMongo} und \emph{Flask-MongoAlchemy} existieren auch
+verschiedene Erweiterungen, um die NoSQL-Datenbank \emph{MongoDB} in Flask zu integrieren. Der Grund
+für die drei verschiedenen Extensions ist, dass je nach Anwendung ein höherer oder niedrigerer
+Abstraktionsgrad bei der Datenbank-API gewünscht ist.
+
+Auch für die Objektdatenbank \emph{ZODB} existiert eine Flask-Erweiterung, die genau wie
+\emph{Flask-SQLAlchemy} den \emph{approved extension}-Status hat und somit den Design Guidelines von
+Flask folgt, entsprechend lizenziert ist und eine entsprechend hochwertige Dokumentation besitzt.
 
 
 \item[Sessions] \hfill \\
