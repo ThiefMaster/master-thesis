@@ -115,7 +115,18 @@ als Erweiterung veröffentlicht.
 
 
 \item[Caching] \hfill \\
-\todotext{Caching}
+Flask selbst enthält keinen Cache, allerdings bietet Werkzeug eine Low-Level-Abstraktion
+verschiedener Cache-Backends, und stellt dabei die Methoden \lstinline{get}, \lstinline{set},
+\lstinline{delete} sowieso entsprechende \lstinline{_many}-Varianten davon zur Verfügung. Dieses
+Cache-Interface ist oftmals ausreichend, allerdings bietet die Erweiterung \emph{Flask-Cache} auch
+eine über die zentrale Flask-Konfiguration konfigurierbare High-Level-API dafür, die neben den
+Low-Level-Funktionen Decorators zum Cachen ganzer Views und ein Jinja2-Plugin zum Cachen einzelner
+Templatefragmente.
+
+Neben diesen relativ üblichen Cache-APIs bietet \emph{Flask-Cache} einen
+\lstinline{memoize}-Decorator. Dieser kann zum Cachen beliebiger Funktionen genutzt werden; er nutzt
+den Namen der Funktion und die übergebenen Parameter als Cache-Key und führt die eigentliche
+Funktion nur aus, wenn das Ergebnis noch nicht im Cache vorhanden ist.
 
 
 \item[Integrierbarkeit] \hfill \\
