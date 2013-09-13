@@ -190,6 +190,12 @@ beispielsweise eine Redis-Verbindung anhand der Daten in der Flask-Konfiguration
 das Verschicken von E-Mails über SMTP mithilfe verschiedener Python-Libraries mit einer intuitiven
 API vereinfachen.
 
+Flask nutzt den von Werkzeug als WSGI-Middleware bereitgestellten webbasierten Debugger. Während
+dieser nicht den Funktionsumfang eines vollwertigen Debuggers bietet - insbesondere Stepping und
+Breakpoints werden nicht unterstützt - so ist er bei der Entwicklung sehr hilfreich, um kleinere
+Fehler schnell zu finden und mithilfe der integrierten Python-Shell Code im selben Kontext
+auszuführen, in dem die Exception verursacht wurde.
+
 
 \item[Dokumentation] \hfill \\
 Flask, Werkzeug und Jinja2 besitzen jeweils eine sehr ausführliche Online-Dokumentation, die sich
