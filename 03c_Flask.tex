@@ -134,7 +134,25 @@ Funktion nur aus, wenn das Ergebnis noch nicht im Cache vorhanden ist.
 
 
 \item[Erweiterbarkeit] \hfill \\
-\todotext{Erweiterbarkeit}
+Flask bietet mit \emph{Signals} eine API, um Callbacks zu registrieren, die zu verschiedenen
+Zeitpunkten ausgeführt werden. Diese sind unter anderem das Rendern eines Templates und vor bzw.
+nach einem Request. Sofern dies nicht ausreicht, kann die \lstinline{Flask}-Klasse subclassed
+werden. Dies bietet die Möglichkeit, bestehende Funktionalität zu erweitern bzw. zu ersetzen und
+beispielsweise die \lstinline{Request}-Klasse durch eine eigene Subklasse davon zu ersetzen.
+
+Flask-Extensions nutzen in der Regel ausschließlich die Callbacks, sodass sie einfach zu einer
+Anwendung hinzugefügt werden können und unabhängig von anderen Extensions sind. Um eine Extension zu
+benutzen, sind zwei Methoden verbreitet. Für einfache Extensions, die keine eigene für den
+Entwickler relevante Klasse besitzen, wird empfohlen, eine Funktion \lstinline{init_app(app)} zu
+definieren. Diese akzeptiert als ersten Parameter die Flask-Anwendung und registriert relevante
+Callbacks und führt sonstigen Initialisierungscode aus. Komplexere Extensions enthalten in der Regel
+eine Klasse, über die vom vom Entwickler auf die Extension zugegriffen werden kann. Dabei wird das
+Applikationsobjekt über einen optionalen Parameter an den Konstruktor übergeben; sofern er nicht
+genutzt wird, sollte die Klasse die zuvor erwähnte Methode \lstinline{init_app(app)} besitzen. Sinn
+davon ist, die Nutzung von \emph{application factories} zu ermöglichen, d.h. Funktionen, die die
+Applikation erst erstellen und damit möglicherweise nie global verfügbar machen. In diesem Fall ist
+es möglicherweise notwendig, die Instanz der Extensionklasse zu erstellen, obwohl noch keine
+Flask-Instanz existiert.
 
 
 \item[Sonstige Features] \hfill \\
