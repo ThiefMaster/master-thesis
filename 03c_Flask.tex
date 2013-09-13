@@ -37,7 +37,50 @@ jeweiligen Anwendung dann überschrieben werden müssen.
 
 
 \item[URL-Routing] \hfill \\
-\todotext{URL-Routing}
+Wie jedes moderne Framework setzt auch Flask auf saubere URLs. Dazu nutzt es von Werkzeug
+bereitgestellte URL-Routing-System und erweitert es um eine einfachere API, die insbesondere bei der
+Registrierung von Routingregeln mittels Decorators und beim Generieren von URLs ihre Vorteile zeigt.
+
+Die einfachste Möglichkeit, eine Routingregel hinzuzufügen ist mit dem Decorator
+\lstinline{app.route}. Dieser akzeptiert als Parameter die Routingregel und optional die erlaubten
+HTTP-Methoden. Die damit dekorierte Funktion wird daraufhin automatisch mit der Regel verknüpft und
+der Funktionsname als Endpoint benutzt. Natürlich sind in einer größeren Anwendung nur wenige URLs
+komplett statisch sondern enthält auch diverse Variablen. Da es sich bei diesen in den meisten
+Fällen um einfache Strings oder Zahlen handelt, werden diese durch einfache Platzhalter in der Form
+\lstinline{'<type:name>'} bzw. bei Strings \lstinline{'<name>'} angegeben statt über oftmals eher
+kryptische reguläre Ausdrücke. Standardmäßig unterstützt Flask die Typen \lstinline{string},
+\lstinline{int}, \lstinline{float} und \lstinline{path}, wobei es möglich ist, eigene Typen zu
+definieren indem man eine Subklasse von \lstinline{BaseConverter} definiert und darin die Methoden
+\lstinline{to_url} und \lstinline{to_python} implementiert. Intern nutzt das Routingsystem reguläre
+Ausdrücke mit denen man allerdings nur in Kontakt kommt, wenn man einen eigenen Typkonverter
+definiert. Die Übergabe der Parameter an die View-Funktion erfolgt über Keyword Arguments. Auch
+optionale Parameter sind möglich; in diesem Fall muss die Funktion mindestens eine Routingregel
+besitzen, die den entsprechenden Parameter nicht enthält.
+
+Sofern Decorators keine Option sind - beispielsweise weil der Code über viele Dateien verstreut ist
+und man die Routingregeln an einem zentralen Ort haben will - bietet Flask die Methode
+\lstinline{app.add_url_rule}. Diese entspricht prinzipiell dem Decorator, allerdings wird die
+View-Funktion ebenfalls als Parameter übergeben.
+
+Neben dem Pfad und dem HTTP-Verb kann das Routingsystem auch die aktuelle Subdomain berücksichtigen;
+sowohl als festen Wert als auch als dynamische Variable. Für komplexere Fälle kann auch direkt auf
+die \lstinline{Map} des Werkzeug-Routingsystems zugegriffen werden statt die Flask-API zu nutzen.
+Dies ist jedoch gerade dank Blueprints nur in den wenigstens Fällen notwendig.
+
+Um über die Routingtabelle eine URL zu generieren, benötigt man den Namen des Endpoints der
+entsprechenden Routingregel. Übergibt man diesen an die Funktion \lstinline{url_for}, kann diese
+eine URL daraus generieren. Standardmäßig ist diese relativ zur aktuellen Domain, also in der Form
+\emph{/foo/bar}, allerdings akzeptiert die Funktion neben den Keyword Arguments für die Variablen
+der Routingregel auch die speziellen Argumente \lstinline{_external} um eine vollständige URL zu
+generieren, \lstinline{_schema} um das Protokoll in einer solchen absoluten URL festzulegen und
+\lstinline{_anchor} um das URL-Fragment (\emph{\#something}) anzugeben. Sofern mehrere Regeln für
+denselben Endpoint existieren, verwendet \lstinline{url_for} automatisch die passendste Regel.
+
+Blueprints besitzen dieselben Methoden; der einzige relevante Unterschied ist, dass ein Blueprint
+einen Präfix besitzen kann, der jeder Routingregel des Blueprints hinzugefügt wird. Bei der Nutzung
+von \lstinline{url_for()} wird ein Blueprint in der Form \lstinline{'blueprint.endpoint'} angegeben,
+wobei auch relative Verweise der Form \lstinline{'.endpoint'} möglich sind; in diesem Fall wird der
+zum Zeitpunkt des Aufrufs aktive Blueprint benutzt.
 
 
 \item[Template-Engine] \hfill \\
