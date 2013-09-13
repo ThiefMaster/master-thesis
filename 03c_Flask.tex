@@ -155,6 +155,11 @@ Applikation erst erstellen und damit möglicherweise nie global verfügbar mache
 es möglicherweise notwendig, die Instanz der Extensionklasse zu erstellen, obwohl noch keine
 Flask-Instanz existiert.
 
+Sofern keine dieser Optionen mächtig genug sind, besteht auch die Option, eine der Werkzeug-Klassen
+zu subclassen um beispielsweise das URL-Routing-System direkt verändern zu können. Wie bei jedem
+Framework besteht darüber hinaus die Möglichkeit, das Framework zu forken und daraufhin den
+Frameworkcode selbst zu verändern.
+
 
 \item[Sonstige Features] \hfill \\
 Flask nutzt Proxy-Objekte um \lstinline{request}, \lstinline{session} und \lstinline{g} global
