@@ -131,7 +131,15 @@ Funktion nur aus, wenn das Ergebnis noch nicht im Cache vorhanden ist.
 
 
 \item[Integrierbarkeit] \hfill \\
-\todotext{Integrierbarkeit}
+Flask benötigt weder eine bestimmte Datenbank noch setzt es eine bestimmte Verzeichnisstruktur in
+der Anwendung voraus. Während URL-Routingregeln meist über Decorators definiert werden, so ist die
+Nicht-Decorator-API genauso mächtig und ähnlich komfortabel. Daher ist es sehr einfach, Flask in
+eine existierende Anwendung zu integrieren.
+
+Selbstverständlich kann eine größere Anwendung, in der Flask nachträglich integriert wurde, nicht
+alle Vorteile des Frameworks ausnutzen ohne dass der gesamte Code modifiziert werden muss,
+allerdings ist Flask sehr flexibel und so ist es kein Problem, bestehende Views so in Flask
+einzubinden, dass sie funktionieren, und neuen Code im \enquote{Flask-Stil} zu schreiben.
 
 
 \item[Erweiterbarkeit] \hfill \\
