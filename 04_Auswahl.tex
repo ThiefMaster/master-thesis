@@ -4,3 +4,36 @@
 Sowohl die einzelnen Frameworks als auch die Kombination eines dieser Frameworks mit Teilen des
 Indico-Frameworks haben spezifische Vor- und Nachteile. Im Folgenden werden sowohl der vollständige
 Umstieg auf ein bestimmtes Framework als auch Hybridlösungen vorgestellt und bewertet.
+
+Der Vollständigkeit halber wird auch die - zugegeben sehr unwahrscheinliche - Option, komplett bei
+der bestehenden Lösung zu bleiben, kurz betrachtet.
+
+\subsection{Weiternutzung des Indico-Frameworks}
+Getreu dem Motto \enquote{never change a running system} stellt sich natürlich die Frage, ob sich
+der nicht zu unterschätzende Aufwand, eine komplexe Software wie Indico auf ein neues Framework
+umzustellen, überhaupt lohnt. Diese Frage ist im Fall von Indico aus verschiedenen Gründen zu
+bejahen. Insbesondere die Kombination aus einem sehr einfachen Routingsystem und dem
+URL-Dateisystem-Mapping im CGI-Stil bietet bei der Entwicklung neuer Features diverse Nachteile:
+Sofern das neue Feature eine für den Benutzer direkt zugängliche Seite besitzt ist aus Gründen der
+Einheitlichkeit eine \emph{*.py}-URL angebracht. Im Falle eines neuen Moduls wie beispielsweise der
+HTTP-API ist dies jedoch nicht gegeben, weshalb sich dort anbietet, ein neues Pfadsegment
+einzuführen und über dieses alle Anfragen in das entsprechende Modul zu routen, was jedoch bedeutet,
+dass jegliches weitere Routing von dem jeweiligen Modul übernommen werden muss.
+
+Ein enormer Vorteil bei der bestehenden Lösung ist natürlich, dass sie seit Jahren relativ stabil
+läuft und von einer breiten Userbasis benutzt wird und damit die \enquote{Kinderkrankheiten} eines
+neuen Systems nicht vorhanden sind. Ebenfalls ist beispielsweise die ZODB-Datenbank stark in das
+aktuelle System integriert, wobei anzumerken ist, dass dabei teilweise fast derselbe Code an
+mehreren Stellen verwendet wird: Die \lstinline{RH}-Klassen und die JSON-RPC-API verwenden jeweils
+dasselbe Retry-System, um Datenbankkonflikte zu behandeln, jedoch ist es in den jeweiligen Klassen
+unabhängig voneinander implementiert.
+
+Ein Vorteil beim Verzicht auf ein neues Framework wäre natürlich auch, die dafür notwendige
+Entwicklungszeit anderweitig nutzen zu können. Dies ist jedoch nur kurzfristig gesehen ein Vorteil,
+da die Nichtnutzung eines modernen Frameworks in Zukunft bei neuen Features mit hoher
+Wahrscheinlichkeit zu deutlich mehr Entwicklungsaufwand führt als mit einem entsprechenden Framework
+notwendig wäre.
+
+Insbesondere aufgrund dieser Folge ist ein neues Framework also unbedingt notwendig. Daher wird die
+Option, weiterhin ausschließlich das Indico-Framework, in den folgenden Abschnitten nicht mehr
+betrachtet.
