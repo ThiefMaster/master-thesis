@@ -72,7 +72,10 @@ können, aber dennoch manuell in \emph{clean URLs} umgeschrieben werden müssen 
 beispielsweise statt \emph{/conferenceTimetable.py/pdf} die URL \emph{/event/123/timetable.pdf} zu
 nutzen, kann keine Software übernehmen. Zusätzlich zu den neuen URLs müssen für alle direkt
 verlinkbaren Seiten auch die alten URLs weiterhin unterstützt werden, um beispielsweise Links von
-anderen Seiten oder Suchmaschinen nicht in einer Fehlermeldung enden zu lassen.
+anderen Seiten oder Suchmaschinen nicht in einer Fehlermeldung enden zu lassen. Da Indico bisher die
+\lstinline{URLHandler}-Klassen zur URL-Generierung nutzt, existiert eine zentrale Stelle, die
+angepasst werden muss, um die neuen URLs nicht nur zu unterstützen sondern auch überall, wo Indico
+eine URL generiert, auch zu erzeugen.
 
 Zusammenfassend kann man sagen, dass es sich bei dieser Migration um ein extrem aufwändiges und
 zeitintensives Unterfangen handelt, das schon eher ein Rewrite als eine Migration ist - insbesondere
@@ -80,3 +83,30 @@ wenn man es mit einem Wechsel von der bestehenden Objektdatenbank auf eine relat
 kombiniert. Am Ende führt der Umstieg jedoch zu sauberem Code, der sowohl leicht wartbar ist als
 auch für neue Entwickler einen einfachen Einstieg ermöglicht, da viele Python-Entwickler bereits mit
 Django vertraut sind.
+
+
+\subsection{Erweiterung durch Django}
+Obwohl es wie bereits erwähnt schwierig ist, Django in die bestehende Codebasis von Indico zu
+integrieren, ist es natürlich prinzipiell möglich, sofern man die von den Django-Entwicklern
+empfohlene Anwendungsstruktur ignoriert. In diesem Fall würde man kein Grundgerüst mit
+\emph{django-admin.py} generieren, sondern die entsprechenden Django-Objekte bzw. -Funktionen direkt
+in bestehenden oder neuen Dateien innerhalb des Indico-Packages importieren. Dazu bietet sich
+beispielsweise eine neues Subpackage \lstinline{indico.web.django} an, welches den gesamten
+Django-spezifischen Basiscode enthält. Der WSGI-Code des alten Indico-Frameworks in
+\lstinline{indico.web.wsgi} kann in jedem Fall entfernt werden, wobei dementsprechend natürlich auch
+das stark auf diesem Code basierende Session-System entfernt und durch das von Django
+bereitgestellte System ersetzt werden muss. Danach können entweder die im \emph{mod\_python}-Stil
+geschriebenen Funktionen über das Routingsystem von Django aufgerufen werden, oder aber die
+\lstinline{RH}-Klassen entsprechend angepasst werden, um direkt von Django aufgerufen werden zu
+können. Durch die vollständige Weiterverwendung dieser Klassen würde der ZODB-Zugriff vom
+bestehenden Code übernommen werden. Für GET/POST-Daten und URL-Parameter muss natürlich eine
+entsprechende Kompatibilitätsschicht entwickelt werden, die sie in das bisher genutzte Format
+konvertiert. Durch die Weiterverwendung des Mako-Templatesystems kann ebenfalls viel
+Entwicklungsaufwand gespart werden, wobei eine externe Templateengine natürlich bei weitem nicht so
+gut mit dem Framework zusammenspielt wie die frameworkeigene Engine.
+
+Letzendlich lässt sich bei diesem Migrationspfad sehr viel Entwicklungszeit einsparen, allerdings
+stellt sich die frage, welchen Nutzen man neben den schöneren URLs am Ende hat. Immerhin handelt es
+sich bei Django um ein sehr mächtiges und komplexes Framework, welches man bei dieser Lösung nur zu
+einem Bruchteil nutzen würde - und ein mit Django vertrauter Entwickler müsste sich dennoch erst
+einarbeiten, da fast keine der bei Django üblichen \emph{Best Practices} genutzt werden könnten.
