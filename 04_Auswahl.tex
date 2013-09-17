@@ -110,3 +110,35 @@ stellt sich die frage, welchen Nutzen man neben den schöneren URLs am Ende hat.
 sich bei Django um ein sehr mächtiges und komplexes Framework, welches man bei dieser Lösung nur zu
 einem Bruchteil nutzen würde - und ein mit Django vertrauter Entwickler müsste sich dennoch erst
 einarbeiten, da fast keine der bei Django üblichen \emph{Best Practices} genutzt werden könnten.
+
+
+\subsection{Erweiterung durch Flask}
+Derzeit nutzt Indico den von Werkzeug bereitgestellten Python-Webserver um bei der Entwicklung auch
+ohne Apache und \emph{mod\_wsgi} betrieben werden zu können. Daher bietet es sich an, das auf
+Werkzeug basierende Flask-Microframework in Indico zu integrieren. Neben der in einem späteren
+Abschnitt beschriebenen Komplettmigration ist insbesondere eine partielle Migration bzw. Erweiterung
+der bestehenden Codebasis auf Flask interessant. Zu Beginn bietet es sich an, den WSGI-Kern und
+darauf aufbauenden Code - insbesondere also des Session-System - des Indico-Frameworks durch Flask
+zu ersetzen, jedoch beispielsweise die einwandfrei funktionierende Datenbankanbindung beizubehalten.
+Das Entfernen des WSGI-Kerns ist ein guter Ausgangspunkt, da dadurch garantiert obsolet werdender
+Code entfernt wird. Nachdem dies geschehen und Flask integriert ist, ist zu prüfen, ob noch weitere
+Kernbestandteile von Indico von dem alten WSGI-Code abhängig sind und angepasst bzw. ersetzt werden
+müssen. Danach kann zunächst ein einfacher Wrapper das Routing im \emph{mod\_python}-Stil emulieren
+und somit Indico mithilfe des Flask-WSGI-Backends größtenteils lauffähig machen.
+
+Die wichtigste von Flask bereitgestellte Neuerung ist aber natürlich das Routingsystem kombiniert
+mit den Modularität von Blueprints. Neben mit geringem bis mittlerem Aufwand integrierbaren Features
+wie dem \lstinline{g}-Objekt und dem integrierten Debugger ist das URL-Routing die komplexeste
+Flask-basierte Erweiterung, und somit auch die aufwändigste. Allerdings ist auf \emph{Rules} und
+\emph{Endpoints} basierende Struktur sehr ähnlich mit der derzeit in Indico genutzten URL-Erzeugung,
+sodass gute Chancen bestehen, dass abgesehen vom Definieren der neuen URLs viele Aufgaben in diesem
+Bereich automatisiert werden können. Gerade im Hinblick auf die Kompatibilität mit Links auf die
+alten URLs ist dies sehr hilfreich.
+
+Der Vorteil darin, Flask zu nutzen, aber nicht rigoros jedes von Flask oder einer Flask-Erweiterung
+gebotene Feature sofort einzuführen, liegt insbesondere in der relativ einfachen Migration - neben
+der unabhängig vom Framework aufwändigen Umstellung der URLs müssen weder zwangsläufig Templates
+konvertiert noch alle View-Klassen angepasst werden. Gleichzeitig kann neuer Code aber durchaus
+zusätzliche Flask-Features nutzen, sodass auch nach der Migration die Codequalität von Indico
+langfristig immer besser wird, solange neue Features implementiert oder bestehende refactored
+werden.
