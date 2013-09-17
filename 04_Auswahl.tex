@@ -112,7 +112,7 @@ einem Bruchteil nutzen würde - und ein mit Django vertrauter Entwickler müsste
 einarbeiten, da fast keine der bei Django üblichen \emph{Best Practices} genutzt werden könnten.
 
 
-\subsection{Erweiterung durch Flask}
+\subsection{Erweiterung durch Flask}\label{migration-flask-partial}
 Derzeit nutzt Indico den von Werkzeug bereitgestellten Python-Webserver um bei der Entwicklung auch
 ohne Apache und \emph{mod\_wsgi} betrieben werden zu können. Daher bietet es sich an, das auf
 Werkzeug basierende Flask-Microframework in Indico zu integrieren. Neben der in einem späteren
@@ -142,3 +142,25 @@ konvertiert noch alle View-Klassen angepasst werden. Gleichzeitig kann neuer Cod
 zusätzliche Flask-Features nutzen, sodass auch nach der Migration die Codequalität von Indico
 langfristig immer besser wird, solange neue Features implementiert oder bestehende refactored
 werden.
+
+
+\subsection{Vollständige Migration zu Flask}
+Bei einer Komplettmigration bietet die in \autoref{migration-flask-partial} beschriebene
+Teilmigration einen guten Ausgangspunkt, da am Ende ein funktionierendes Indico steht, welches
+bereits an verschiedenen Stellen Flask-Features nutzt. Die verbleibenden Bereiche - insbesondere
+Templates und \lstinline{RH}-Klassen - können zwar relativ unabhängig voneinander migriert werden,
+allerdings müssen in beiden Fällen diese Klassen bzw. ihre Nachfolger angepasst werden, weshalb es
+sinnvoll ist, diese schrittweise zusammen zu migrieren, d.h. jeweils eine Klasse und die von dieser
+genutzten Templates. Die Templatemigration kann größtenteils automatisiert werden, allerdings
+enthalten einige Templates Python-Code, der manuell entfernt bzw. in die entsprechende Python-Klasse
+verschoben werden muss. Bei den weiteren Änderungen an den Klassen gibt es mehrere Möglichkeiten,
+Dinge wie die Datenbankverbindung und die dazugehörigen Transaktionen entsprechend zu behandeln.
+Neben einem \emph{Class Decorator} wäre auch eine Superklasse denkbar, die ähnlich wie derzeit die
+\lstinline{RH}-Klasse die entsprechende Logik implementiert, aber dabei entsprechend flexibel bleibt
+und Flask ideal nutzt.
+
+Da es sich bei dieser Variante um eine Erweiterung der Einbindung von Flask in die bestehende
+Infrastruktur handelt, macht es wenig Sinn, diese zu Beginn in Betracht zu ziehen. Während sie
+logischerweise zum besseren Code führt ist sie extrem aufwändig und bietet insbesondere im Hinblick
+auf neue Entwicklungen nur wenige Vorteile, da diese unabhängig davon bereits alle neuen Features
+nutzen können.
