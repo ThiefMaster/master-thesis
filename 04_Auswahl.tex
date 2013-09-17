@@ -37,3 +37,46 @@ notwendig wäre.
 Insbesondere aufgrund dieser Folge ist ein neues Framework also unbedingt notwendig. Daher wird die
 Option, weiterhin ausschließlich das Indico-Framework, in den folgenden Abschnitten nicht mehr
 betrachtet.
+
+
+\subsection{Vollständige Migration zu Django}
+Aufgrund der Struktur von Django - mehrere möglichst in sich abgeschlossene Apps - und der
+empfohlenen Verzeichnisstruktur in den einzelnen Apps ist es schwierig, Django in die bestehende
+Indico-Codebasis zu integrieren. Es ist deutlich einfacher und auch sauberer, das Django-Projekt in
+einem neuen Verzeichnis unabhängig von der bestehenden Codebasis zu integrieren. Danach müssen
+zunächst die in der gesamten Anwendung genutzten Funktionen wie beispielsweise das Benutzer- und
+Gruppensystem samt LDAP-Anbindung unter Verwendung der Django-User-App neu implementiert werden.
+Obwohl beispielsweise das bestehende Benutzersystem nicht Teil des Frameworks ist und durchaus in
+das Django-Projekt übernommen werden könnte, hat die Neuimplementierung den Vorteil, dass die
+Django-Infrastruktur im weiteren Verlauf möglichst effizient benutzt werden kann. Da die Benutzer in
+der ZODB abgespeichert werden, muss diese Datenbank auch in Django integriert werden; dazu bietet
+sich möglicherweise \emph{Django-ZODB} an - dies muss jedoch genauer untersucht werden, da unter
+anderem Datenbankkonflikte während eines Commits sauber abgefangen werden sollten. Eine Alternative
+wäre natürlich der Umstieg auf eine relationale Datenbank unter Verwendund des ORM-Systems von
+Django, allerdings würde dies die bereits sehr aufwändige Migration noch komplexer machen.
+
+Sobald der Kern der Django-Version von Indico funktionsfähig ist, kann die eigentliche Anwendung
+migriert werden. Da Indico mit den \lstinline{RH}-Klassen bereits klassenbasierte Views nutzt und
+oftmals auch Vererbung nutzt, bietet es sich in den meisten Fällen an, auch weiterhin Klassen statt
+einfacher Funktionen zu nutzen. Während die meiste Anwendungslogik dieser Klassen übernommen werden
+kann, sind dennoch in fast allen Fällen Änderungen angebracht, um beispielsweise über die von Django
+bereitgestellten Variablen auf HTTP-Parameter und dynamische Elemente aus der URL zuzugreifen.
+Zusammen mit dem Umstieg auf die Django-Templateengine führt dies also dazu, dass hunderte von
+Klassen und Templates angepasst werden müssen. Letzteres kann teilweise automatisiert werden, die
+Klassen müssen jedoch manuell umgeschrieben werden.
+
+Für das URL-Routing müssen entsprechende Regeln in Form regulärer Ausdrücke geschrieben werden.
+Indico besitzt ca. 700 verschiedene URLs, die zwar oftmals dieselben Parameter wie die ID des Events
+nethalten und damit dank der \lstinline{include()}-Funktion des Routingsystems vereinfacht werden
+können, aber dennoch manuell in \emph{clean URLs} umgeschrieben werden müssen - die Entscheidung,
+beispielsweise statt \emph{/conferenceTimetable.py/pdf} die URL \emph{/event/123/timetable.pdf} zu
+nutzen, kann keine Software übernehmen. Zusätzlich zu den neuen URLs müssen für alle direkt
+verlinkbaren Seiten auch die alten URLs weiterhin unterstützt werden, um beispielsweise Links von
+anderen Seiten oder Suchmaschinen nicht in einer Fehlermeldung enden zu lassen.
+
+Zusammenfassend kann man sagen, dass es sich bei dieser Migration um ein extrem aufwändiges und
+zeitintensives Unterfangen handelt, das schon eher ein Rewrite als eine Migration ist - insbesondere
+wenn man es mit einem Wechsel von der bestehenden Objektdatenbank auf eine relationale Datenbank.
+kombiniert. Am Ende führt der Umstieg jedoch zu sauberem Code, der sowohl leicht wartbar ist als
+auch für neue Entwickler einen einfachen Einstieg ermöglicht, da viele Python-Entwickler bereits mit
+Django vertraut sind.
