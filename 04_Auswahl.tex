@@ -164,3 +164,68 @@ Infrastruktur handelt, macht es wenig Sinn, diese zu Beginn in Betracht zu ziehe
 logischerweise zum besseren Code führt ist sie extrem aufwändig und bietet insbesondere im Hinblick
 auf neue Entwicklungen nur wenige Vorteile, da diese unabhängig davon bereits alle neuen Features
 nutzen können.
+
+
+\section{Entscheidung für ein Framework}
+Nach der Analyse der diversen Frameworks und der verschiedenen Migrationspfade sind genügend
+Informationen vorhanden, um eine Entscheidung treffen zu können. Bei dieser Entscheidung muss
+allerdings auch bedacht werden, dass sie dauerhaft ist, sobald die Migration begonnen hat und
+entsprechend weit fortgeschritten ist, da es nicht wirtschaftlich wäre, nach kurzer Zeit erneut die
+Technologie zu wechseln und man damit auch die übrigen Entwickler zwingen würde, sich wieder mit
+einem neuen Framework auseinanderzusetzen.
+
+Die Idee, das Indico-Framework vollständig zu ersetzen, ist zwar diskussionswürdig, kann aber gerade
+bei einem von einer Vielzahl an Benutzern aktiv verwendeten System, bei dem es häufig kleinere
+Bugreports, aber auch Feature-Requests gibt, nicht wirklich in die Tat umgesetzt werden, da ein
+Entwickler nicht langfristig ausschließlich an einer solchen Migration, die fast einer
+Neuentwicklung entspräche, arbeiten kann. Die große Zahl zu ändernder Klassen und Funktionen würde
+möglicherweise sogar die Mitarbeit weiterer Entwickler benötigen. Daher stellt sich nur die Frage,
+durch welches Framework Indico erweitert werden soll, welche Bereiche dabei unbedingt angepasst bzw.
+umgeschrieben werden müssen und wo es nur \emph{nice to have} wäre, aber nicht unbedingt im Rahmen
+der eigentlichen Framework-Migration geschehen muss.
+
+Sowohl bei Django als auch bei Flask handelt es sich um stabile und verbreitete Webframeworks,
+hinter denen jeweils große Entwicklercommunities stehen und für die es viele, ebenfalls meist unter
+einer kompatiblen Open-Source-Lizenz stehende, Erweiterungen gibt. Der Unterschied liegt jedoch
+darin, dass Django-Erweiterungen oftmals vollständige \emph{Apps} bereitstellen, die möglichst
+vollständig in eine eigene Anwendung integriert werden können und beispielsweise bereits eigene
+Templates mitliefern, während Flask-Extensions sich meist an Entwickler richten und Tools bzw. APIs
+bereitstellen. Sowohl diese Tatsache als auch der generelle Aufbau macht Django eher bei neuen
+Projekten zum Framework der Wahl, da man dort keine Altlasten hat und damit alle Features des
+Frameworks nutzen kann, sofern sie für die Anwendung nützlich sind, statt gegen das Framework zu
+arbeiten um es mit bestehendem Code zu verbinden.
+
+Beide Frameworks enthalten ein flexibles und mächtiges Routingsystem für URLs, welches auch URLs
+generieren kann. Die Designentscheidung in Django, dort durchgehend, d.h. auch beim Definieren der
+URLs, reguläre Ausdrücke zu verwenden, macht es jedoch nicht sehr entwicklerfreundlich und unnötig
+kompliziert. Im Gegensatz dazu bietet Flask einfache Platzhalter und optionale Konverter, die durch
+eine sehr einfache API erweitert werden können.
+
+Aufgrund der partiellen Migration spielt die Templateengine der Frameworks keine große Rolle, da
+die bereits vorhandenen Mako-Templates nicht konvertiert werden. Unabhängig davon ist die
+Templatesyntax von Django und Jinja2 nahezu identisch. Dass Flask selbst keine Datenbank nutzt und
+daher auch kein ORM oder sonstige Datenbankschichten enthält ist aufgrund der in Indico genutzten
+ZODB von Vorteil; eine separate SQL-Datenbank für das Framework würde nur den Administrationsaufwand
+erhöhen.
+
+Django und Flask nutzen beide die \lstinline{dict}-API für Sessions. Allerdings hat Django den
+Vorteil, bereits nativ einen In-Memory-Cache zum Speichern der Sessiondaten zu unterstützen, während
+Flask dazu ein separates Modul benötigt. Flask hingegen ist bei der Sessionklasse flexibler;
+zusätzlich zur \lstinline{dict}-API lässt sich die Session durch Subclassing einfach durch
+\emph{Properties} erweitern. Dabei handelt es sich um Attribute, die automatisch eine durch eine
+Getter- und Setterfunktion aufrufen und somit zusätzliche Logik enthalten können - gerade bei
+Sessiondaten, die auf in der ZODB gespeicherte Elemente verweisen, ist dies nützlich, um nur bei
+Bedarf auf die Datenbank zuzugreifen.
+
+Indico nutzt nur einen Lowlevel-Cache, der relativ neu ist und eine saubere API bereitstellt, die
+große Ähnlichkeit mit den Lowlevel-Cache-APIs von Django und Flask-Cache hat. Daher muss dieser
+nicht unbedingt durch einen vom Framework bereitgestellten Cache ersetzt werden. Insbesondere bei
+den Lowlevel-APIs bieten jedoch beide Frameworks nahezu identische Funktionalität und ähnliche
+Backends.
+
+Weder die Lizenz noch der Dokumentationsumfang bieten eine gute Basis um die Entscheidung für eines
+der Frameworks zu beeinflussen. Letzendlich kann Django in einer Anwendung wie Indico seine Vorteile
+jedoch nicht ausspielen und würde durch das verglichen mit Flask kompliziertere Routingsystem den
+Aufwand während der Migration erhöhen. Im Gegensatz dazu ist Flask als Microframework, das möglichst
+keine bestimmten Technologien voraussetzt, sehr einfach integrierbar. Daher ist die Entscheidung auf
+\textbf{Flask} gefallen.
