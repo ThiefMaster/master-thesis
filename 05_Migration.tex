@@ -46,3 +46,66 @@ dem Paketmanager, eine beliebige Version ab 0.7 zu installieren. Meist ist dies 
 gute Libraries API-Inkompatibilitäten möglichst vermeiden, allerdings ist es sicherer, dennoch von
 allen genutzten Abhängigkeiten die Version festzulegen, sodass ein Benutzer exakt dieselben
 Versionen nutzt, mit denen die Anwendung auch getestet wurde.
+
+
+\subsection{Einbinden von Flask}
+
+Indico enthält zwei Python-Packages: \lstinline{MaKaC} und \lstinline{indico}, wobei
+\lstinline{MaKaC} alten Legacy-Code und \lstinline{indico} hauptsächlich neuen Code enthält.
+Web-spezifischer Code ist im Paket \lstinline{indico.web}, weshalb es sich anbietet, für Flask ein
+neues Package \lstinline{indico.web.flask} anzulegen. Um den Flask-Code innerhalb dieses Pakets
+bereits im Hinblick auf die Migration und zukünftige Entwicklungen zu strukturieren, wird ein Modul
+\emph{app.py} angelegt, welches die \emph{Application Factory} und den zum Initialisieren der App
+notwendigen Code enthält.
+
+Bei der \emph{Application Factory} handelt es sich um eine Funktion, die eine Flask-Instanz
+erstellt, konfiguriert zurückgibt. Diese Kapselung hat den Vorteil, dass jegliche Initialisierung an
+einigen wenigen Stellen stattfindet und beispielsweise für Unittests eine Instanz mit anderen
+Konfigurationsoptionen erstellt werden kann. Ohne Nutzung einer Factory-Funktion würde die
+Flask-Instanz zur Importzeit des Moduls erstellt werden und jedes andere Modul könnte das Objekt von
+dort importieren und verändern. Zur \enquote{Laufzeit}, also während der Abarbeitung eines Requests,
+macht sich der Unterschied nicht mehr bemerktbar, da Flask mit \lstinline{current_app} ein
+Proxy-Objekt bereitstellt, welches jeweils auf die gerade aktive Flask-Instanz verweist.
+
+Derzeit wird der eingebaute Webserver von Indico mittels \emph{indico\_shell --web-server}
+gestartet. Zu Beginn ist es sinnvoll, über einen weiteren Kommandozeilenparameter zwischen Flask und
+dem bestehenden Webserver samt dem alten Framework wählen zu können. Aufgrund des einfachen Aufbaus
+von WSGI muss dazu nur entweder das bestehende \emph{application-Callable} oder das neue, von
+\lstinline{make_app()} zurückgegebene, an den Webserver übergeben werden. Beim Aktualisieren des
+dafür zuständigen Codes fällt auf, dass dort eine einfache WSGI-Middleware implementiert wurde, die
+die WSGI-Applikation über den Indico-Konfiguration angegebenen Pfad verfügbar macht - also
+beispielsweise \emph{http://localhost:8000/indico} statt nur \emph{http://localhost:8000}. Ein Blick
+in die Werkzeug-Dokumentation zeigt, dass dort mit \lstinline{DispatcherMiddleware} eine fertige
+Middleware enthalten ist, die diese Aufgabe ebenfalls übernehmen kann - allerdings mit weniger
+benutzerdefiniertem Code. Da es sich dabei um eine sehr einfache Änderung handelt und Werkzeug
+sowieso bereits eingebunden war, bietet es sich an, diese bereits zu diesem Zeitpunkt vorzunehmen.
+Dazu dient die in \autoref{lst:indico-dispatcher} gezeigte Funktion. Sie akzeptiert als Parameter
+eine WSGI-Anwendung - also entweder die Flask-Instanz oder die alte Indico-WSGI-Applikation und gibt
+eine Anwendung zurück, die die übergebene Anwendung in dem konfigurierten Pfad verfügbar macht und
+für alle anderen Pfade einen \emph{404 Not Found}-Fehler an den Client sendet. Sofern kein Pfad
+konfiguriert ist gibt die Funktion direkt die App zurück, da die Middleware in diesem Fall nicht
+benötigt wird.
+
+\begin{lstlisting}[caption=Indico-WSGI-Dispatcher,label=lst:indico-dispatcher]
+def make_indico_dispatcher(wsgi_app):
+    baseURL = Config.getInstance().getBaseURL()
+    path = urlparse.urlparse(baseURL)[2].rstrip('/')
+    if not path:
+        return wsgi_app
+    else:
+        return DispatcherMiddleware(NotFound(), {
+            path: wsgi_app
+        })
+\end{lstlisting}
+
+An dieser Stelle enthält Indico jetzt bereits eine lauffähige Flask-Anwendung, der man bereits zum
+ersten Testen eine Hello-World-Funktion hinzufügen könnte. Allerdings kann die Anwendung
+ausschließlich über den nicht für Produktionszwecke geeigneten Entwicklungswebserver gestartet
+werden. Um sie auch über einen WSGI-kompatiblen externen Webserver nutzen zu können, wird eine
+\emph{indico.wsgi}-Datei benötigt, die die Anwendung unter dem Namen \lstinline{application}
+zugänglich macht.
+
+\begin{lstlisting}[caption=indico.wsgi]
+from indico.web.flask.app import make_app
+application = make_app()
+\end{lstlisting}
