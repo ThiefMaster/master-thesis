@@ -7,7 +7,10 @@ werden die Migrationsschritte in der Reihenfolge beschrieben, wie sie durchgefü
 \section{Vorbereitung}
 In der Vorbereitungsphase wird Flask eingebunden und lauffähig konfiguriert. Sollten dabei jedoch
 Konflikte auftreten, werden diese bereits - möglichst unter Nutzung von Features des Frameworks -
-behoben. Es findet zu diesem Zeitpunkt jedoch noch keine Migration statt.
+behoben. Es findet zu diesem Zeitpunkt jedoch noch keine Migration statt. Das Endziel dieser Phase
+ist ein temporärer Wrapper, der die \emph{mod\_python}-Funktionen über Flask aufruft, sodass
+grundsätzliche Inkompatibilitäten zwischen Flask und dem Indico-Code zu Beginn der nächsten Phase
+beseitigt werden können.
 
 
 \subsection{Installieren von Flask}
@@ -109,3 +112,51 @@ zugänglich macht.
 from indico.web.flask.app import make_app
 application = make_app()
 \end{lstlisting}
+
+
+\subsection{Interface zu den mod\_python-Funktionen}
+
+Beim \emph{mod\_python}-Routing verweisen URLs der Form \emph{/file.py} bzw. \emph{/file.py/func}
+auf eine gleichnamige Datei und entweder die angegebene Funktion oder auf eine Funktion namens
+\lstinline{index}. Der erste Parameter ist jeweils das Request-Objekt, danach folgen alle GET- und
+POST-Parameter als Keyword Arguments. Der Rückgabewert der Funktion wird als Antwort-Body an den
+Client gesendet.
+
+Um ein Interface zu diesen Funktionen zu entwickeln, existieren verschiedene Möglichkeiten, die
+jedoch alle auf einer Art Reflection basieren. Neben komplexen, auf dem Python-Syntaxbaum
+aufbauenden, Varianten, ist die einfachste Lösung, die Dateien zu importieren und dann aus ihrem
+globalen Namespace alle aufrufbaren Objekte auszufiltern. Dies ist in einer dynamischen Sprache wie
+Python sehr einfach möglich: Mit \lstinline{execfile(path, globals)} bietet Python eine Funktion,
+die die angegebene Datei ausführt und dabei das als \lstinline{globals} übergebene \lstinline{dict}
+für alle \emph{globals}, d.h. die im aktuellen Modul verfügbaren globalen Variablen, nutzt. Nach dem
+Aufruf dieser Funktion muss der Inhalt der Liste also nur noch gefiltert werden, um nicht
+ausführbare Objekte zu entfernen, und enthält danach nur noch die relevanten Funktionen. Aus
+Dateiname und Funktionsname kann nun mithilfe einfacher Stringoperationen eine entsprechende
+Routingregel für Flask erzeugt werden.
+
+Anders als \emph{mod\_python} übergibt Flask jedoch keine Parameter an die Viewfunktionen, sofern
+die Routingregel keine solchen enthält. Daher ist eine Wrapperfunktion notwendig, welche die
+eigentliche Funktion mit den richtigen Parametern aufruft. Da es sich bei Funktionen in Python um
+First-Class-Objekte handelt, die ja wie in \autoref{firstclass} erwähnt zur Laufzeit erstellt und
+von anderen Funktionen zurückgegeben werden können, ist dies wie man in
+\autoref{lst:flask-mp-wrapper} erkennen kann sehr einfach möglich.
+
+\begin{lstlisting}[caption=mod\_python-Wrapper-Facatory,label=lst:flask-mp-wrapper]
+def create_flask_mp_wrapper(func):
+    def wrapper():
+        args = request.args.copy()
+        args.update(request.form)
+        flat_args = {}
+        for key, item in args.iterlists():
+            flat_args[key] = map(_to_utf8, item) if len(item) > 1 else _to_utf8(item[0])
+        return func(None, **flat_args)
+    return wrapper
+\end{lstlisting}
+
+Beim Aufruf dieser Funktion mit der \emph{mod\_python}-Funktion als Parameter wird eine neue
+Funktion definiert und zurückgegeben, die die GET- und POST-Parameter in einem einzigen Objekt
+zusammenfasst und alle Werte in UTF8 konvertiert. Dies ist nötig, da Flask Unicodestrings verwendet,
+während Indico intern grundsätzlich mit UTF8-Strings arbeitet. Neben \lstinline{None}, dem
+Python-Äquivalent von dem aus anderen Sprachen bekannten \lstinline{NULL}, statt des nicht mehr
+verfügbaren Request-Objekts übergibt die neue Funktion zum Schluss die neue Parameterliste in der
+von Indico erwarteten Form an die Originalfunktion.
