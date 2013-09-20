@@ -1,0 +1,48 @@
+\chapter{Migration zu Flask}
+Bei der Migration zu Flask sind einige Schritte am Anfang zwingend notwendig, während andere
+optional sind und in relativ beliebiger Reihenfolge ausgeführt werden können. Im Folgenden
+werden die Migrationsschritte in der Reihenfolge beschrieben, wie sie durchgeführt wurden.
+
+
+\section{Vorbereitung}
+In der Vorbereitungsphase wird Flask eingebunden und lauffähig konfiguriert. Sollten dabei jedoch
+Konflikte auftreten, werden diese bereits - möglichst unter Nutzung von Features des Frameworks -
+behoben. Es findet zu diesem Zeitpunkt jedoch noch keine Migration statt.
+
+
+\subsection{Installieren von Flask}
+Um einem Python-Projekt eine neue Abhängigkeit hinzuzufügen gibt es grundsätzlich zwei
+Möglichkeiten. Insbesondere für Python-Libraries und andere über PyPi\footnote{Python Package Index,
+\href{https://pypi.python.org}{https://pypi.python.org}} veröffentlichte Packages nutzt man eine
+Datei \emph{setup.py}, in der unter anderem die Funktion \lstinline{setup()} aufgerufen wird, an die
+neben diversen anderen Metadaten über den Parameter \lstinline{install_requires} die zur
+Installation benötigten Pakete übergeben werden. Dies ermöglicht es Paketmanagern, die notwendigen
+Abhängigkeiten automatisch zu installieren. Die Alternative zur \emph{setup.py} ist die
+\emph{requirements.txt}-Datei. Diese enthält jeweils ein Paket pro Zeile, wobei neben dem Paketnamen
+auch eine Version oder ein Verweis auf ein Versionskontrollsystem wie beispielsweise Git angegeben
+werden kann. Meist wird die \emph{requirements.txt} bei Python-Anwendungen benutzt, die nicht über
+PyPi installiert sondern manuell heruntergeladen werden und weitere Konfiguration benötigen. In
+diesem Fall enthalten die Installationsanweisungen meist den Hinweis, die Abhängigkeiten mit den
+Befehl \emph{pip install -r requirements.txt} zu installieren.
+
+Da bei Indico ursprünglich vorgesehen war, es systemweit zu installieren und nur die
+Konfigurationsdaten und sonstige dynamische Dateien bzw. Verzeichnisse außerhalb des systemweiten
+Python-Verzeichnisses abzulegen, besitzt es sowohl eine \emph{setup.py} als auch eine
+\emph{requirements.txt}. Daher muss Flask an beiden Stellen als Abhängigkeit definiert werden und
+danach installiert werden. Dies kann entweder manuell mittels \emph{pip install Flask} geschehen
+oder wie zuvor erwähnt über die \emph{requirements.txt}. Letzteres hat den Vorteil, dass Tippfehler
+o.ä. direkt auffallen.
+
+\begin{lstlisting}[caption=Auszug aus der requirements.txt von Indico,label=lst:indicoreqtxt]
+git+https://github.com/miracle2k/webassets.git
+Werkzeug==0.9
+Flask==0.10
+\end{lstlisting}
+
+\autoref{lst:indicoreqtxt} zeigt einen Ausschnit aus der \emph{requirements.txt}, wobei unter
+anderem Flask und das zugrundeliegende Werkzeug-Toolkit in der gerade aktuellen Version eingebunden
+werden. Flask selbst setzt zwar bereits \lstinline{'Werkzeug>=0.7'} voraus, allerdings erlaubt dies
+dem Paketmanager, eine beliebige Version ab 0.7 zu installieren. Meist ist dies kein Problem, da
+gute Libraries API-Inkompatibilitäten möglichst vermeiden, allerdings ist es sicherer, dennoch von
+allen genutzten Abhängigkeiten die Version festzulegen, sodass ein Benutzer exakt dieselben
+Versionen nutzt, mit denen die Anwendung auch getestet wurde.
