@@ -246,7 +246,7 @@ relativ leicht finden und anpassen.
 \todotext{später die XSendFile-Middleware erwähnen!}
 
 
-\subsection{Testen}
+\subsection{Trial and Error}
 An dieser Stelle ist es sinnvoll, alle einfach zugänglichen Bereiche von Indico kurz zu testen um
 weitere Probleme zu finden und zu beheben. Idealerweise könnte dies automatisiert durch die
 Unittests und funktionalen Tests geschehen, allerdings decken die Unit-Tests hauptsächlich intern
@@ -261,3 +261,13 @@ bei der Beschreibung des Indico-Frameworks erwähnte auf dem ersten Pfadsegment 
 nutzen und dementsprechend vom zuvor entwickelten Wrapper nicht abgedeckt werden. Dies kann jedoch
 durch manuelles Hinzufügen der entsprechenden Routingregeln und geringfügige Modifikationen im davon
 aufgerufenen Code leicht behoben werden.
+
+Ebenfalls in dieser Phase behoben werden Zugriffe auf das alte, nicht mehr vorhandene,
+Session-Objekt. Dabei stellt sich heraus, dass das Room-Booking-Plugin extrem viele separate
+Einträge in der Session abspeichert, die sinnvoller in einem Dict zusammengefasst werden könnten. Da
+dieses Refactoring den Aufwand nur minimal erhöht wird es zusammen mit den sowieso notwendigen
+Änderungen durchgeführt.
+
+Das Vorgehen nach dem \emph{Trial-and-Error}-Prinzip hat hier den Vorteil, dass jeweils nur einzelne
+zusammengehörende Bereiche von Indico aktualisiert werden und sie direkt nach der Änderung auf
+Funktionalität getestet werden können.
