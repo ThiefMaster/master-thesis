@@ -242,3 +242,22 @@ Allerdings schlagen alle Requests fehl, die eine im Dateisystem existierende Dat
 senden sollen, da dort \emph{mod\_python}-spezifische Funktionen genutzt werden statt der
 komfortablen \lstinline{send_file()}-Funktion von Flask. Diese Stellen lassen sich allerdings
 relativ leicht finden und anpassen.
+
+\todotext{später die XSendFile-Middleware erwähnen!}
+
+
+\subsection{Testen}
+An dieser Stelle ist es sinnvoll, alle einfach zugänglichen Bereiche von Indico kurz zu testen um
+weitere Probleme zu finden und zu beheben. Idealerweise könnte dies automatisiert durch die
+Unittests und funktionalen Tests geschehen, allerdings decken die Unit-Tests hauptsächlich intern
+genutzten, nicht-web-spezifischen Code ab. Kombiniert mit sehr wenigen funktionalen Tests stellt
+sich schnell heraus, dass die vorhandenen Tests hier nicht wirklich hilfreich sind und es zwei
+Optionen gibt: Manuell testen oder entsprechend viele Testcases schreiben, um die ganze Software
+abzudecken. Dass letzteres langfristig gesehen die bessere Lösung ist steht außer Frage, allerdings
+muss hier aus Zeitgründen auf manuelle Tests zurückgegriffen werden.
+
+Die Tests zeigen, dass unter anderem die HTTP-API und JSON-RPC-API nicht funktionieren, da sie das
+bei der Beschreibung des Indico-Frameworks erwähnte auf dem ersten Pfadsegment basierende Routing
+nutzen und dementsprechend vom zuvor entwickelten Wrapper nicht abgedeckt werden. Dies kann jedoch
+durch manuelles Hinzufügen der entsprechenden Routingregeln und geringfügige Modifikationen im davon
+aufgerufenen Code leicht behoben werden.
