@@ -160,3 +160,85 @@ während Indico intern grundsätzlich mit UTF8-Strings arbeitet. Neben \lstinlin
 Python-Äquivalent von dem aus anderen Sprachen bekannten \lstinline{NULL}, statt des nicht mehr
 verfügbaren Request-Objekts übergibt die neue Funktion zum Schluss die neue Parameterliste in der
 von Indico erwarteten Form an die Originalfunktion.
+
+
+\section{Migration}
+
+\subsection{Inkompatibilitäten beheben}
+Da statt eines (emulierten) \emph{mod\_python}-Request-Objekts nun \lstinline{None} übergeben wird,
+schlagen Zugriffe beispielsweise auf \lstinline{req.get_remote_ip()} fehl. Flask macht die IP des
+Benutzers über \lstinline{request.remote_addr} zwar ebenfalls verfügbar, allerdings handelt es sich
+dabei grundsätzlich um die IP, von dem aus die Verbindung zum Webserver aufgebaut wurde. Dies ist
+zwar bei der Entwicklung und in einfachen Setups die richtige IP-Adresse, allerdings nutzt
+beispielsweise die Indico-Installation am CERN einen Loadbalancer, der die IP-Adresse des Clients
+über den HTTP-Header \emph{X-Forwarded-For} übergibt. Flask macht alle in diesem Header enthaltenen
+IP-Adressen über \lstinline{request.access_route} zugänglich. Da die IP-Adresse des Loadbalancers
+jedoch nie relevant ist und der Header sofern kein Loadbalancer verwendet wird vom Benutzer
+manipuliert sein kann, ist eine neue Eigenschaft sinnvoll, die jeweils die korrekte IP-Adresse
+zurückgibt. Natürlich könnte dies einfach gelöst werden, indem man die bereits in Indico enthaltene
+Funktion \lstinline{_get_remote_ip(req)} anpasst, d.h. den Parameter entfernt und auf die Flask-APIs
+zugreift. Flask ist jedoch flexibel genug, um eine deutlich sauberere Lösung zu implementieren.
+Durch Subclassing der Klasse \lstinline{flask.wrappers.Request} kann die Funktion, die von der
+\lstinline{remote_addr}-Eigenschaft genutzt wird, durch eine eigene ersetzt werden, die bei
+Verwendung eines Proxies \lstinline{self.access_route[0]} verwenden und ansonsten die
+\lstinline{remote_addr}-Eigenschaft der Superklasse nutzt. Um die benutzerdefinierte
+\lstinline{IndicoRequest}-Klasse in Flask auch zu verwenden, wird einfach \lstinline{Flask}
+subclassed und die \lstinline{request_class}-Klasseneigenschaft überschrieben. Alternativ könnte es
+auch erst in der durch \lstinline{make_app()} erstellten Instanz überschrieben werden.
+
+Ebenfalls mit Flask inkompatibel ist das Sessionsystem. Dies war aufgrund der starken Integration
+mit der \emph{mod\_python}-Emulation zu erwarten und es sollte sowieso durch eine auf Flask
+basierende Neuentwicklung ersetzt werden. Da Flask standardmäßig nur auf signierten Cookies
+basierende Session unterstützt, was die dort speicherbare Datenmenge auf ca. 4096 Bytes beschränkt
+und insbesondere im Zusammenhang AJAX-Requests, die in der JSON-RPC-API massiv genutzt werden,
+oftmals problematisch ist, muss dazu ein neues Session-Interface entwickelt werden. Aufgrund des in
+Indico bereits vorhandenen Cache-Systems bietet es sich an, dieses zum Speichern der Sessiondaten zu
+verwenden. Gerade bei der empfohlenen Nutzung von Memcached oder Redis als Cache-Backend hat dies
+den Vorteil, dass für jeden Datensatz eine Time-To-Live angegeben werden kann und er nach Ablauf
+dieser Zeit automatisch gelöscht wird. In Flask eingebunden wird das Sessioninterface ähnlich wie
+die benutzerdefinierte \lstinline{IndicoRequest}-Klasse: Die Klasse \lstinline{Flask} enthält eine
+Eigenschaft, der man einfach eine Instanz der neuen Interfaceklasse zuweist. Das von dieser Klasse
+zu implementierende Interface ist dabei sehr simpel. Zu Beginn eines Requests wird die Methode
+\lstinline{open_session(app, request)} aufgerufen und gibt das Session-Objekt zurück, welches im
+Anwendungscode dann über den \lstinline{session}-Proxy verfügbar ist. Nach erfolgreicher
+Verarbeitung des Requests kann die Methode \lstinline{save_session(app, session, response)} die
+Sessiondaten speichern. Aus Performancegründen sollte die Session nur aktualisiert werden, wenn sie
+noch nie gespeichert wurde und Daten enthält, verändert wurde oder die Daten bzw. das Cookie bald
+ablaufen.
+
+Das Sessioninterface ist jedoch ausschließlich für das Laden und Speichern der Session
+verantwortlich. Es enthält selbst keinerlei Sessiondaten. Diese sind in einer separaten Klasse,
+welche die Dict-API von Python implementiert und das Objekt nach jeder Änderung als \emph{dirty}
+markiert. Die ursprüngliche Session-Implementierung unterstützt neben einer Dict-ähnlichen API auch
+diverse Funktionen wie \lstinline{getUser()}, die den aktuellen Benutzer zurückgeben. Da die neuen
+Sessions nicht mehr in der ZODB gespeichert werden, kann dort nicht direkt das Benutzerobjekt
+referenziert werden sondern ausschließlich die ID des Benutzers gespeichert werden. Dies macht es
+allerdings unmöglich, die Dict-API ohne größeren Aufwand dafür zu nutzen. Stattdessen werden diese
+speziellen Eigenschaften als \emph{Properties} implementiert, also Objekteigenschaften, die intern
+auf eine Getter- und Setterfunktion zugreifen. Dies ermöglicht es, beim Zugriff auf
+\lstinline{session.user} den entsprechenden Benutzer anhand der in der Session gespeicherten ID aus
+der Datenbank zu laden, für weitere Zugriff lokal zu cachen, und dann zurückzugeben.
+
+Um das neue Sessionsystem zu nutzen, wird die alte Implementierung vollständig entfernt. Dies ist
+problemlos möglich, da \lstinline{MaKaC.webinterface.session} keinen weiteren Code enthält und somit
+komplett gelöscht werden kann. Danach müssen alle darauf verweisenden Importe und natürlich der
+Code, der die alte Session initialisiert und im \lstinline{RH}-Objekt ablegt, entfernt werden.
+Zugriffe auf explizit implementierte Funktionen der Session - also \lstinline{getUser()} und
+ähnliche Methoden - lassen sich relativ leicht mit der Suchfunktion des Editors finden und auch fast
+automatisch (Imports und Funktionsparameter müssen manuell angepasst bzw. entfernt werden) durch
+ihre neue Variante in der Form \lstinline{session.user} er setzen. Sessionzugriffe über
+\lstinline{getVar()} bzw. \lstinline{setVar()} könnten zwar prinzipiell mithilfe von regulären
+Ausdrücken in die Dict-Syntax umgeschrieben werden, jedoch könnten in diesem Fall weder direkt in
+der Session abgelegte Datenbankobjekte noch die direkte Veränderung von bereits in der Session
+vorhandenen Daten gesondert behandelt werden. Ersteres ist jedoch prinzipiell nicht möglich und
+führt zu einem Fehler beim Laden der Session und letzteres würde die geänderten Daten nicht im
+Cache-Backend aktualisieren, da ein Container nicht ohne massive Performanceeinbußen feststellen
+kann, dass ein enthaltenes Objekt verändert wurde. Daher werden alle weiteren Sessionzugriffe
+manuell angepasst - allerdings nicht zu diesem Zeitpunkt, da es für einen allgemeinen Funktionstest
+von Indico nicht notwendig ist, dass jedes Feature fehlerfrei funktioniert.
+
+Erste Tests zeigen an dieser Stelle, dass Indico nun schon prinzipiell auf Flask-Basis funktioniert.
+Allerdings schlagen alle Requests fehl, die eine im Dateisystem existierende Datei an den Client
+senden sollen, da dort \emph{mod\_python}-spezifische Funktionen genutzt werden statt der
+komfortablen \lstinline{send_file()}-Funktion von Flask. Diese Stellen lassen sich allerdings
+relativ leicht finden und anpassen.
