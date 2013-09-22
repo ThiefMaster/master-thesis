@@ -114,7 +114,7 @@ application = make_app()
 \end{lstlisting}
 
 
-\subsection{Interface zu den mod\_python-Funktionen}
+\subsection{Interface zu den mod\_python-Funktionen}\label{oldmpinterface}
 
 Beim \emph{mod\_python}-Routing verweisen URLs der Form \emph{/file.py} bzw. \emph{/file.py/func}
 auf eine gleichnamige Datei und entweder die angegebene Funktion oder auf eine Funktion namens
@@ -271,3 +271,147 @@ dieses Refactoring den Aufwand nur minimal erhöht wird es zusammen mit den sowi
 Das Vorgehen nach dem \emph{Trial-and-Error}-Prinzip hat hier den Vorteil, dass jeweils nur einzelne
 zusammengehörende Bereiche von Indico aktualisiert werden und sie direkt nach der Änderung auf
 Funktionalität getestet werden können.
+
+
+\subsection{Routing}
+
+In \autoref{oldmpinterface} wurde ein einfaches Interface zu den \emph{mod\_python}-Funktionen
+entwickelt, um möglichst schnell ein lauffähiges System zu haben. Im Hinblick auf saubere URLs und
+Kompatibilität mit alten URLs ist es jedoch sinnvoller, die Routingregeln nicht erst zur Laufzeit zu
+generieren, sodass die alten Python-Dateien, die alle exakt dieselbe Struktur wie das Beispiel in
+\autoref{lst:mpabout} haben, gelöscht werden können.
+
+\begin{lstlisting}[caption=about.py im htdocs-Verzeichnis,label=lst:mpabout]
+from MaKaC.webinterface.rh import about as rhAbout
+
+def index(req, **params):
+    return rhAbout.RHAbout(req).process(params)
+\end{lstlisting}
+
+
+\subsubsection{Generieren der Routingregeln}\label{routingrulegen}
+
+Um die benötigten Daten aus den Python-Dateien zu extrahieren existieren mehrere Möglichkeiten.
+Mittels regulärer Ausdrücke ließen sich sowohl die Importe als auch die Funktions- und Klassennamen
+relativ einfach extrahieren. Allerdings müssten Sonderfälle wie der im Beispiel genutzte
+Import-Alias entsprechend behandelt werden und auch unterschiedliche Formatierung entweder zuvor
+vereinheitlicht oder durch einen komplexeren regulären Ausdruck abgedeckt werden. Da es sich bei
+Python um eine extrem dynamische Sprache handelt, kann jedoch auch der \emph{Abstract Syntax Tree}
+dder jeweiligen Funktion genutzt werden, um an die benötigten Daten zu gelangen. Dieser Syntaxbaum
+enthält eine abstrakte Repräsentation des Quellcodes und ist sehr viel einfacher zu parsen als der
+nur in Stringform vorliegende Quellcode selbst.
+
+\img{ast.png}{400px}{Abstract Syntax Tree}{Abstract Syntax Tree}
+
+Relevant sind - um beim Beispiel aus \autoref{lst:mpabout} zu bleiben - neben dem bereits bekannten
+Funktionsnamen \lstinline{index}, der zur Sicherheit mit dem Namen in \emph{FunctionDef} verglichen
+werden kann, der globale Name \lstinline{rhAbout} des Moduls und der Klassenname
+\lstinline{RHAbout}. Diese beiden Werte sind wie man in der \autoref{img.ast.png} leicht erkennt vom
+inneren \emph{Call} aus über \lstinline{func.value.id} und \lstinline{func.attr} erreichbar. Über
+die Globals des mittels \lstinline{execfile()} ausgeführten Python-Moduls kann das zu
+\lstinline{rhAbout} gehörende Python-Modul referenziert und der korrekte Name ausgelesen werden.
+
+Damit sind alle notwendigen Daten zum Generieren einer Routingregel verfügbar. Insbesondere ist die
+Kombination aus Datei- und Funktionsname einzigartig und kann damit als Endpoint im Routingsystem
+benutzt werden. Da Funktionsnamen keine Bindestriche enthalten können und keiner der Dateinamen
+einen solchen enthält, ist der Dateiname ohne Extension bzw. für eine Funktion, die nicht
+\emph{index} heißt, der String \emph{Dateiname-Funktionsname} als Endpoint geeignet, anhand dessen
+auch wieder die ursprüngliche URL erzeugt werden kann. Dies ist im späteren Verlauf für die
+Kompatibilitätsschicht hilfreich.
+
+
+\subsubsection{Generieren von URLs}
+
+Indico nutzt zum Generieren von URLs Subklassen der \lstinline{URLHandler}-Klasse, die jeweils eine
+Eigenschaft mit der relativen URL enthalten. Diese enthalten eine \emph{classmethod}
+\lstinline{getURL()}, die optionale Parameter für GET-Argumente akzeptiert und ein URL-Objekt
+zurückgibt, welches ebenfalls Methoden besitzt, um GET-Argumente hinzuzufügen oder zu entfernen.
+In einem String-Kontext genutzt gibt das Objekt mithilfe der magischen Methode \lstinline{__str__}
+die auf der \lstinline{_relativeURL} basierende absolute URL zurück.
+
+\begin{lstlisting}[caption=URLHandler für about.py]
+class UHAbout(URLHandler):
+    _relativeURL = 'about.py'
+\end{lstlisting}
+
+Man könnte nun denken, dass es sehr einfach ist, die URLHandler-Klasse anzupassen, sodass statt der
+relativen URL der Flask-Endpoint übergeben wird und die URL-Instanz die mittels
+\lstinline{url_for()} zum Endpoint gehörende URL erhält. Mit den bestehenden Routingregeln
+funktioniert dies auch ohne Probleme. Problematisch wird es allerdings, sobald eine Regel eine
+Variable in der URL enthält. In diesem Fall schlägt \lstinline{url_for()} fehl, sofern die Variable
+nicht übergeben wurde. Da die in Indico jedoch nicht immer alle Variablen an \lstinline{getURL()}
+übergeben werden sondern teilweise erst über die Methoden der URL-Klasse hinzugefügt werden, darf
+\lstinline{url_for()} erst aufgerufen werden, wenn die URL auch als String benötigt wird. Dies lässt
+sich dadurch lösen, dass der \lstinline{URLHandler} den Endpoint und die bereits bekannten Parameter
+an die URL-Klasse weitergibt, und diese die URL erst dann generiert, wenn sie als String benötigt
+wird. Der Nachteil bei dieser Lösung ist, dass Tracebacks im Fehlerfall nicht sehr hilfreich sind:
+Oftmals wird die URL erst innerhalb eines Templates in einen String konvertiert und die
+Mako-Templateengine zeigt in Tracebacks nicht den im Template vorhandenen Code an sondern den aus
+dem Template generierten Python-Code.
+
+Ein weiteres Problem zeigt sich in clientseitgem JavaScript-Code, der URLs generieren muss. Zuvor
+konnten dort einfach Parameter mittels mittels Stringoperationen angehängt werden. Dies ist jedoch
+nicht mehr möglich, da die URL ohne alle notwendigen Parameter überhaupt nicht generiert werden
+kann. Die Lösung dazu liegt im Package \lstinline{werkzeug.contrib.jsrouting}. Dabei handelt es sich
+um eine JavaScript-Implementierung des URL-Generators von Flask/Werkzeug. Während es nicht direkt in
+Indico nutzbar ist - eine Liste mit allen ca. 700 Routingregeln und später nochmal ebensovielen
+Kompatibilitätsregeln würde die an den Browser gesendeten Daten unnötig aufblähen - bietet es eine
+sehr gute Basis für eine vereinfachte Version, die nicht die komplette Routingtabelle clientseitig
+verfügbar nacht sondern nur ausgewählte Regeln daraus. Implementiert ist dies mit einer Eigenschaft
+der URL-Klasse, die die notwendigen Informationen der Regel als JSON zurückgibt und einer auf dem
+jsrouting-Code basierenden JavaScript-Funktion, die aus der JSON-Regel und den Parametern die URL
+generiert.
+
+Um die URL-Generierung von Flask nun tatsächlich zu verwenden müssen alle URLHandler-Subklassen
+entsprechend angepasst werden. Dies kann praktischerweise mit einem regulären Ausdruck automatisiert
+werden. Da die generierten Legacy-Routingregeln alle in einem Blueprint namens \emph{legacy} sind,
+müssen auch die Endpoints in den URLHandler-Klassen auf diesen Blueprint verweisen.
+
+\begin{lstlisting}[caption=Endpointbasierter URLHandler für about.py]
+class UHAbout(URLHandler):
+    _endpoint = 'legacy.about'
+\end{lstlisting}
+
+
+\subsubsection{Clean URLs}
+
+Eines der Hauptziele der Migration neben saubererem Code und dem damit verbundenen Komfort für
+Entwickler ist die Nutzung sauberer URLs. Vor der Implementation macht es Sinn, sich Gedanken über
+den Aufbau dieser URLs zu machen. Ein oftmals in diesem Kontext genanntes Paradigma ist
+REST\footnote{Representational state transfer}. Dabei handelt es sich um die oftmals fälschlich als
+Standard bezeichnete Idee, dass eine URL genau eine Ressource bzw. Collection repräsentiert und
+verschiedene HTTP-Methoden unterschiedliche Aktionen darauf ausführen. Beispiel würde \emph{/event/}
+die Liste aller Events repräsentieren während \emph{/event/123} das Event mit der ID 123
+repräsentieren würde. Insbesondere aufgrund der Verwendung verschiedener HTTP-Methoden wie DELETE
+und PUT eignet sich REST eher für APIs als für den von Benutzern direkt zugänglichen Bereich einer
+Webanwendung. Darüberhinaus wäre es bei einer Anwendung wie Indico sehr umständlich, alle Ressourcen
+im REST-Stil zu repräsentieren. Deutlich einfacher und benutzerfreundlicher ist es, die URL-Struktur
+nach Kategorien aufzuteilen, sodass beispielsweise \emph{/event/123/} auf die Startseite des Events
+verweist, \emph{/event/123/timetable} auf den Zeitplan und \emph{/event/123/timetable.pdf} auf die
+PDF-Version von selbigem. Der Administrationsbereich der Anwendung ist komplett unabhängig davon und
+somit beispielsweise über \emph{/admin/} erreichbar.
+
+Die eigentliche Implementierung der sauberen URLs sind prinzipiell einfach, aber sehr zeitaufwändig,
+da jede URL manuell definiert werden muss. Die generierten Legacy-Routen vereinfachen die Aufgabe
+jedoch etwas, da nach dem Erstellen der Flask-Blueprints nur die entsprechenden Legacy-Routen via
+Cut\&Paste im entsprechend Modul eingefügt und die URL und die erlauben HTTP-Methoden angepasst
+werden. Da die Endpoints denselben Namen wie im Legacy-Blueprint haben muss in den dazugehörigen
+URLHandler-Klassen nur der Name des Blueprints angepasst werden.
+
+
+\subsubsection{Unterstützung der alten URLs}
+
+Für bestehende Indico-Installationen wäre es extrem problematisch, wenn nach dem Update auf eine
+neuere Indico-Version alle alten URLs in einer \emph{404 Not Found}-Fehlermeldung enden würden.
+Daher müssen die alten URLs ebenfalls unterstützt werden; allerdings sollten sie nicht auf die
+ursprüngliche Zielseite verweisen, sondern mit einem \emph{301 Moved Permanently}-Redirect auf die
+neue URL weiterleiten.
+
+Aufgrund der in \autoref{routingrulegen} gewählten Endpoint-Namen, sind keine weiteren Informationen
+notwendig, um basierend darauf die ursprüngliche URL zu generieren. Daher kann einfach eine Funktion
+implementiert werden, die zu einem existierenden Blueprint einen Kompatibilitäts-Blueprint
+generiert, der die alten URLs nutzt und auf die neuen weiterleitet. Der einzige zu beachtende
+Sonderfall ist bei POST-Requests. Diese werden laut HTTP-Standard bei einer Weiterleitung mit GET
+wiederholt, was nicht gewollt ist. Daher muss in diesem Fall auf die Weiterleitung verzichtet werden
+und die Originalfunktion direkt aufgerufen werden. Da normale Links und Suchmaschinen jedoch
+ausschließlich GET verwenden, ist dies kein Problem.
