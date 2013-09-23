@@ -243,8 +243,6 @@ senden sollen, da dort \emph{mod\_python}-spezifische Funktionen genutzt werden 
 komfortablen \lstinline{send_file()}-Funktion von Flask. Diese Stellen lassen sich allerdings
 relativ leicht finden und anpassen.
 
-\todotext{später die XSendFile-Middleware erwähnen!}
-
 
 \subsection{Trial and Error}
 An dieser Stelle ist es sinnvoll, alle einfach zugänglichen Bereiche von Indico kurz zu testen um
@@ -415,3 +413,23 @@ Sonderfall ist bei POST-Requests. Diese werden laut HTTP-Standard bei einer Weit
 wiederholt, was nicht gewollt ist. Daher muss in diesem Fall auf die Weiterleitung verzichtet werden
 und die Originalfunktion direkt aufgerufen werden. Da normale Links und Suchmaschinen jedoch
 ausschließlich GET verwenden, ist dies kein Problem.
+
+
+\section{Probleme bei der Migration}
+
+Die Migration zu Flask lief größtenteils unproblematisch ab, wobei gerade bei einer Anwendung dieser
+Größe immer einige kleinere Schwierigkeiten auftreten. Diese beruhten jedoch meist auf unerwarteten
+Sonderfällen wie beispielsweise alten \emph{mod\_python}-Dateien, die Debugcode enthielten und somit
+beim Import unerwartete Nebeneffekte hatten.
+
+Ein weiterer ursprünglich nicht bedachter Sonderfall machte sich beim Testen von Indico mit dem
+\emph{nginx}-Webserver bemerkbar: Bei statischen Dateien, die im Dateisystem existieren, ist es
+deutlich performanter, wenn der Webserver die Datei ausliefen kann, als wenn die Webanwendung dies
+tun muss. Dazu unterstützen die meisten Webserver den \emph{X-Sendfile}-Header, der den Pfad zu der
+Datei enthält, die der Webserver an den Client senden soll. Aus Sicherheitsgründen unterstützt nginx
+jedoch nur \emph{X-Accel-Redirect}, der sich zwar fast identisch verhält, allerdings statt eines
+Dateisystempfads eine URL erwartet, die in der Webserverkonfiguration dann auf einen entsprechenden
+Pfad gemappt wird. Dank des Middleware-Systems von WSGI ließ sich dieses Problem jedoch leicht
+lösen, indem eine neue Middleware den \emph{X-Sendfile}-Header entfernt und mithilfe einer zuvor
+konfigurierten Mappingtabelle den Pfad in eine URL konvertiert und diese im
+\emph{X-Accel-Redirect}-Header weiterreicht.
