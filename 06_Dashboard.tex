@@ -1,0 +1,57 @@
+\chapter{Dashboard mit relevanten Vorschlägen}
+
+Im Anschluss an die Migration soll das Benutzerdashboard von Indico noch um für den Benutzer
+relevante Vorschläge erweitert werden.
+
+
+\section{Aktueller und gewünschter Zustand}
+
+Derzeit zeigt das Dashboard aktuelle Events an, mit denen der User verbunden ist, d.h. an denen er
+teilnimmt, die er organisiert oder an deren \emph{Paper-Reviewing}-Prozess er beteiligt ist. Neben
+diesen Events sieht er eine Liste aller Kategorien, in denen er Manager-Rechte hat oder die auf
+seiner Favoritenliste sind, und welche Events aktuell in diesen Kategorien stattfinden. Bei dem
+gesamten Dashboard handelt es sich um ein noch sehr neues Feature, welches aber bereits großen
+Zuspruch seitens der Indico-Benutzer findet.
+
+Zusätzlich zu diesen Informationen wäre es hilfreich, wenn dem Benutzer sowohl potenziell
+interessante Kategorien als auch weitere Events vorgeschlagen werden könnten. Benutzer sind solche
+Vorschläge bereits aus größeren Onlineshops gewohnt und gerade in einer großen Indico-Installation
+mit sehr vielen Events und Kategorien ist die Chance groß, dass solche Vorschläge auch wirklich
+hilfreich sind und nicht nur auf Events verweisen, die der User bereits kennt.
+
+
+\section{Kategorien}
+
+Alle Events in Indico sind in genau einer Kategorie, die wiederum Teil einer Baumstruktur ist. Dabei
+werden auf der Indico-Startseite die in der Rootkategorie enthaltenen Kategorien angezeigt und in
+jeder Kategorie werden entweder die enthaltenen Events oder Unterkategorien aufgelistet. Um
+Kategorien sinnvoll vorschlagen zu können, muss jeder Kategorie ein Score zugewiesen werden, die die
+Relevanz dieser Kategorie für den jeweiligen Benutzer angibt. Wenn dieser Score entsprechend hoch
+ist, wird die Kategorie im Dashboard als Vorschlag angezeigt.
+
+Da Kategorien in Indico sehr unterschiedliche Events enthalten können, macht es wenig Sinn, komplett
+neue Kategorien vorzuschlagen. Stattdessen bieten sich Kategorien an, mit denen der Benutzer bereits
+in Kontakt gekommen ist, weil er an einem darin enthaltenen Event teilgenommen hat. Dies alleine ist
+jedoch nicht ausreichend, um eine Kategorie vorzuschlagen - gerade bei Benutzern, die Indico schon
+länger verwenden, ist die Chance groß, dass sie in einigen Kategorien an einem Event teilgenommen
+haben und seitdem nichts mehr mit dieser Kategorie zu tun hatten. Solch eine Kategorie vorzuschlagen
+würde also letzendlich nur dazu führen, dass der Benutzer sich über die schlechten Vorschläge ärgert
+und sie daraufhin grundsätzlich nicht mehr beachtet. Ein gutes Relevanzkriterium ist also, an
+wievielen aktuellen Events in der jeweiligen Kategorie der User teilgenommen hat. Da dies jedoch
+durch längere Pausen ohne Teilnahme negativ beeinflusst wird, selbst wenn im aktuellsten Block 100\%
+Teilnahme herrscht, sollten dabei alle älteren Blöcke verworfen werden, sodass nur das erste Event
+im aktuellsten Block als frühstes Teilnahmedatum zählt. Um Kategorien, in denen der User regelmäßig
+an Event teilgenommen hat, dies nun aber nicht mehr tut, auszufiltern, kann der Score abhängig von
+der Anzahl Events, die nach der letzten Teilnahme stattfinden, verringert oder erhöht werden.
+
+Damit zeigen sich bereits relativ gute Ergebnisse, allerdings tauchen weiterhin Kategorien auf, die
+die bisherigen Kriterien erfüllen, aber nicht mehr aktiv genutzt werden und somit keine neuen Events
+enthalten. Um diese nicht mehr vorzuschlagen, kann der Score abhängig davon, wie weit das neueste
+Event in der Vergangenheit liegt, verringert werden - je länger das ist, desto weniger relevant ist
+die Kategorie für den Benutzer.
+
+Unabhängig von der vergangenen Aktivität des Benutzers ist eine Kategorie, an deren Events man
+bereits lange im Voraus teilnimmt, ein sehr guter Kandidat. Daher erhöht jedes solche Event den
+Score der Kategorie. Abhängig davon, wie weit das Event in der Zukunft liegt, wird der Score
+ebenfalls erhöht - ein in Kürze stattfindendes Event ist ein gutes Indiz dafür, dass der User Indico
+aktiver nutzt und evtl die Kategorie des Events seinen Favoriten hinzufügen will.
