@@ -433,3 +433,31 @@ Pfad gemappt wird. Dank des Middleware-Systems von WSGI ließ sich dieses Proble
 lösen, indem eine neue Middleware den \emph{X-Sendfile}-Header entfernt und mithilfe einer zuvor
 konfigurierten Mappingtabelle den Pfad in eine URL konvertiert und diese im
 \emph{X-Accel-Redirect}-Header weiterreicht.
+
+
+\section{Ausblick}
+
+Bei der Entwicklung neuer Features kann Flask deutlich stärker genutzt werden als es beim
+bestehenden Code der Fall ist. Insbesondere bei der Generierung von URLs macht es Sinn, direkt auf
+\lstinline{url_for()} zuzugreifen, statt den Umweg über eine neue URLHandler-Subklasse zu gehen.
+Darüberhinaus kann strenger darauf geachtet werden, dass GET und POST korrekt eingesetzt werden.
+Beispielsweise sollte ein normaler Seitenaufruf, der keinerlei Daten verändert, grundsätzlich GET
+nutzen und die Veränderung von Daten ausschließlich mit POST möglich sein. Dies kann durch das
+Routingsystem von Indico einfach durchgesetzt werden, allerdings hätte es im bestehenden Code
+oftmals Änderungen an den HTML-Templates benötigt, da insbesondere im Administrationsbereich häufig
+Formularbuttons zur Navigation verwendet werden. Für Fälle, in denen sowohl GET als auch POST
+benötigt werden - hauptsächlich sind das Seiten, die Formulare enthalten - ist es jedoch aufgrund
+der Architektur von Indico sinnvoller, dies innerhalb der \lstinline{RH}-Klasse zu tun, da ansonsten
+im Anwendungscode manuell mittels \lstinline{request.method == 'POST'} unterschieden werden müsste,
+welcher Codezweig gerade ausgeführt werden soll. Die Lösung dafür findet sich in der Klasse
+\lstinline{MethodView} von Flask. Dabei handelt es sich um eine Klasse, die eine Methode mit
+demselben Namen wie das verwendete HTTP-Verb aufruft. Im Kontext von Indicos \lstinline{RH}-Klassen
+würde also entweder \lstinline{_process_GET()} oder \lstinline{_process_POST()} aufgerufen.
+
+Mittelfristig könnte man auch nach einer Alternative zu den \lstinline{RH}-Klassen zu suchen, um in
+neuen Code weniger Zwischenschichten zu haben. Voraussetzung dafür ist aber, dass alle derzeit von
+der \lstinline{RH}-Klasse übernommenen Aufgaben anderweitig gelöst werden können. Insbesondere die
+oftmals überschriebene Methode zum Überprüfen, ob der Benutzer die notwendigen Berechtigungen hat,
+könnte sich dabei als problematisch erweisen - typischerweise werden in Flask dafür Decorators
+genutzt, was aber nur Sinn macht, wenn dieselbe Logik für möglichst vielen Funktionen verwendet
+werden kann.
