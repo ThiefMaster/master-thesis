@@ -8,10 +8,12 @@
 \chapter{Anhang}
 
 \section{Screenshots von Indico}
-\todotext{Screenshots}
+\imgrot{indico-home.png}{450px}{90}{Startseite von Indico}{Indico-Startseite}
+\imgrot{dashboard.png}{450px}{90}{Benutzerdashboard (ohne Vorschläge)}{Indico-Dashboard}
 
 
 \section{Quellcodes}
-\subsection{AST einer mod\_python-Funktion in Textform}
+\subsection{AST einer mod\_python-Funktion}
 \lstinputlisting[nolol,caption=about.py - Abstract Syntax Tree]{code/ast.txt}
-
+\subsection{Algorithmus für Kategorie-Scores}
+\lstinputlisting[nolol,caption=Der für Kategorievorschläge genutzte Scoringalgorithmus]{code/suggestion.py}
