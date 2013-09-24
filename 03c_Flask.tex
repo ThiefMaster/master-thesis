@@ -53,14 +53,14 @@ kryptische reguläre Ausdrücke. Standardmäßig unterstützt Flask die Typen \l
 definieren indem man eine Subklasse von \lstinline{BaseConverter} definiert und darin die Methoden
 \lstinline{to_url} und \lstinline{to_python} implementiert. Intern nutzt das Routingsystem reguläre
 Ausdrücke mit denen man allerdings nur in Kontakt kommt, wenn man einen eigenen Typkonverter
-definiert. Die Übergabe der Parameter an die View-Funktion erfolgt über Keyword Arguments. Auch
+definiert. Die Übergabe der Parameter an die Viewfunktion erfolgt über Keyword Arguments. Auch
 optionale Parameter sind möglich; in diesem Fall muss die Funktion mindestens eine Routingregel
 besitzen, die den entsprechenden Parameter nicht enthält.
 
 Sofern Decorators keine Option sind - beispielsweise weil der Code über viele Dateien verstreut ist
 und man die Routingregeln an einem zentralen Ort haben will - bietet Flask die Methode
 \lstinline{app.add_url_rule}. Diese entspricht prinzipiell dem Decorator, allerdings wird die
-View-Funktion ebenfalls als Parameter übergeben.
+Viewfunktion ebenfalls als Parameter übergeben.
 
 Neben dem Pfad und dem HTTP-Verb kann das Routingsystem auch die aktuelle Subdomain berücksichtigen;
 sowohl als festen Wert als auch als dynamische Variable. Für komplexere Fälle kann auch direkt auf
@@ -83,7 +83,7 @@ wobei auch relative Verweise der Form \lstinline{'.endpoint'} möglich sind; in 
 zum Zeitpunkt des Aufrufs aktive Blueprint benutzt.
 
 
-\item[Template-Engine] \hfill \\
+\item[Templateengine] \hfill \\
 Flask nutzt standardmäßig die \emph{Jinja2}-Templateengine, die auch unabhängig von Flask verfügbar
 ist. Die Templatesyntax ist größtenteils mit der von Django identisch und auch die Features sind
 sehr ähnlich. Flask stellt diverse Funktionen - insbesondere \lstinline{url_for()} zum Generieren
@@ -159,12 +159,12 @@ als Erweiterung veröffentlicht.
 
 
 \item[Caching] \hfill \\
-Flask selbst enthält keinen Cache, allerdings bietet Werkzeug eine Low-Level-Abstraktion
+Flask selbst enthält keinen Cache, allerdings bietet Werkzeug eine Lowlevel-Abstraktion
 verschiedener Cache-Backends, und stellt dabei die Methoden \lstinline{get}, \lstinline{set},
 \lstinline{delete} sowieso entsprechende \lstinline{_many}-Varianten davon zur Verfügung. Dieses
 Cache-Interface ist oftmals ausreichend, allerdings bietet die Erweiterung \emph{Flask-Cache} auch
 eine über die zentrale Flask-Konfiguration konfigurierbare High-Level-API dafür, die neben den
-Low-Level-Funktionen Decorators zum Cachen ganzer Views und ein Jinja2-Plugin zum Cachen einzelner
+Lowlevel-Funktionen Decorators zum Cachen ganzer Views und ein Jinja2-Plugin zum Cachen einzelner
 Templatefragmente.
 
 Neben diesen relativ üblichen Cache-APIs bietet \emph{Flask-Cache} einen

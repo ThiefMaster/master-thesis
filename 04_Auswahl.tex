@@ -94,7 +94,7 @@ in bestehenden oder neuen Dateien innerhalb des Indico-Packages importieren. Daz
 beispielsweise eine neues Subpackage \lstinline{indico.web.django} an, welches den gesamten
 Django-spezifischen Basiscode enthält. Der WSGI-Code des alten Indico-Frameworks in
 \lstinline{indico.web.wsgi} kann in jedem Fall entfernt werden, wobei dementsprechend natürlich auch
-das stark auf diesem Code basierende Session-System entfernt und durch das von Django
+das stark auf diesem Code basierende Sessionsystem entfernt und durch das von Django
 bereitgestellte System ersetzt werden muss. Danach können entweder die im \emph{mod\_python}-Stil
 geschriebenen Funktionen über das Routingsystem von Django aufgerufen werden, oder aber die
 \lstinline{RH}-Klassen entsprechend angepasst werden, um direkt von Django aufgerufen werden zu
@@ -118,7 +118,7 @@ ohne Apache und \emph{mod\_wsgi} betrieben werden zu können. Daher bietet es si
 Werkzeug basierende Flask-Microframework in Indico zu integrieren. Neben der in einem späteren
 Abschnitt beschriebenen Komplettmigration ist insbesondere eine partielle Migration bzw. Erweiterung
 der bestehenden Codebasis auf Flask interessant. Zu Beginn bietet es sich an, den WSGI-Kern und
-darauf aufbauenden Code - insbesondere also des Session-System - des Indico-Frameworks durch Flask
+darauf aufbauenden Code - insbesondere also des Sessionsystem - des Indico-Frameworks durch Flask
 zu ersetzen, jedoch beispielsweise die einwandfrei funktionierende Datenbankanbindung beizubehalten.
 Das Entfernen des WSGI-Kerns ist ein guter Ausgangspunkt, da dadurch garantiert obsolet werdender
 Code entfernt wird. Nachdem dies geschehen und Flask integriert ist, ist zu prüfen, ob noch weitere
@@ -182,7 +182,7 @@ Neuentwicklung entspräche, arbeiten kann. Die große Zahl zu ändernder Klassen
 möglicherweise sogar die Mitarbeit weiterer Entwickler benötigen. Daher stellt sich nur die Frage,
 durch welches Framework Indico erweitert werden soll, welche Bereiche dabei unbedingt angepasst bzw.
 umgeschrieben werden müssen und wo es nur \emph{nice to have} wäre, aber nicht unbedingt im Rahmen
-der eigentlichen Framework-Migration geschehen muss.
+der eigentlichen Frameworkmigration geschehen muss.
 
 Sowohl bei Django als auch bei Flask handelt es sich um stabile und verbreitete Webframeworks,
 hinter denen jeweils große Entwicklercommunities stehen und für die es viele, ebenfalls meist unter

@@ -34,14 +34,14 @@ sondern nur die entsprechende Handlerfunktion aufrufen, allerdings ist es dennoc
 
 Neben diesen Legacy-Handlern, die jedoch für fast alle Bestandteile von Indico genutzt werden,
 existiert ein sehr einfaches Routingsystem, das Anfragen anhand des ersten Pfadsegments der URL an
-eine Handler-Funktion übergibt. Dies ist zwar prinzipiell besser, da so die Nutzung von
+eine Handlerfunktion übergibt. Dies ist zwar prinzipiell besser, da so die Nutzung von
 \lstinline{exec} vermieden werden könnte, allerdings wird letzendlich genau dieselbe zuvor schon
 beschriebene Funktion verwendet, was leicht dazu verleitet, in der in \autoref{lst:lame-routing}
 gezeigten Routingtabelle direkt auf die Handlerfunktion mit der eigentlichen Logik zu verweisen.
 Dies führt dann allerdings dazu, dass das mit \lstinline{exec} verbundene Debuggingproblem plötzlich
 auch relevanten Code betrifft statt nur einen einfachen Funktionsaufruf. Umgangen werden kann das
 zum Glück sehr einfach, indem eine separate Python-Datei nur den Aufruf der eigentlichen
-Handler-Funktion enthält und diese Datei in der Routingtabelle referenziert wird.
+Handlerfunktion enthält und diese Datei in der Routingtabelle referenziert wird.
 
 \begin{lstlisting}[caption=Einfaches URL-Routing,label=lst:lame-routing]
 {'': ((self.htdocs_dir, 'index.py'), 'index', '', None),
@@ -111,7 +111,7 @@ Generierung von URLs und nicht auf das Routing auf, was dem DRY-Konzept\footnote
 Yourself} widerspricht.
 
 
-\item[Template-Engine] \hfill \\
+\item[Templateengine] \hfill \\
 Indico nutzt die Mako-Templateengine\footnote{\href{http://www.makotemplates.org}{http://www.makotemplates.org}}.
 Dabei handelt es sich um eine von Indico unabhängige Open-Source-Templateengine unter der
 MIT-Lizenz. Sie unterstützt alle von einer modernen Templateengine erwarteten Features wie

@@ -191,7 +191,7 @@ mit der \emph{mod\_python}-Emulation zu erwarten und es sollte sowieso durch ein
 basierende Neuentwicklung ersetzt werden. Da Flask standardmäßig nur auf signierten Cookies
 basierende Session unterstützt, was die dort speicherbare Datenmenge auf ca. 4096 Bytes beschränkt
 und insbesondere im Zusammenhang AJAX-Requests, die in der JSON-RPC-API massiv genutzt werden,
-oftmals problematisch ist, muss dazu ein neues Session-Interface entwickelt werden. Aufgrund des in
+oftmals problematisch ist, muss dazu ein neues Sessioninterface entwickelt werden. Aufgrund des in
 Indico bereits vorhandenen Cache-Systems bietet es sich an, dieses zum Speichern der Sessiondaten zu
 verwenden. Gerade bei der empfohlenen Nutzung von Memcached oder Redis als Cache-Backend hat dies
 den Vorteil, dass für jeden Datensatz eine Time-To-Live angegeben werden kann und er nach Ablauf
@@ -199,7 +199,7 @@ dieser Zeit automatisch gelöscht wird. In Flask eingebunden wird das Sessionint
 die benutzerdefinierte \lstinline{IndicoRequest}-Klasse: Die Klasse \lstinline{Flask} enthält eine
 Eigenschaft, der man einfach eine Instanz der neuen Interfaceklasse zuweist. Das von dieser Klasse
 zu implementierende Interface ist dabei sehr simpel. Zu Beginn eines Requests wird die Methode
-\lstinline{open_session(app, request)} aufgerufen und gibt das Session-Objekt zurück, welches im
+\lstinline{open_session(app, request)} aufgerufen und gibt das Sessionobjekt zurück, welches im
 Anwendungscode dann über den \lstinline{session}-Proxy verfügbar ist. Nach erfolgreicher
 Verarbeitung des Requests kann die Methode \lstinline{save_session(app, session, response)} die
 Sessiondaten speichern. Aus Performancegründen sollte die Session nur aktualisiert werden, wenn sie
@@ -209,7 +209,7 @@ ablaufen.
 Das Sessioninterface ist jedoch ausschließlich für das Laden und Speichern der Session
 verantwortlich. Es enthält selbst keinerlei Sessiondaten. Diese sind in einer separaten Klasse,
 welche die Dict-API von Python implementiert und das Objekt nach jeder Änderung als \emph{dirty}
-markiert. Die ursprüngliche Session-Implementierung unterstützt neben einer Dict-ähnlichen API auch
+markiert. Die ursprüngliche Sessionimplementierung unterstützt neben einer Dict-ähnlichen API auch
 diverse Funktionen wie \lstinline{getUser()}, die den aktuellen Benutzer zurückgeben. Da die neuen
 Sessions nicht mehr in der ZODB gespeichert werden, kann dort nicht direkt das Benutzerobjekt
 referenziert werden sondern ausschließlich die ID des Benutzers gespeichert werden. Dies macht es
@@ -247,7 +247,7 @@ relativ leicht finden und anpassen.
 \subsection{Trial and Error}
 An dieser Stelle ist es sinnvoll, alle einfach zugänglichen Bereiche von Indico kurz zu testen um
 weitere Probleme zu finden und zu beheben. Idealerweise könnte dies automatisiert durch die
-Unittests und funktionalen Tests geschehen, allerdings decken die Unit-Tests hauptsächlich intern
+Unittests und funktionalen Tests geschehen, allerdings decken die Unittests hauptsächlich intern
 genutzten, nicht-web-spezifischen Code ab. Kombiniert mit sehr wenigen funktionalen Tests stellt
 sich schnell heraus, dass die vorhandenen Tests hier nicht wirklich hilfreich sind und es zwei
 Optionen gibt: Manuell testen oder entsprechend viele Testcases schreiben, um die ganze Software
@@ -261,7 +261,7 @@ durch manuelles Hinzufügen der entsprechenden Routingregeln und geringfügige M
 aufgerufenen Code leicht behoben werden.
 
 Ebenfalls in dieser Phase behoben werden Zugriffe auf das alte, nicht mehr vorhandene,
-Session-Objekt. Dabei stellt sich heraus, dass das Room-Booking-Plugin extrem viele separate
+Sessionobjekt. Dabei stellt sich heraus, dass das Room-Booking-Plugin extrem viele separate
 Einträge in der Session abspeichert, die sinnvoller in einem Dict zusammengefasst werden könnten. Da
 dieses Refactoring den Aufwand nur minimal erhöht wird es zusammen mit den sowieso notwendigen
 Änderungen durchgeführt.

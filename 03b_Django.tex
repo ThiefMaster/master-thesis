@@ -23,7 +23,7 @@ handelt es sich - um bei der in der Django-Dokumentation genutzten Terminologie 
 \emph{Project}. Dabei handelt es sich um ein in der Regel in sich abgeschlossenes Projekt, das die
 Konfiguration sowohl für Django selbst, die genutzte Datenbank und die Anwendung enthält. Ein
 \emph{Project} enthält eine oder mehrere \emph{Apps}, wobei es sich bei jeder App um ein
-Python-Paket handelt, das Datenbankmodelle, View-Funktionen, Templates und Anwendungslogik enthält.
+Python-Paket handelt, das Datenbankmodelle, Viewfunktionen, Templates und Anwendungslogik enthält.
 Der Vorteil darin, viele kleine Apps statt einer großen zu nutzen, liegt darin, dass in sich
 abgeschlossene Funktionalität wie beispielsweise Tagging oder auch ein Loginsystem sauber von dem
 restlichen Projekt abgegrenzt ist und damit in der Regel wiederverwendbar ist. Dies wird von Django
@@ -38,7 +38,7 @@ niedrigen Ebene in die Abarbeitung von Requests eingegriffen werden kann.
 einzugreifen und entweder die reguläre Verarbeitung fortsetzen oder sie mit einer HTTP-Antwort
 vorzeitig beenden. Dies bietet sich beispielsweise an, um Seiten anhand der aufgerufenen URL zu
 cachen. \lstinline{process_view} verhält sich ähnlich, allerdings ist zu dem Zeitpunkt, wo dieser
-Middleware-Hook ausgeführt wird, bereits bekannt, welche View-Funktion den Request abarbeiten wird.
+Middleware-Hook ausgeführt wird, bereits bekannt, welche Viewfunktion den Request abarbeiten wird.
 
 Middleware hat außerdem die Möglichkeit, nach der Verarbeitung eines Requests einzugreifen. Dazu
 stehen die Methoden \lstinline{process_response} und \lstinline{process_exception} zur Verfügung.
@@ -53,14 +53,14 @@ mit der aufgerufdenen URL ist bieten sich reguläre Ausdrücke perfekt dazu an u
 dementsprechend auch dazu verwendet.
 
 Der Entwickler definiert in seiner App dazu eine Liste mit \emph{Patterns}, wobei jedes Element aus
-einem regulären Ausdruck und der View-Funktion, wobei es sich bei letzterem entweder direkt um die
+einem regulären Ausdruck und der Viewfunktion, wobei es sich bei letzterem entweder direkt um die
 Funktion handeln kann oder aber um einen String der Form \lstinline{'myapp.views.somefunc'}. Für
 dynamische Elemente in der URL wird das Gruppierungs-Feature der Regex-Engine verwendet. Dies
 bedeutet, dass beispielsweise \lstinline{r'news/(\d+)'} eine URL nach dem Schema \emph{news/123}
-matchen würde und die Zahl als positionalen Parameter an die View-Funktion übergibt. Da dies gerade
+matchen würde und die Zahl als positionalen Parameter an die Viewfunktion übergibt. Da dies gerade
 in komplexeren URLs mit mehreren Parametern schnell unübersichtlich würde, können auch Namen für die
 Parameter in der Form \lstinline{r'news/(?P<id>\d+)'} vergeben werden. Diese werden dann als Keyword
-Arguments an die View-Funktion übergeben.
+Arguments an die Viewfunktion übergeben.
 
 Es ist zu erwähnen, dass das Routing ausschließlich die regulären Ausdrücke benutzt und somit nur
 den Pfad in der URL berücksichtigt. Das HTTP-Verb, also meist \emph{GET} oder \emph{POST} und der
@@ -69,16 +69,16 @@ Domainname sind also nicht Teil des Routings.
 Insbesondere mit Apps, die zusätzliche Funktionalität wie beispielsweise eine Kommentarfunktion
 bereitstellen, würde es dem Prinzip der sauberen URLs widersprechen, alle URLs auf der Rootebene zu
 registrieren. Dazu bietet Django die \lstinline{include()}-Funktion mit der eine anstelle auf eine
-View-Funktion auch auf eine andere URL-Routingtabelle verwiesen werden kann.
+Viewfunktion auch auf eine andere URL-Routingtabelle verwiesen werden kann.
 
-Um anhand der View-Funktion oder eines optionalen Identifiers eine URL zu generieren bietet Django
+Um anhand der Viewfunktion oder eines optionalen Identifiers eine URL zu generieren bietet Django
 sowohl die Python-Funktion \lstinline{reverse()} als auch eine spezielle Syntax für Templates. Ganz
 im Sinne von DRY führt dies dazu, dass URLs niemals manuell erzeugt werden müssen und Änderungen
 keine toten internen Links zur Folge haben, da Dispatching und URL-Generierung beide auf dieselben
 Routingtabellen zugreifen.
 
 
-\item[Template-Engine] \hfill \\
+\item[Templateengine] \hfill \\
 Django verwendet eine eigene Templateengine, die speziell für das Framework entwickelt wurde und
 dementsprechend gut integriert ist. Sie unterstützt alle von einer modernen Templateengine
 erwarteten Features und ermöglicht direkten Zugriff auf das Routingsystem bzw. die dazu gehörende
@@ -113,7 +113,7 @@ Das Session-System von Django ist zwar Teil des \lstinline{django}-Pakets, aller
 Teil des Django-Kerns sondern als App und Middleware realisiert, was ein gutes Beispiel für die
 Modularität des Frameworks ist. Wenn es aktiviert ist stellst es in \lstinline{request.session} ein
 \lstinline{dict}-artiges Objekt bereit, über das auf die Daten der Session zugegriffen werden kann.
-Bei \lstinline{request} handelt es sich um den an jede View-Funktion übergebenen Parameter, über den
+Bei \lstinline{request} handelt es sich um den an jede Viewfunktion übergebenen Parameter, über den
 auf alle zum aktuellen Request gehörenden Daten zugegriffen werden kann.
 
 Die meisten Eigenschaften der Session-App können konfiguriert werden was sie sehr flexibel macht.
@@ -154,7 +154,7 @@ immernoch nicht ausreicht erlaubt Django es auch, einzelne Templatefragmente zu 
 sich an, wenn Teile eines Templates zu dynamisch zum cachen sind, andere jedoch nur relativ selten
 aktualisiert werden.
 
-Neben diesen Methoden bietet Django auch eine Low-Level-API, die direkten Cachezugriff ermöglicht.
+Neben diesen Methoden bietet Django auch eine Lowlevel-API, die direkten Cachezugriff ermöglicht.
 Diese unterstützt mehrere Caches, die auch verschiedene Backends nutzen können, und bietet neben den
 üblichen Methoden \lstinline{get}, \lstinline{set}, \lstinline{delete} und den Varianten für mehrere
 Keys auch \lstinline{incr} und \lstinline{decr} zum Inkrementieren bzw. Dekrementieren von
@@ -185,7 +185,7 @@ vor und nach der Abarbeitung eines Requests Code auszuführen, bietet Django mit
 Callback-System, welches insbesondere eine Reaktion auf verschiedene Datenbankereignisse ermöglicht.
 
 Um das Verhalten des Django-Kerns selbst zu verändern, ist es jedoch in der Regel notwendig, den
-Framework-Code zu modifizieren. Dies bedeutet, dass entweder ein Fork notwendig ist oder aber dass
+Frameworkcode zu modifizieren. Dies bedeutet, dass entweder ein Fork notwendig ist oder aber dass
 die Änderungen allgemein genug sind, um eine Chance zu haben, von den Django-Entwicklern in die
 offizielle Django-Version übernommen zu werden.
 
@@ -215,7 +215,7 @@ Step-By-Step-Tutorial und eine Beschreibung aller in Django genutzten Klassen un
 Der Code von Django ist größtenteils sauber dokumentiert bzw. kommentiert, wobei gerade im
 Django-Kern einige internen Funktionen für einen Außenstehenden, der nicht mit dem Code vertraut
 ist, nicht auf den ersten Blick verständlich sind. Allerdings ist es in der Regel nicht notwendig
-oder angebracht, Framework-Code zu verändern und dank der guten Dokumentation der APIs muss man auch
+oder angebracht, Frameworkcode zu verändern und dank der guten Dokumentation der APIs muss man auch
 nur selten etwas direkt im Code nachschauen.
 
 
