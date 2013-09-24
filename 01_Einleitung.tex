@@ -1,7 +1,7 @@
 \chapter{Einleitung}
 \pagenumbering{arabic}
 
-Ein Webframework ist aus einer modernen Webanwendung nicht mehr wegzudenken. Während vor einigen
+Ein Webframework ist in einer modernen Webanwendung schon fast Pflicht. Während vor einigen
 Jahren noch Technologien wie \emph{CGI}\footnote{Common Gateway Interface -
 \href{http://www.ietf.org/rfc/rfc3875}{RFC 3875}\citep{rfc3875}} oder die Nutzung von PHP in seiner
 einfachsten Form, d.h. eine Datei pro Seite, die sowohl HTML als auch Geschäftslogik enthält, weit
@@ -40,10 +40,10 @@ unterziehen.
 Vor der Auswahl eines neuen Frameworks muss zuerst analysiert werden, welche Funktionalität das
 bestehende Framework zur Verfügung stellt und welche Probleme es dort gibt, damit beim neuen
 Framework darauf geachtet werden kann, dass diese Probleme dort nicht ebenfalls vorhanden sind.
-Sofern das Framework eine eigene Datenbankschicht enthält muss geprüft werden, inwiefern diese mit
+Falls das Framework eine eigene Datenbankschicht enthält muss geprüft werden, inwiefern diese mit
 der in Indico genutzten Objektdatenbank kompatibel ist.
 
-Nachdem ein Framework ausgewählt wurde, muss dieses in die Software integriert werden. Der erste
+Nachdem ein Framework ausgewählt wurde, muss es zunächst in Indico integriert werden. Der erste
 Schritt danach ist, die Anwendung wieder in einen vollständig lauffähigen Zustand zu bringen und
 Konflikte zwischen dem Framework und bestehendem Code zu beheben. Ab diesem Zeitpunkt kann
 analysiert werden, welche Elemente des alten Frameworks neben dem WSGI-Kern ebenfalls durch das neue
@@ -57,22 +57,23 @@ ersetzen.
 Im Einleitungskapitel wird kurz auf die Aufgabenstellung eingegangen und die groben Schritte zum
 Ziel beschrieben. Desweiteren wird kurz auf die Firma eingegangen, an der das Projekt durchgeführt
 wurde.
-Ebenfalls wird die Software, die im Rahmen dieser Arbeit modifiziert wurde, kurz vorgestellt, sodass
-man sich einen Überblick darüber verschaffen kann.
+Ebenfalls wird die Indico-Software, die im Rahmen dieser Arbeit um ein Framework erweitert wird,
+kurz vorgestellt, sodass man sich einen Überblick darüber verschaffen kann, was sie eigentlich tut.
 
-Im Grundlagenkapitel werden die genutzen Technologien und ihre Besonderheiten näher betrachtet und
-erläutert. Nach einem kurzen Überblick über die Programmiersprache Python werden ihre Besonderheiten
-kurz vorgestellt und das WSGI-Interface näher betrachtet.
+Im Grundlagenkapitel werden die genutzen Technologien und ihre Besonderheiten vorgestellt. Nach
+einem kurzen Überblick über die Programmiersprache Python werden ihre Besonderheiten kurz
+vorgestellt und das WSGI-Interface näher betrachtet.
 
 Auf die Funktionen des bestehenden Frameworks wird im dritten Kapitel kurz eingegangen. Desweiteren
-werden dort die in Frage kommenden Frameworks vorgestellt, anhand von verschiedenen Gesichtspunkten
-analysiert und mit dem aktuellen Framework verglichen.
+werden dort die in Frage kommenden Frameworks vorgestellt und anhand von verschiedenen Kriterien
+analysiert, sodass die Entscheidung für ein Framework später besser begründet werden kann.
 
-Im vierten Kapitel wird die Entscheidung für das Flask-Microframework begründet, nachdem die Vor-
-und Nachteile der Migration auf die verschiedenen Frameworks diskutiert wurden.
+Im vierten Kapitel wird die Entscheidung für das Flask-Microframework begründet, nachdem die
+verschiedenen Migrationspfade erläutert und die jeweiligen Vor- und Nachteile diskutiert wurden.
 
-Das fünfte Kapitel geht auf die eigentliche Migration und die damit verbundenen Schritte,
-Entwicklungen und Probleme ein.
+Die wichtigsten Schritte der eigentlichen Migration werden im fünften Kapitel näher beschrieben. Zum
+Schluss wird auf die Probleme dabei eingegangen und betrachtet, welche Erweiterungen zukünftig
+möglich sind.
 
 Zusätzlich zur Frameworkmigration soll das Benutzerdashboard durch automatische Vorschläge erweitert
 werden. Lösungsansätze zu diesem Teilprojekt werden im sechsten Kapitel vorgestellt.
@@ -82,24 +83,25 @@ Das siebte Kapitel schließt diese Arbeit mit einem kurzen Rückblick ab.
 
 \section{CERN}
 
-Beim CERN (Europäische Organisation für Kernforschung), handelt es sich um eine
-Forschungseinrichtung im Schweizer Kanton Genf. Der Hauptaufgabenbereich liegt in der Erforschung
-von Grundlagen der Physik, wobei der weltgrößte Teilchenbeschleuniger \emph{LHC} zum Einsatz kommt.
+Beim CERN\footnote{Conseil Européen pour la Recherche Nucléaire - Europäische Organisation für
+Kernforschung} handelt es sich um eine internationale Forschungseinrichtung im Schweizer Kanton
+Genf. Der Hauptaufgabenbereich liegt in der Erforschung von Grundlagen der Teilchenphysik, wobei der
+weltgrößte Teilchenbeschleuniger \emph{LHC}\footnote{Large Hadron Collider, der
+Teilchenbeschleuniger am CERN} zum Einsatz kommt.
 
-Neben der physikalischen Forschung wird am CERN auch Software entwickelt, die zwar in erster Linie
-zur internen Nutzung dient, jedoch oftmals auch als \emph{Open Source} der Allgemeinheit zur Verfügung
-gestellt wird. Diese Software erstreckt sich über viele Bereiche der IT, so werden am CERN
-beispielsweise Steuersysteme für den Teilchenbeschleuniger, Business-Software für die Verwaltung des
-Personals, Grid-Lösungen für die verteilte Datenspeicherung und Webanwendungen für die Archivierung
-und Indizierung von Medien entwickelt.
+Neben der physikalischen Forschung wird am CERN auch Software entwickelt, die zwar meist in erster
+Linie zur internen Nutzung dient, jedoch oftmals auch in Form von \emph{Open Source} der
+Allgemeinheit kostenfrei zur Verfügung gestellt wird. Diese Software erstreckt sich über viele
+Bereiche der IT, so werden am CERN beispielsweise Business-Software für den Human-Resources-Bereich,
+Grid-Lösungen für die verteilte Datenverarbeitung, Steuersysteme für den Teilchenbeschleuniger und
+Webanwendungen für die Archivierung von Medien entwickelt.
 
 Die Abteilung \emph{IT-CIS-AVC}\footnote{Collaboration \& Information Services - AudioVisual and
-Collaborative Services} am CERN ist zuständig für die Verwaltung und Einrichtung von video- und
-telefonbasierten Konferenzsystemen, Aufzeichnung und Onlinestreaming von Vorträgen, Meetings und
-Konferenzen und die Software zu deren Planung. Ebenfalls im Zuständigkeitsbereich der Abteilung sind
-die Informationsbildschirme, die in verschiedenen Gebäuden des CERN aufgebaut sind und beispielsweise
-den Status des \emph{LHC}\footnote{Large Hadron Collider, der Teilchenbeschleuniger am CERN} und
-für die Mitarbeiter relevante Neuigkeiten anzeigen.
+Collaborative Services} ist zuständig für die Verwaltung und Einrichtung von Videkonferenzsystemen,
+Aufzeichnung und Onlinestreaming von Vorträgen, Meetings und Konferenzen und die Software zu deren
+Planung. Ebenfalls im Zuständigkeitsbereich der Abteilung sind die Informationsbildschirme, die in
+verschiedenen Gebäuden des CERN aufgebaut sind und aktuelle Informationen zum nächstgelegenen
+Konferenzraum oder aber den Status des \emph{Large Hadron Colliders} anzeigen.
 
 
 \section{Indico}
@@ -107,61 +109,62 @@ für die Mitarbeiter relevante Neuigkeiten anzeigen.
 \subsection{Überblick}
 Indico\footnote{Integrated Digital Conference - \href{http://indico-software.org/}{http://indico-software.org/}}
 ist eine von der Abteilung \emph{IT-CIS-AVC} am CERN entwickelte Webapplikation, die zum Planen und
-Organisieren von Events dient. Diese Events können sowohl einfache Vorträge als auch Meetings und
-Konferenzen mit mehreren Sessions und Beiträgen sein. Die Applikation unterstützt außerdem externe
-Benutzerauthentifizierung, \emph{Paper Reviewing}\footnote{Im Rahmen eines \emph{Call for Papers}
-oder \emph{Call for Abstracts} bei einer Konferenz}, elektronische Sitzungsprotokolle und ein Archiv
-für die in einer Konferenz benutzten Materialien. \citep{indico}
+Organisieren von Events dient. Dabei kann es sich sowohl um einfache Vorträge handeln, aber auch um
+Meetings und mehrtägige Konferenzen mit mehreren Sessions und Beiträgen. Zur integration in eine
+bestehende Benutzerinfrastruktur unterstützt die Software außerdem externe
+Benutzerauthentifizierung. Insbesondere für Meetings und Konferenzen wichtig sind Features wie das
+\emph{Paper Reviewing}\footnote{Im Rahmen eines \emph{Call for Papers} oder \emph{Call for
+Abstracts} bei einer Konferenz}, elektronische Sitzungsprotokolle und ein Archiv für die in einer
+Konferenz benutzten Materialien. \citep{indico}
 
-Im Laufe der Zeit wurden immer mehr Funktionen hinzugefügt, sodass diese Featureliste schon lange
-nicht mehr aktuell ist. Inzwischen enthält Indico u.a. ein Buchungs- und Reservierungssystem für
+Diese Featureliste ist jedoch schon lange nicht mehr aktuell, da im Laufe der Zeit immer mehr
+Funktionen hinzugefügt wurden. Inzwischen enthält Indico u.a. ein Reservierungssystem für
 Konferenzzimmer, sodass beim Erstellen eines Events sichergestellt werden kann, dass der gewünschte
-Raum auch verfügbar ist und nicht gerade anderweitig benutzt wird. Ebenfalls in Indico integriert
-sind die am CERN genutzten Audio- und Videokonferenzsysteme, sodass diese vollautomatisch
-eingerichtet und aktiviert werden können, sofern diese Systeme im gewählten Raum verfügbar sind.
-Eines der neuesten Features ist die Möglichkeit, sich die Konferenzzimmer auf einer
-\href{http://maps.google.com/}{\emph{Google Maps}}-basierten Karte anzeigen zu lassen und anhand der
-Nähe zu einem bestimmten Gebäude auszuwählen.
+Raum auch verfügbar ist und nicht gerade anderweitig benutzt wird. Diverse Videokonferenzsysteme
+sind ebenfalls in Indico integriert, sodass diese - sofern sie im jeweiligen Raum verfügbar sind -
+vollautomatisch eingerichtet und aktiviert werden können. Ein neueres Feature, welches gerade in
+Entwicklung ist, ermöglicht es den Organisatoren einer Konferenz, Tickets mit QR-Code zu generien,
+die vor Ort dann mithilfe einer Smartphone-App eingescannt und auf Gültigkeit geprüft werden können.
 
 \subsection{Aufbau}
-Events in Indico sind Teil einer Baumstruktur: Auf der Top-Level-Ebene finden sich ausschließlich
-Kategorien, die jeweils wieder Kategorien oder beliebige Events (Konferenzen, Meetings und
-Vorträge) enthalten können. Ein Event wiederum kann diverse Elemente enthalten; welche das sind,
-hängt vom Typ des Events ab, so kann z.B. nur eine Konferenz ein Registrierungsformular
-besitzen.
+Kategorien und Events in Indico sind in einer Baumstruktur organisiert: Auf der Rootebene finden
+sich in der Regel ausschließlich Kategorien, die jeweils entweder weitere Kategorien oder beliebige
+Events (Vorträge, Meetings und Konferenzen) enthalten können. Ein solches Event wiederum kann
+diverse Elemente enthalten, wobei es vom Typ des Events abhängt, welche das sind. So kann
+beispielsweise ein Vortrag oder Meeting kein Registrierungsformular enthalten.
 
-\newpage
 Die folgende Auflistung beinhaltet die wichtigsten Bestandteile von Events:
 \begin{itemize}
-\item Audio-/Videokonferenzen
 \item \emph{Call for Abstracts}
 \item Chaträume
 \item Evaluation
 \item Materialien
 \item \emph{Paper Reviewing}
-\item Registrierung
+\item Registrierungsformular (inkl. Integration von Payment-Gateways)
+\item Videokonferenzen
 \item Zeitplan
 \end{itemize}
 
 \subsection{Architektur}
-Der serverseitige Code von Indico ist in Python geschrieben und nutzt
+Der serverseitige Code von Indico ist komplett in Python 2.6 geschrieben und nutzt als Datenbank die
 ZODB\footnote{Zope Object Database, \href{http://www.zodb.org}{http://www.zodb.org}} als Datenbank.
-Der Code ist in einer
-Multi-Tier-Architektur organisiert: Die Anfrage des Webservers wird über
-WSGI\footnote{\href{http://www.python.org/dev/peps/pep-0333/}{Web Server Gateway Interface}} an die
-Applikation weitergegeben, in der die \emph{Request Handler (RH)}-Ebene die Geschäftlogik ausführt.
-Sie prüft die Zugangsberechtigung des Benutzers, verarbeitet GET- bzw. POST-Daten, baut die
-Datenbankverbindung auf und führt letztendlich auch die gewünschte Aktion aus. Um eine HTML-Seite
-auszugeben, nutzt der \emph{Request Handler} die \emph{Web Pages (WP)}-Ebene. Dort werden diverse
-Aktionen ausgeführt, welche die Anzeige der Daten beeinflussen - zum einen werden die benötigten
-JavaScript- bzw. CSS-Packages geladen, zum anderen werden, falls vorhanden, Tabs als aktiv markiert
-oder Daten sortiert. Die eigentliche Erzeugung der HTML-Datei übernimmt die \emph{Components
-(W)}-Ebene. Jede Klasse dieser Ebene repräsentiert ein Template mit demselbem Namen. In der Regel
-werden in dieser Ebene nur die aus der WP-Ebene übergebenen Daten an das Template weitergereicht und
-falls nötig aufbereitet.
+Der Code ist in einer mehrschichtigen Architektur organisiert: Die Anfrage des Benutzers wird vom
+Webserver über WSGI\footnote{\href{http://www.python.org/dev/peps/pep-0333/}{Web Server Gateway
+Interface}} an die Anwendung weitergegeben, in der die \emph{Request Handler (RH)}-Ebene die
+Anwendungslogik ausführt. Diese baut die Datenbankverbindung auf, prüft die Zugangsberechtigung des
+Benutzers, verarbeitet vom Client übermittelte Daten und führt letztendlich auch die gewünschte
+Aktion aus. Um eine dynamische HTML-Seite auszugeben, nutzt der \emph{Request Handler} die
+\emph{Web Pages (WP)}-Ebene. Dort werden diverse Aktionen ausgeführt, welche die Anzeige der Daten
+beeinflussen - insbesondere werden dort die benötigten JavaScript- bzw. CSS-Packages mithilfe der
+\emph{webassets}-Bibliothek geladen. Die eigentliche Erzeugung der HTML-Datei übernimmt die
+\emph{Components (W)}-Ebene. Bei dieser Ebene handelt es sich um ein Überbleibsel aus der
+Anfangszeit von Indico, als Templates noch keinerlei Logik enthalten konnten. Jede Klasse in dieser
+Ebene entspricht einem Template. In der Regel werden dort nur die aus der WP-Ebene übergebenen Daten
+an das Template weitergereicht.
 
-Wie \autoref{img.indico-layers.png} verdeutlicht, hat sich Indico im Laufe der Zeit verändert: Statt
-des obsoleten \emph{mod\_python}\footnote{\href{http://www.modpython.org}{http://www.modpython.org}}
-wird inzwischen WSGI verwendet.
+\autoref{img.indico-layers.png} zeigt die ursprüngliche Struktur, die sich jedoch im Laufe der Zeit
+verändert hat: Statt des obsoleten
+\emph{mod\_python}\footnote{\href{http://www.modpython.org}{http://www.modpython.org}} wird
+inzwischen WSGI verwendet.
 
 \img{indico-layers.png}{200px}{Die Architektur von Indico \citep{indicoarch}}{Indico-Architektur}
