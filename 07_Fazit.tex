@@ -1,0 +1,34 @@
+\chapter{Fazit}
+
+Im Rahmen dieser Masterarbeit am CERN wurden nicht nur die beiden immer weiter verbreiteten
+Python-Webframeworks \emph{Django} und \emph{Flask} unter die Lupe genommen, sondern auch den
+frameworkähnlichen Code von Indico untersucht. Bei allen Frameworks haben sich sowohl Stärken als
+auch Schwächen gezeigt, wobei klar erkennbar wurde, dass eine Schwäche in einer anderen Anwendung
+durchaus eine Stärke sein kann und umgekehrt. So ist beispielsweise ist das ORM-System von Django
+für eine Anwendung wie Indico nicht von Nutzen, sofern man sie nicht von Grund auf neu entwickelt,
+aber wenn man eine weniger umfangreiche Webapplikation von Anfang an auf Django basiert, ist ein
+integriertes Datenbankframework sehr nützlich.
+
+Alle mit Flask verbundenen Änderungen einschließlich der sauberen URLs sind inzwischen im
+Hauptentwicklungszweig von Indico integriert und dokumentiert, sodass andere Indico-Entwickler von
+den Neuerungen profitieren können. Im Laufe der Entwicklung hat sich gezeigt, dass es sehr viele
+Bereiche in Indico gibt, die durch Flask-Features verbessert werden könnten, aber um den Übergang
+auch für andere Entwickler möglichst einfach zu gestalten, noch nicht umgesetzt wurden. Dies ist
+leicht zu erklären, indem man das Entwicklungsmodell bei der Nutzung von Git betrachtet. Jedes
+Feature wird in einer separaten Branch des Codes entwickelt. Dies kann prinzipiell jederzeit
+aktualisiert werden, sodass alle eigenen Änderungen auf der aktuellsten \emph{master}-Version
+basieren. Bei größeren Änderungen wie einer Frameworkmigration sind Konflikte bei diesen Updates
+jedoch extrem wahrscheinlich und müssen jeweils manuell behoben werden. Daher war es wünschenswert,
+die Migration möglichst schnell soweit abzuschließen, dass der Code relativ fehlerfrei in den
+\emph{master}-Branch integriert werden konnte.
+
+Langfristig wäre es aus Entwicklersicht natürlich angenehm, wenn alle Bestandteile von Indico
+Flask-Features nutzen würden und jeglicher alte Code entfernt würde. Dies ist jedoch aufgrund des
+enormen Aufwands, der damit verbunden ist, sehr unwahrscheinlich.
+
+Die Entwicklung der \emph{Recommendation Engine} für Kategorien und die Planung einer solchen für
+Events hat gezeigt, dass ein gerade aus Onlineshop eigentlich als alltäglich erscheinendes Feature
+alles andere als einfach zu implementieren ist und die Tatsache, dass Indico kein Onlineshop sondern
+ein \emph{Conference Management System} ist, die Aufgabe nicht einfacher macht. Da das existierende
+Dashboard jedoch sehr positiv aufgenommen wurde ist damit zu rechnen, dass auch ein relativ simples
+Vorschlagssystem für Kategorien gut aufgenommen wird.
