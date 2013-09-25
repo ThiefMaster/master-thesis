@@ -1,4 +1,4 @@
-\section{Indico}\label{frameworks-indico}
+\section{Indico}
 
 Das derzeit in Indico verwendete System kann zwar grob als Framework betrachtet werden, ist jedoch
 nicht wirklich ein Framework, da sehr viele Dinge speziell auf die Anwendung zugeschnitten sind,
@@ -83,7 +83,7 @@ Funktionen für die JSON-RPC-API als auch Endpoints für die REST-basierte Expor
 
 
 \item[URL-Routing] \hfill \\
-Wie bereits in \autoref{frameworks-indico} beschrieben emuliert Indico \emph{mod\_python} und
+Wie oben bereits beschrieben emuliert Indico \emph{mod\_python} und
 verwendet daher das bereits aus CGI-Anwendungen Mapping zwischen URLs und Dateisystem. Der WSGI-Kern
 von Indico kann Anfragen anhand des ersten Pfadsegments routen, allerdings ist dies für die
 wenigsten Use-Cases ausreichend - für \emph{clean URLs} sind in der Regel alle Pfadsegmente relevant
