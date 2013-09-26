@@ -1,29 +1,27 @@
-Module(body=[
-    FunctionDef(
-        name='index',
-        args=arguments(args=[Name(id='req', ctx=Param())], vararg=None, kwarg='params', defaults=[]),
-        body=[
-            Return(
-                value=Call(
-                    func=Attribute(
-                        value=Call(
-                            func=Attribute(
-                                value=Name(id='rhAbout', ctx=Load()),
-                                attr='RHAbout', ctx=Load()
-                            ),
-                            args=[Name(id='req', ctx=Load())],
-                            keywords=[],
-                            starargs=None,
-                            kwargs=None),
-                        attr='process',
-                        ctx=Load()),
-                    args=[Name(id='params', ctx=Load())],
-                    keywords=[],
-                    starargs=None,
-                    kwargs=None
-                )
+FunctionDef(
+    name='index',
+    args=arguments(args=[Name(id='req', ctx=Param())], vararg=None, kwarg='params', defaults=[]),
+    body=[
+        Return(
+            value=Call(
+                func=Attribute(
+                    value=Call(
+                        func=Attribute(
+                            value=Name(id='rhAbout', ctx=Load()),
+                            attr='RHAbout', ctx=Load()
+                        ),
+                        args=[Name(id='req', ctx=Load())],
+                        keywords=[],
+                        starargs=None,
+                        kwargs=None),
+                    attr='process',
+                    ctx=Load()),
+                args=[Name(id='params', ctx=Load())],
+                keywords=[],
+                starargs=None,
+                kwargs=None
             )
-        ],
-        decorator_list=[]
-    )
-])
+        )
+    ],
+    decorator_list=[]
+)

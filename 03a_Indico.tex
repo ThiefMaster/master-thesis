@@ -38,10 +38,6 @@ eine Handlerfunktion übergibt. Dies ist prinzipiell besser, da so die Nutzung v
 vermieden werden könnte. Letzendlich wird jedoch genau dieselbe zuvor schon
 beschriebene Funktion verwendet, was leicht dazu verleitet, in der in \autoref{lst:lame-routing}
 gezeigten Routingtabelle direkt auf die Handlerfunktion mit der eigentlichen Logik zu verweisen.
-Dies führt dann dazu, dass das mit \lstinline{exec} verbundene Debuggingproblem plötzlich
-auch relevanten Code betrifft statt nur einen einfachen Funktionsaufruf. Umgangen werden kann das
-zum Glück sehr einfach, indem ein separates Python-Modul nur den Aufruf der eigentlichen
-Handlerfunktion enthält und dieses Modul in der Routingtabelle referenziert wird.
 
 \begin{lstlisting}[caption=Einfaches URL-Routing,label=lst:lame-routing]
 {'': ((self.htdocs_dir, 'index.py'), 'index', '', None),
@@ -50,6 +46,11 @@ Handlerfunktion enthält und dieses Modul in der Routingtabelle referenziert wir
  'api': ((DIR_MODULES, 'wsgi_handler.py'), 'handler', '', None)
 }
 \end{lstlisting}
+
+Dies führt dann dazu, dass das mit \lstinline{exec} verbundene Debuggingproblem plötzlich
+auch relevanten Code betrifft statt nur einen einfachen Funktionsaufruf. Umgangen werden kann das
+zum Glück sehr einfach, indem ein separates Python-Modul nur den Aufruf der eigentlichen
+Handlerfunktion enthält und dieses Modul in der Routingtabelle referenziert wird.
 
 Für die eigentliche Anwendungslogik sind die \lstinline{RH}-Klassen zuständig. Die Basisklasse
 enthält dabei die Logik für die Datenbankverbindung und zum Abfangen von Fehlern, während die

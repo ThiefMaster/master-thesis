@@ -82,12 +82,7 @@ in die Werkzeug-Dokumentation zeigt, dass dort mit \lstinline{DispatcherMiddlewa
 Middleware enthalten ist, die diese Aufgabe ebenfalls übernehmen kann - allerdings mit weniger
 benutzerdefiniertem Code. Da es sich dabei um eine sehr einfache Änderung handelt und Werkzeug
 sowieso bereits eingebunden war, bietet es sich an, diese bereits zu diesem Zeitpunkt vorzunehmen.
-Dazu dient die in \autoref{lst:indico-dispatcher} gezeigte Funktion. Sie akzeptiert als Parameter
-eine WSGI-Anwendung - also entweder die Flask-Instanz oder die alte Indico-WSGI-Applikation und gibt
-eine Anwendung zurück, die die übergebene Anwendung in dem konfigurierten Pfad verfügbar macht und
-für alle anderen Pfade einen \emph{404 Not Found}-Fehler an den Client sendet. Sofern kein Pfad
-konfiguriert ist gibt die Funktion direkt die App zurück, da die Middleware in diesem Fall nicht
-benötigt wird.
+Dazu dient die in \autoref{lst:indico-dispatcher} gezeigte Funktion.
 
 \begin{lstlisting}[caption=Indico-WSGI-Dispatcher,label=lst:indico-dispatcher]
 def make_indico_dispatcher(wsgi_app):
@@ -100,6 +95,12 @@ def make_indico_dispatcher(wsgi_app):
             path: wsgi_app
         })
 \end{lstlisting}
+
+Sie akzeptiert als Parameter eine WSGI-Anwendung - also entweder die Flask-Instanz oder die alte
+Indico-WSGI-Applikation und gibt eine Anwendung zurück, die die übergebene Anwendung in dem
+konfigurierten Pfad verfügbar macht und für alle anderen Pfade einen \emph{404 Not Found}-Fehler an
+den Client sendet. Sofern kein Pfad konfiguriert ist gibt die Funktion direkt die App zurück, da die
+Middleware in diesem Fall nicht benötigt wird.
 
 An dieser Stelle enthält Indico jetzt bereits eine lauffähige Flask-Anwendung, der man bereits zum
 ersten Testen eine Hello-World-Funktion hinzufügen könnte. Allerdings kann die Anwendung
