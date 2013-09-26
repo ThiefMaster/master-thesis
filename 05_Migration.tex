@@ -22,10 +22,10 @@ neben diversen anderen Metadaten über den Parameter \lstinline{install_requires
 Installation benötigten Pakete übergeben werden. Dies ermöglicht es Paketmanagern, die notwendigen
 Abhängigkeiten automatisch zu installieren. Die Alternative zur \emph{setup.py} ist die
 \emph{requirements.txt}-Datei. Diese enthält jeweils ein Paket pro Zeile, wobei neben dem Paketnamen
-auch eine Version oder ein Verweis auf ein Versionskontrollsystem wie beispielsweise Git angegeben
+auch eine Version oder ein Verweis auf ein Versionskontrollsystem wie Git angegeben
 werden kann. Meist wird die \emph{requirements.txt} bei Python-Anwendungen benutzt, die nicht über
-PyPi installiert sondern manuell heruntergeladen werden und weitere Konfiguration benötigen. In
-diesem Fall enthalten die Installationsanweisungen meist den Hinweis, die Abhängigkeiten mit den
+PyPi installiert sondern manuell heruntergeladen werden müssen und weitere Konfiguration benötigen.
+In diesem Fall enthalten die Installationsanweisungen meist den Hinweis, die Abhängigkeiten mit den
 Befehl \emph{pip install -r requirements.txt} zu installieren.
 
 Da bei Indico ursprünglich vorgesehen war, es systemweit zu installieren und nur die
@@ -63,21 +63,21 @@ notwendigen Code enthält.
 
 Bei der \emph{Application Factory} handelt es sich um eine Funktion, die eine Flask-Instanz
 erstellt, konfiguriert zurückgibt. Diese Kapselung hat den Vorteil, dass jegliche Initialisierung an
-einigen wenigen Stellen stattfindet und beispielsweise für Unittests eine Instanz mit anderen
+einigen wenigen Stellen stattfindet und z.B. für Unittests eine Instanz mit anderen
 Konfigurationsoptionen erstellt werden kann. Ohne Nutzung einer Factory-Funktion würde die
 Flask-Instanz zur Importzeit des Moduls erstellt werden und jedes andere Modul könnte das Objekt von
 dort importieren und verändern. Zur \enquote{Laufzeit}, also während der Abarbeitung eines Requests,
 macht sich der Unterschied nicht mehr bemerktbar, da Flask mit \lstinline{current_app} ein
 Proxy-Objekt bereitstellt, welches jeweils auf die gerade aktive Flask-Instanz verweist.
 
-Derzeit wird der eingebaute Webserver von Indico mittels \emph{indico\_shell --web-server}
+Derzeit wird der in Indico integrierte Webserver mittels \emph{indico\_shell --web-server}
 gestartet. Zu Beginn ist es sinnvoll, über einen weiteren Kommandozeilenparameter zwischen Flask und
 dem bestehenden Webserver samt dem alten Framework wählen zu können. Aufgrund des einfachen Aufbaus
 von WSGI muss dazu nur entweder das bestehende \emph{application-Callable} oder das neue, von
-\lstinline{make_app()} zurückgegebene, an den Webserver übergeben werden. Beim Aktualisieren des
+\lstinline{make_app()} erstellte, an den Webserver übergeben werden. Beim Aktualisieren des
 dafür zuständigen Codes fällt auf, dass dort eine einfache WSGI-Middleware implementiert wurde, die
 die WSGI-Applikation über den Indico-Konfiguration angegebenen Pfad verfügbar macht - also
-beispielsweise \emph{http://localhost:8000/indico} statt nur \emph{http://localhost:8000}. Ein Blick
+\emph{http://localhost:8000/indico} statt nur \emph{http://localhost:8000}. Ein Blick
 in die Werkzeug-Dokumentation zeigt, dass dort mit \lstinline{DispatcherMiddleware} eine fertige
 Middleware enthalten ist, die diese Aufgabe ebenfalls übernehmen kann - allerdings mit weniger
 benutzerdefiniertem Code. Da es sich dabei um eine sehr einfache Änderung handelt und Werkzeug
@@ -166,21 +166,21 @@ von Indico erwarteten Form an die Originalfunktion.
 
 \subsection{Inkompatibilitäten beheben}
 Da statt eines (emulierten) \emph{mod\_python}-Request-Objekts nun \lstinline{None} übergeben wird,
-schlagen Zugriffe beispielsweise auf \lstinline{req.get_remote_ip()} fehl. Flask macht die IP des
+schlagen Zugriffe auf Methoden wie \lstinline{req.get_remote_ip()} fehl. Flask macht die IP des
 Benutzers über \lstinline{request.remote_addr} zwar ebenfalls verfügbar, allerdings handelt es sich
-dabei grundsätzlich um die IP, von dem aus die Verbindung zum Webserver aufgebaut wurde. Dies ist
+dabei grundsätzlich um die IP, von der aus die Verbindung zum Webserver aufgebaut wurde. Dies ist
 zwar bei der Entwicklung und in einfachen Setups die richtige IP-Adresse, allerdings nutzt
-beispielsweise die Indico-Installation am CERN einen Loadbalancer, der die IP-Adresse des Clients
+z.B. die Indico-Installation am CERN einen Loadbalancer, der die IP-Adresse des Clients
 über den HTTP-Header \emph{X-Forwarded-For} übergibt. Flask macht alle in diesem Header enthaltenen
 IP-Adressen über \lstinline{request.access_route} zugänglich. Da die IP-Adresse des Loadbalancers
-jedoch nie relevant ist und der Header sofern kein Loadbalancer verwendet wird vom Benutzer
+jedoch nie relevant ist und der Header, sofern kein Loadbalancer verwendet wird, vom Benutzer
 manipuliert sein kann, ist eine neue Eigenschaft sinnvoll, die jeweils die korrekte IP-Adresse
 zurückgibt. Natürlich könnte dies einfach gelöst werden, indem man die bereits in Indico enthaltene
 Funktion \lstinline{_get_remote_ip(req)} anpasst, d.h. den Parameter entfernt und auf die Flask-APIs
 zugreift. Flask ist jedoch flexibel genug, um eine deutlich sauberere Lösung zu implementieren.
 Durch Subclassing der Klasse \lstinline{flask.wrappers.Request} kann die Funktion, die von der
-\lstinline{remote_addr}-Eigenschaft genutzt wird, durch eine eigene ersetzt werden, die bei
-Verwendung eines Proxies \lstinline{self.access_route[0]} verwenden und ansonsten die
+\lstinline{remote_addr}-Eigenschaft genutzt wird, durch eine eigene ersetzt werden, die sofern ein
+Proxy vorhanden ist \lstinline{self.access_route[0]} und ansonsten die
 \lstinline{remote_addr}-Eigenschaft der Superklasse nutzt. Um die benutzerdefinierte
 \lstinline{IndicoRequest}-Klasse in Flask auch zu verwenden, wird einfach \lstinline{Flask}
 subclassed und die \lstinline{request_class}-Klasseneigenschaft überschrieben. Alternativ könnte es
@@ -225,17 +225,18 @@ komplett gelöscht werden kann. Danach müssen alle darauf verweisenden Importe 
 Code, der die alte Session initialisiert und im \lstinline{RH}-Objekt ablegt, entfernt werden.
 Zugriffe auf explizit implementierte Funktionen der Session - also \lstinline{getUser()} und
 ähnliche Methoden - lassen sich relativ leicht mit der Suchfunktion des Editors finden und auch fast
-automatisch (Imports und Funktionsparameter müssen manuell angepasst bzw. entfernt werden) durch
-ihre neue Variante in der Form \lstinline{session.user} er setzen. Sessionzugriffe über
-\lstinline{getVar()} bzw. \lstinline{setVar()} könnten zwar prinzipiell mithilfe von regulären
+automatisch durch ihre neue Variante in der Form \lstinline{session.user} ersetzen. Nur Imports und
+Funktionsparameter müssen manuell angepasst bzw. entfernt werden. Sessionzugriffe über
+\lstinline{getVar()} bzw. \lstinline{setVar()} könnten zwar prinzipiell mit regulären
 Ausdrücken in die Dict-Syntax umgeschrieben werden, jedoch könnten in diesem Fall weder direkt in
 der Session abgelegte Datenbankobjekte noch die direkte Veränderung von bereits in der Session
 vorhandenen Daten gesondert behandelt werden. Ersteres ist jedoch prinzipiell nicht möglich und
 führt zu einem Fehler beim Laden der Session und letzteres würde die geänderten Daten nicht im
 Cache-Backend aktualisieren, da ein Container nicht ohne massive Performanceeinbußen feststellen
-kann, dass ein enthaltenes Objekt verändert wurde. Daher werden alle weiteren Sessionzugriffe
-manuell angepasst - allerdings nicht zu diesem Zeitpunkt, da es für einen allgemeinen Funktionstest
-von Indico nicht notwendig ist, dass jedes Feature fehlerfrei funktioniert.
+kann, ob ein enthaltenes Objekt verändert wurde. Daher werden alle weiteren Sessionzugriffe
+manuell angepasst. Dies geschieht allerdings noch nicht zu diesem Zeitpunkt, da es für einen
+allgemeinen Funktionstest von Indico nicht notwendig ist, dass jedes Feature fehlerfrei
+funktioniert.
 
 Erste Tests zeigen an dieser Stelle, dass Indico nun schon prinzipiell auf Flask-Basis funktioniert.
 Allerdings schlagen alle Requests fehl, die eine im Dateisystem existierende Datei an den Client
@@ -249,8 +250,8 @@ An dieser Stelle ist es sinnvoll, alle einfach zugänglichen Bereiche von Indico
 weitere Probleme zu finden und zu beheben. Idealerweise könnte dies automatisiert durch die
 Unittests und funktionalen Tests geschehen, allerdings decken die Unittests hauptsächlich intern
 genutzten, nicht-web-spezifischen Code ab. Kombiniert mit sehr wenigen funktionalen Tests stellt
-sich schnell heraus, dass die vorhandenen Tests hier nicht wirklich hilfreich sind und es zwei
-Optionen gibt: Manuell testen oder entsprechend viele Testcases schreiben, um die ganze Software
+sich schnell heraus, dass die vorhandenen Tests hier nicht wirklich hilfreich sind. Daher existieren
+zwei Optionen: Manuell testen oder entsprechend viele Testcases schreiben, um die ganze Software
 abzudecken. Dass letzteres langfristig gesehen die bessere Lösung ist steht außer Frage, allerdings
 muss hier aus Zeitgründen auf manuelle Tests zurückgegriffen werden.
 
@@ -276,7 +277,7 @@ Funktionalität getestet werden können.
 In \autoref{oldmpinterface} wurde ein einfaches Interface zu den \emph{mod\_python}-Funktionen
 entwickelt, um möglichst schnell ein lauffähiges System zu haben. Im Hinblick auf saubere URLs und
 Kompatibilität mit alten URLs ist es jedoch sinnvoller, die Routingregeln nicht erst zur Laufzeit zu
-generieren, sodass die alten Python-Dateien, die alle exakt dieselbe Struktur wie das Beispiel in
+generieren, damit die alten Python-Dateien, die alle exakt dieselbe Struktur wie das Beispiel in
 \autoref{lst:mpabout} haben, gelöscht werden können.
 
 \begin{lstlisting}[caption=about.py im htdocs-Verzeichnis,label=lst:mpabout]
@@ -289,19 +290,19 @@ def index(req, **params):
 
 \subsubsection{Generieren der Routingregeln}\label{routingrulegen}
 
-Um die benötigten Daten aus den Python-Dateien zu extrahieren existieren mehrere Möglichkeiten.
+Um die benötigten Daten aus den Python-Dateien zu extrahieren, existieren mehrere Möglichkeiten.
 Mittels regulärer Ausdrücke ließen sich sowohl die Importe als auch die Funktions- und Klassennamen
 relativ einfach extrahieren. Allerdings müssten Sonderfälle wie der im Beispiel genutzte
 Import-Alias entsprechend behandelt werden und auch unterschiedliche Formatierung entweder zuvor
 vereinheitlicht oder durch einen komplexeren regulären Ausdruck abgedeckt werden. Da es sich bei
 Python um eine extrem dynamische Sprache handelt, kann jedoch auch der \emph{Abstract Syntax Tree}
-dder jeweiligen Funktion genutzt werden, um an die benötigten Daten zu gelangen. Dieser Syntaxbaum
+der jeweiligen Funktion genutzt werden, um an die benötigten Daten zu gelangen. Dieser Syntaxbaum
 enthält eine abstrakte Repräsentation des Quellcodes und ist sehr viel einfacher zu parsen als der
 nur in Stringform vorliegende Quellcode selbst.
 
 \img{ast.png}{400px}{Abstract Syntax Tree}{Abstract Syntax Tree}
 
-Relevant sind - um beim Beispiel aus \autoref{lst:mpabout} zu bleiben - neben dem bereits bekannten
+Relevant sind um beim Beispiel aus \autoref{lst:mpabout} zu bleiben neben dem bereits bekannten
 Funktionsnamen \lstinline{index}, der zur Sicherheit mit dem Namen in \emph{FunctionDef} verglichen
 werden kann, der globale Name \lstinline{rhAbout} des Moduls und der Klassenname
 \lstinline{RHAbout}. Diese beiden Werte sind wie man in der \autoref{img.ast.png} leicht erkennt vom
@@ -310,7 +311,7 @@ die Globals des mittels \lstinline{execfile()} ausgeführten Python-Moduls kann 
 \lstinline{rhAbout} gehörende Python-Modul referenziert und der korrekte Name ausgelesen werden.
 
 Damit sind alle notwendigen Daten zum Generieren einer Routingregel verfügbar. Insbesondere ist die
-Kombination aus Datei- und Funktionsname einzigartig und kann damit als Endpoint im Routingsystem
+Kombination aus Datei- und Funktionsname eindeutig  und kann damit als Endpoint im Routingsystem
 benutzt werden. Da Funktionsnamen keine Bindestriche enthalten können und keiner der Dateinamen
 einen solchen enthält, ist der Dateiname ohne Extension bzw. für eine Funktion, die nicht
 \emph{index} heißt, der String \emph{Dateiname-Funktionsname} als Endpoint geeignet, anhand dessen
@@ -351,19 +352,19 @@ Ein weiteres Problem zeigt sich in clientseitgem JavaScript-Code, der URLs gener
 konnten dort einfach Parameter mittels mittels Stringoperationen angehängt werden. Dies ist jedoch
 nicht mehr möglich, da die URL ohne alle notwendigen Parameter überhaupt nicht generiert werden
 kann. Die Lösung dazu liegt im Package \lstinline{werkzeug.contrib.jsrouting}. Dabei handelt es sich
-um eine JavaScript-Implementierung des URL-Generators von Flask/Werkzeug. Während es nicht direkt in
-Indico nutzbar ist - eine Liste mit allen ca. 700 Routingregeln und später nochmal ebensovielen
-Kompatibilitätsregeln würde die an den Browser gesendeten Daten unnötig aufblähen - bietet es eine
+um eine JavaScript-Implementierung des URL-Generators von Flask/Werkzeug. Während diese nicht direkt
+in Indico nutzbar ist, da eine Liste mit allen ca. 700 Routingregeln und später nochmal ebensovielen
+Kompatibilitätsregeln die an den Browser gesendeten Daten unnötig aufblähen würde, bietet es eine
 sehr gute Basis für eine vereinfachte Version, die nicht die komplette Routingtabelle clientseitig
-verfügbar nacht sondern nur ausgewählte Regeln daraus. Implementiert ist dies mit einer Eigenschaft
+verfügbar macht, sondern nur einige ausgewählte Regeln. Implementiert ist dies mit einer Eigenschaft
 der URL-Klasse, die die notwendigen Informationen der Regel als JSON zurückgibt und einer auf dem
 jsrouting-Code basierenden JavaScript-Funktion, die aus der JSON-Regel und den Parametern die URL
 generiert.
 
 Um die URL-Generierung von Flask nun tatsächlich zu verwenden müssen alle URLHandler-Subklassen
 entsprechend angepasst werden. Dies kann praktischerweise mit einem regulären Ausdruck automatisiert
-werden. Da die generierten Legacy-Routingregeln alle in einem Blueprint namens \emph{legacy} sind,
-müssen auch die Endpoints in den URLHandler-Klassen auf diesen Blueprint verweisen.
+werden. Da die generierten Legacy-Routingregeln alle in einem Blueprint namens \emph{legacy}
+enthalten sind, müssen auch die Endpoints in den URLHandler-Klassen auf diesen Blueprint verweisen.
 
 \begin{lstlisting}[caption=Endpointbasierter URLHandler für about.py]
 class UHAbout(URLHandler):
@@ -373,8 +374,8 @@ class UHAbout(URLHandler):
 
 \subsubsection{Clean URLs}
 
-Eines der Hauptziele der Migration neben saubererem Code und dem damit verbundenen Komfort für
-Entwickler ist die Nutzung sauberer URLs. Vor der Implementation macht es Sinn, sich Gedanken über
+Eines der Hauptziele der Migration, neben saubererem Code und dem damit verbundenen Komfort für
+Entwickler, ist die Nutzung sauberer URLs. Vor der Implementation macht es Sinn, sich Gedanken über
 den Aufbau dieser URLs zu machen. Ein oftmals in diesem Kontext genanntes Paradigma ist
 REST\footnote{Representational state transfer}. Dabei handelt es sich um die oftmals fälschlich als
 Standard bezeichnete Idee, dass eine URL genau eine Ressource bzw. Collection repräsentiert und
@@ -382,12 +383,12 @@ verschiedene HTTP-Methoden unterschiedliche Aktionen darauf ausführen. Beispiel
 die Liste aller Events repräsentieren während \emph{/event/123} das Event mit der ID 123
 repräsentieren würde. Insbesondere aufgrund der Verwendung verschiedener HTTP-Methoden wie DELETE
 und PUT eignet sich REST eher für APIs als für den von Benutzern direkt zugänglichen Bereich einer
-Webanwendung. Darüberhinaus wäre es bei einer Anwendung wie Indico sehr umständlich, alle Ressourcen
-im REST-Stil zu repräsentieren. Deutlich einfacher und benutzerfreundlicher ist es, die URL-Struktur
-nach Kategorien aufzuteilen, sodass beispielsweise \emph{/event/123/} auf die Startseite des Events
-verweist, \emph{/event/123/timetable} auf den Zeitplan und \emph{/event/123/timetable.pdf} auf die
-PDF-Version von selbigem. Der Administrationsbereich der Anwendung ist komplett unabhängig davon und
-somit beispielsweise über \emph{/admin/} erreichbar.
+Webanwendung. Außerdem wäre es bei einer Anwendung wie Indico sehr umständlich, alle Ressourcen im
+REST-Stil zu repräsentieren. Deutlich einfacher und benutzerfreundlicher ist es, die URL-Struktur
+nach Kategorien aufzuteilen, sodass \emph{/event/123/} auf die Startseite des Events verweist,
+\emph{/event/123/timetable} auf den Zeitplan und \emph{/event/123/timetable.pdf} auf die PDF-Version
+von selbigem. Der Administrationsbereich der Anwendung ist komplett unabhängig davon und somit über
+\emph{/admin/} erreichbar.
 
 Die eigentliche Implementierung der sauberen URLs sind prinzipiell einfach, aber sehr zeitaufwändig,
 da jede URL manuell definiert werden muss. Die generierten Legacy-Routen vereinfachen die Aufgabe
@@ -405,8 +406,8 @@ Daher müssen die alten URLs ebenfalls unterstützt werden; allerdings sollten s
 ursprüngliche Zielseite verweisen, sondern mit einem \emph{301 Moved Permanently}-Redirect auf die
 neue URL weiterleiten.
 
-Aufgrund der in \autoref{routingrulegen} gewählten Endpoint-Namen, sind keine weiteren Informationen
-notwendig, um basierend darauf die ursprüngliche URL zu generieren. Daher kann einfach eine Funktion
+Aufgrund der in \autoref{routingrulegen} gewählten Endpoint-Namen sind keine weiteren Informationen
+notwendig, um aus diesem Namen die ursprüngliche URL zu generieren. Daher kann einfach eine Funktion
 implementiert werden, die zu einem existierenden Blueprint einen Kompatibilitäts-Blueprint
 generiert, der die alten URLs nutzt und auf die neuen weiterleitet. Der einzige zu beachtende
 Sonderfall ist bei POST-Requests. Diese werden laut HTTP-Standard bei einer Weiterleitung mit GET
@@ -419,12 +420,12 @@ ausschließlich GET verwenden, ist dies kein Problem.
 
 Die Migration zu Flask lief größtenteils unproblematisch ab, wobei gerade bei einer Anwendung dieser
 Größe immer einige kleinere Schwierigkeiten auftreten. Diese beruhten jedoch meist auf unerwarteten
-Sonderfällen wie beispielsweise alten \emph{mod\_python}-Dateien, die Debugcode enthielten und somit
-beim Import unerwartete Nebeneffekte hatten.
+Sonderfällen wie alten \emph{mod\_python}-Dateien, die Debugcode enthielten und somit beim Import
+unerwartete Nebeneffekte hatten.
 
 Ein weiterer ursprünglich nicht bedachter Sonderfall machte sich beim Testen von Indico mit dem
 \emph{nginx}-Webserver bemerkbar: Bei statischen Dateien, die im Dateisystem existieren, ist es
-deutlich performanter, wenn der Webserver die Datei ausliefen kann, als wenn die Webanwendung dies
+deutlich effizienter, wenn der Webserver die Datei ausliefen kann, als wenn die Webanwendung dies
 tun muss. Dazu unterstützen die meisten Webserver den \emph{X-Sendfile}-Header, der den Pfad zu der
 Datei enthält, die der Webserver an den Client senden soll. Aus Sicherheitsgründen unterstützt nginx
 jedoch nur \emph{X-Accel-Redirect}, der sich zwar fast identisch verhält, allerdings statt eines
@@ -441,12 +442,12 @@ Bei der Entwicklung neuer Features kann Flask deutlich stärker genutzt werden a
 bestehenden Code der Fall ist. Insbesondere bei der Generierung von URLs macht es Sinn, direkt auf
 \lstinline{url_for()} zuzugreifen, statt den Umweg über eine neue URLHandler-Subklasse zu gehen.
 Darüberhinaus kann strenger darauf geachtet werden, dass GET und POST korrekt eingesetzt werden.
-Beispielsweise sollte ein normaler Seitenaufruf, der keinerlei Daten verändert, grundsätzlich GET
-nutzen und die Veränderung von Daten ausschließlich mit POST möglich sein. Dies kann durch das
+Ein normaler Seitenaufruf, der keinerlei Daten verändert, sollte grundsätzlich GET nutzen während
+die Veränderung von Daten ausschließlich mit POST möglich sein sollte. Dies kann durch das
 Routingsystem von Indico einfach durchgesetzt werden, allerdings hätte es im bestehenden Code
 oftmals Änderungen an den HTML-Templates benötigt, da insbesondere im Administrationsbereich häufig
 Formularbuttons zur Navigation verwendet werden. Für Fälle, in denen sowohl GET als auch POST
-benötigt werden - hauptsächlich sind das Seiten, die Formulare enthalten - ist es jedoch aufgrund
+benötigt werden, also hauptsächlich auf Seiten, die Formulare enthalten, ist es jedoch aufgrund
 der Architektur von Indico sinnvoller, dies innerhalb der \lstinline{RH}-Klasse zu tun, da ansonsten
 im Anwendungscode manuell mittels \lstinline{request.method == 'POST'} unterschieden werden müsste,
 welcher Codezweig gerade ausgeführt werden soll. Die Lösung dafür findet sich in der Klasse
@@ -455,9 +456,9 @@ demselben Namen wie das verwendete HTTP-Verb aufruft. Im Kontext von Indicos \ls
 würde also entweder \lstinline{_process_GET()} oder \lstinline{_process_POST()} aufgerufen.
 
 Mittelfristig könnte man auch nach einer Alternative zu den \lstinline{RH}-Klassen zu suchen, um in
-neuen Code weniger Zwischenschichten zu haben. Voraussetzung dafür ist aber, dass alle derzeit von
+neuem Code weniger Zwischenschichten zu haben. Voraussetzung dafür ist aber, dass alle derzeit von
 der \lstinline{RH}-Klasse übernommenen Aufgaben anderweitig gelöst werden können. Insbesondere die
 oftmals überschriebene Methode zum Überprüfen, ob der Benutzer die notwendigen Berechtigungen hat,
-könnte sich dabei als problematisch erweisen - typischerweise werden in Flask dafür Decorators
+könnte sich dabei als problematisch erweisen. Typischerweise werden in Flask dafür Decorators
 genutzt, was aber nur Sinn macht, wenn dieselbe Logik für möglichst vielen Funktionen verwendet
 werden kann.

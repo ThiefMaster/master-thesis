@@ -15,14 +15,14 @@ umzustellen, überhaupt lohnt. Diese Frage ist im Fall von Indico aus verschiede
 bejahen. Insbesondere die Kombination aus einem sehr einfachen Routingsystem und dem
 URL-Dateisystem-Mapping im CGI-Stil bietet bei der Entwicklung neuer Features diverse Nachteile:
 Sofern das neue Feature eine für den Benutzer direkt zugängliche Seite besitzt ist aus Gründen der
-Einheitlichkeit eine \emph{*.py}-URL angebracht. Im Falle eines neuen Moduls wie beispielsweise der
-HTTP-API ist dies jedoch nicht gegeben, weshalb sich dort anbietet, ein neues Pfadsegment
-einzuführen und über dieses alle Anfragen in das entsprechende Modul zu routen, was jedoch bedeutet,
-dass jegliches weitere Routing von dem jeweiligen Modul übernommen werden muss.
+Einheitlichkeit eine \emph{*.py}-URL angebracht. Im Falle eines neuen Moduls wie der HTTP-API ist
+dies jedoch nicht gegeben, weshalb sich dort anbietet, ein neues Pfadsegment einzuführen und über
+dieses alle Anfragen in das entsprechende Modul zu routen. Dies bedeutet jedoch, dass jegliches
+weitere Routing von dem jeweiligen Modul übernommen werden muss.
 
 Ein enormer Vorteil bei der bestehenden Lösung ist natürlich, dass sie seit Jahren relativ stabil
 läuft und von einer breiten Userbasis benutzt wird und damit die \enquote{Kinderkrankheiten} eines
-neuen Systems nicht vorhanden sind. Ebenfalls ist beispielsweise die ZODB-Datenbank stark in das
+neuen Systems nicht vorhanden sind. Ebenfalls ist die ZODB-Datenbank stark in das
 aktuelle System integriert, wobei anzumerken ist, dass dabei teilweise fast derselbe Code an
 mehreren Stellen verwendet wird: Die \lstinline{RH}-Klassen und die JSON-RPC-API verwenden jeweils
 dasselbe Retry-System, um Datenbankkonflikte zu behandeln, jedoch ist es in den jeweiligen Klassen
@@ -34,9 +34,9 @@ da die Nichtnutzung eines modernen Frameworks in Zukunft bei neuen Features mit 
 Wahrscheinlichkeit zu deutlich mehr Entwicklungsaufwand führt als mit einem entsprechenden Framework
 notwendig wäre.
 
-Insbesondere aufgrund dieser Folge ist ein neues Framework also unbedingt notwendig. Daher wird die
-Option, weiterhin ausschließlich das Indico-Framework, in den folgenden Abschnitten nicht mehr
-betrachtet.
+Insbesondere aufgrund dieser Folgekosten ist ein neues Framework also unbedingt notwendig. Daher
+wird die Option, weiterhin ausschließlich das Indico-Framework, in den folgenden Abschnitten nicht
+mehr betrachtet.
 
 
 \subsection{Vollständige Migration zu Django}
@@ -44,13 +44,13 @@ Aufgrund der Struktur von Django - mehrere möglichst in sich abgeschlossene App
 empfohlenen Verzeichnisstruktur in den einzelnen Apps ist es schwierig, Django in die bestehende
 Indico-Codebasis zu integrieren. Es ist deutlich einfacher und auch sauberer, das Django-Projekt in
 einem neuen Verzeichnis unabhängig von der bestehenden Codebasis zu integrieren. Danach müssen
-zunächst die in der gesamten Anwendung genutzten Funktionen wie beispielsweise das Benutzer- und
+zunächst die in der gesamten Anwendung genutzten Funktionen wie das Benutzer- und
 Gruppensystem samt LDAP-Anbindung unter Verwendung der Django-User-App neu implementiert werden.
-Obwohl beispielsweise das bestehende Benutzersystem nicht Teil des Frameworks ist und durchaus in
+Obwohl das bestehende Benutzersystem nicht Teil des Frameworks ist und durchaus in
 das Django-Projekt übernommen werden könnte, hat die Neuimplementierung den Vorteil, dass die
 Django-Infrastruktur im weiteren Verlauf möglichst effizient benutzt werden kann. Da die Benutzer in
 der ZODB abgespeichert werden, muss diese Datenbank auch in Django integriert werden; dazu bietet
-sich möglicherweise \emph{Django-ZODB} an - dies muss jedoch genauer untersucht werden, da unter
+sich evtl. \emph{Django-ZODB} an - dies muss jedoch genauer untersucht werden, da unter
 anderem Datenbankkonflikte während eines Commits sauber abgefangen werden sollten. Eine Alternative
 wäre natürlich der Umstieg auf eine relationale Datenbank unter Verwendund des ORM-Systems von
 Django, allerdings würde dies die bereits sehr aufwändige Migration noch komplexer machen.
@@ -59,19 +59,19 @@ Sobald der Kern der Django-Version von Indico funktionsfähig ist, kann die eige
 migriert werden. Da Indico mit den \lstinline{RH}-Klassen bereits klassenbasierte Views nutzt und
 oftmals auch Vererbung nutzt, bietet es sich in den meisten Fällen an, auch weiterhin Klassen statt
 einfacher Funktionen zu nutzen. Während die meiste Anwendungslogik dieser Klassen übernommen werden
-kann, sind dennoch in fast allen Fällen Änderungen angebracht, um beispielsweise über die von Django
+kann, sind dennoch in fast allen Fällen Änderungen angebracht, um z.B. über die von Django
 bereitgestellten Variablen auf HTTP-Parameter und dynamische Elemente aus der URL zuzugreifen.
-Zusammen mit dem Umstieg auf die Django-Templateengine führt dies also dazu, dass hunderte von
-Klassen und Templates angepasst werden müssen. Letzteres kann teilweise automatisiert werden, die
-Klassen müssen jedoch manuell umgeschrieben werden.
+Zusammen mit dem Umstieg auf die Django-Templateengine macht dies also die Anpassung hunderter
+Klassen und Templates notwendig. Letzteres kann teilweise automatisiert werden, die Klassen müssen
+jedoch manuell umgeschrieben werden.
 
 Für das URL-Routing müssen entsprechende Regeln in Form regulärer Ausdrücke geschrieben werden.
 Indico besitzt ca. 700 verschiedene URLs, die zwar oftmals dieselben Parameter wie die ID des Events
 nethalten und damit dank der \lstinline{include()}-Funktion des Routingsystems vereinfacht werden
 können, aber dennoch manuell in \emph{clean URLs} umgeschrieben werden müssen - die Entscheidung,
-beispielsweise statt \emph{/conferenceTimetable.py/pdf} die URL \emph{/event/123/timetable.pdf} zu
+statt \emph{/conferenceTimetable.py/pdf} die URL \emph{/event/123/timetable.pdf} zu
 nutzen, kann keine Software übernehmen. Zusätzlich zu den neuen URLs müssen für alle direkt
-verlinkbaren Seiten auch die alten URLs weiterhin unterstützt werden, um beispielsweise Links von
+verlinkbaren Seiten auch die alten URLs weiterhin unterstützt werden, um Links von
 anderen Seiten oder Suchmaschinen nicht in einer Fehlermeldung enden zu lassen. Da Indico bisher die
 \lstinline{URLHandler}-Klassen zur URL-Generierung nutzt, existiert eine zentrale Stelle, die
 angepasst werden muss, um die neuen URLs nicht nur zu unterstützen sondern auch überall, wo Indico
@@ -86,12 +86,12 @@ Django vertraut sind.
 
 
 \subsection{Erweiterung durch Django}
-Obwohl es wie bereits erwähnt schwierig ist, Django in die bestehende Codebasis von Indico zu
-integrieren, ist es natürlich prinzipiell möglich, sofern man die von den Django-Entwicklern
-empfohlene Anwendungsstruktur ignoriert. In diesem Fall würde man kein Grundgerüst mit
-\emph{django-admin.py} generieren, sondern die entsprechenden Django-Objekte bzw. -Funktionen direkt
-in bestehenden oder neuen Dateien innerhalb des Indico-Packages importieren. Dazu bietet sich
-beispielsweise eine neues Subpackage \lstinline{indico.web.django} an, welches den gesamten
+Obwohl es wie bereits erwähnt schwierig ist, Django in die bestehende Codebasis von Indico
+einzubauen, ist die Integration natürlich prinzipiell möglich, sofern man die von den
+Django-Entwicklern empfohlene Anwendungsstruktur ignoriert. In diesem Fall würde man kein
+Grundgerüst mit \emph{django-admin.py} generieren, sondern die entsprechenden Django-Objekte bzw.
+-Funktionen direkt in bestehenden oder neuen Dateien innerhalb des Indico-Packages importieren.
+Dazu bietet sich ein neues Subpackage \lstinline{indico.web.django} an, welches den gesamten
 Django-spezifischen Basiscode enthält. Der WSGI-Code des alten Indico-Frameworks in
 \lstinline{indico.web.wsgi} kann in jedem Fall entfernt werden, wobei dementsprechend natürlich auch
 das stark auf diesem Code basierende Sessionsystem entfernt und durch das von Django
@@ -99,14 +99,14 @@ bereitgestellte System ersetzt werden muss. Danach können entweder die im \emph
 geschriebenen Funktionen über das Routingsystem von Django aufgerufen werden, oder aber die
 \lstinline{RH}-Klassen entsprechend angepasst werden, um direkt von Django aufgerufen werden zu
 können. Durch die vollständige Weiterverwendung dieser Klassen würde der ZODB-Zugriff vom
-bestehenden Code übernommen werden. Für GET/POST-Daten und URL-Parameter muss natürlich eine
+bestehenden Code übernommen werden. Für GET/POST-Daten und URL-Parameter muss eine
 entsprechende Kompatibilitätsschicht entwickelt werden, die sie in das bisher genutzte Format
 konvertiert. Durch die Weiterverwendung des Mako-Templatesystems kann ebenfalls viel
-Entwicklungsaufwand gespart werden, wobei eine externe Templateengine natürlich bei weitem nicht so
+Entwicklungsaufwand gespart werden, wobei eine externe Templateengine bei weitem nicht so
 gut mit dem Framework zusammenspielt wie die frameworkeigene Engine.
 
 Letzendlich lässt sich bei diesem Migrationspfad sehr viel Entwicklungszeit einsparen, allerdings
-stellt sich die frage, welchen Nutzen man neben den schöneren URLs am Ende hat. Immerhin handelt es
+stellt sich die Frage, welchen Nutzen man außer den schöneren URLs am Ende hat. Immerhin handelt es
 sich bei Django um ein sehr mächtiges und komplexes Framework, welches man bei dieser Lösung nur zu
 einem Bruchteil nutzen würde - und ein mit Django vertrauter Entwickler müsste sich dennoch erst
 einarbeiten, da fast keine der bei Django üblichen \emph{Best Practices} genutzt werden könnten.
@@ -118,25 +118,25 @@ ohne Apache und \emph{mod\_wsgi} betrieben werden zu können. Daher bietet es si
 Werkzeug basierende Flask-Microframework in Indico zu integrieren. Neben der in einem späteren
 Abschnitt beschriebenen Komplettmigration ist insbesondere eine partielle Migration bzw. Erweiterung
 der bestehenden Codebasis auf Flask interessant. Zu Beginn bietet es sich an, den WSGI-Kern und
-darauf aufbauenden Code - insbesondere also des Sessionsystem - des Indico-Frameworks durch Flask
-zu ersetzen, jedoch beispielsweise die einwandfrei funktionierende Datenbankanbindung beizubehalten.
-Das Entfernen des WSGI-Kerns ist ein guter Ausgangspunkt, da dadurch garantiert obsolet werdender
+darauf aufbauenden Code - insbesondere also das Sessionsystem - des Indico-Frameworks durch Flask
+zu ersetzen, jedoch die einwandfrei funktionierende Datenbankanbindung beizubehalten.
+Das Entfernen des WSGI-Kerns ist ein guter Ausgangspunkt, da dadurch sicher obsolet werdender
 Code entfernt wird. Nachdem dies geschehen und Flask integriert ist, ist zu prüfen, ob noch weitere
 Kernbestandteile von Indico von dem alten WSGI-Code abhängig sind und angepasst bzw. ersetzt werden
 müssen. Danach kann zunächst ein einfacher Wrapper das Routing im \emph{mod\_python}-Stil emulieren
 und somit Indico mithilfe des Flask-WSGI-Backends größtenteils lauffähig machen.
 
-Die wichtigste von Flask bereitgestellte Neuerung ist aber natürlich das Routingsystem kombiniert
-mit den Modularität von Blueprints. Neben mit geringem bis mittlerem Aufwand integrierbaren Features
-wie dem \lstinline{g}-Objekt und dem integrierten Debugger ist das URL-Routing die komplexeste
-Flask-basierte Erweiterung, und somit auch die aufwändigste. Allerdings ist auf \emph{Rules} und
-\emph{Endpoints} basierende Struktur sehr ähnlich mit der derzeit in Indico genutzten URL-Erzeugung,
-sodass gute Chancen bestehen, dass abgesehen vom Definieren der neuen URLs viele Aufgaben in diesem
-Bereich automatisiert werden können. Gerade im Hinblick auf die Kompatibilität mit Links auf die
-alten URLs ist dies sehr hilfreich.
+Die wichtigste von Flask bereitgestellte Neuerung ist aber natürlich die Kombination aus dem
+Routingsystem und der Modularität von Blueprints. Neben mit vertretbarem Aufwand integrierbaren
+Features wie dem \lstinline{g}-Objekt und dem integrierten Debugger ist das URL-Routing die
+komplexeste Flask-basierte Erweiterung, und somit auch die aufwändigste. Allerdings ist auf
+\emph{Rules} und \emph{Endpoints} basierende Struktur sehr ähnlich mit der derzeit in Indico
+genutzten URL-Erzeugung. Daher besteht eine gute Chance, dass abgesehen vom Definieren der neuen
+URLs viele Aufgaben in diesem Bereich automatisiert werden können. Gerade im Hinblick auf die
+Kompatibilität mit Links auf die alten URLs ist dies sehr hilfreich.
 
-Der Vorteil darin, Flask zu nutzen, aber nicht rigoros jedes von Flask oder einer Flask-Erweiterung
-gebotene Feature sofort einzuführen, liegt insbesondere in der relativ einfachen Migration - neben
+Der Vorteil, Flask zu nutzen, aber nicht rigoros jedes von Flask oder einer Flask-Erweiterung
+gebotene Feature sofort einzuführen, liegt insbesondere in der relativ einfachen Migration. Neben
 der unabhängig vom Framework aufwändigen Umstellung der URLs müssen weder zwangsläufig Templates
 konvertiert noch alle View-Klassen angepasst werden. Gleichzeitig kann neuer Code aber durchaus
 zusätzliche Flask-Features nutzen, sodass auch nach der Migration die Codequalität von Indico
@@ -147,32 +147,31 @@ werden.
 \subsection{Vollständige Migration zu Flask}
 Bei einer Komplettmigration bietet die in \autoref{migration-flask-partial} beschriebene
 Teilmigration einen guten Ausgangspunkt, da am Ende ein funktionierendes Indico steht, welches
-bereits an verschiedenen Stellen Flask-Features nutzt. Die verbleibenden Bereiche - insbesondere
-Templates und \lstinline{RH}-Klassen - können zwar relativ unabhängig voneinander migriert werden,
+bereits an verschiedenen Stellen Flask-Features nutzt. Die verbleibenden Bereiche, insbesondere
+Templates und \lstinline{RH}-Klassen, können zwar relativ unabhängig voneinander migriert werden,
 allerdings müssen in beiden Fällen diese Klassen bzw. ihre Nachfolger angepasst werden, weshalb es
 sinnvoll ist, diese schrittweise zusammen zu migrieren, d.h. jeweils eine Klasse und die von dieser
 genutzten Templates. Die Templatemigration kann größtenteils automatisiert werden, allerdings
-enthalten einige Templates Python-Code, der manuell entfernt bzw. in die entsprechende Python-Klasse
+enthalten einige Templates Python-Code, der manuell entfernt bzw. in die dazugehörige Python-Klasse
 verschoben werden muss. Bei den weiteren Änderungen an den Klassen gibt es mehrere Möglichkeiten,
-Dinge wie die Datenbankverbindung und die dazugehörigen Transaktionen entsprechend zu behandeln.
+Dinge wie die Datenbankverbindung und die dazugehörigen Transaktionen neu zu implementieren.
 Neben einem \emph{Class Decorator} wäre auch eine Superklasse denkbar, die ähnlich wie derzeit die
-\lstinline{RH}-Klasse die entsprechende Logik implementiert, aber dabei entsprechend flexibel bleibt
-und Flask ideal nutzt.
+\lstinline{RH}-Klasse die entsprechende Logik implementiert, aber dabei flexibel bleibt und Flask
+ideal nutzt.
 
 Da es sich bei dieser Variante um eine Erweiterung der Einbindung von Flask in die bestehende
-Infrastruktur handelt, macht es wenig Sinn, diese zu Beginn in Betracht zu ziehen. Während sie
-logischerweise zum besseren Code führt ist sie extrem aufwändig und bietet insbesondere im Hinblick
-auf neue Entwicklungen nur wenige Vorteile, da diese unabhängig davon bereits alle neuen Features
-nutzen können.
+Infrastruktur handelt, macht es wenig Sinn, diese zu schon Beginn in Betracht zu ziehen. Während sie
+logischerweise zu besserem Code führt, ist sie extrem aufwändig und bietet insbesondere im Hinblick
+auf neue Entwicklungen nur wenige Vorteile, da diese sowieso bereits die meisten neuen Features von
+Flask nutzen können.
 
 
 \section{Entscheidung für ein Framework}
-Nach der Analyse der diversen Frameworks und der verschiedenen Migrationspfade sind genügend
-Informationen vorhanden, um eine Entscheidung treffen zu können. Bei dieser Entscheidung muss
-allerdings auch bedacht werden, dass sie dauerhaft ist, sobald die Migration begonnen hat und
-entsprechend weit fortgeschritten ist, da es nicht wirtschaftlich wäre, nach kurzer Zeit erneut die
-Technologie zu wechseln und man damit auch die übrigen Entwickler zwingen würde, sich wieder mit
-einem neuen Framework auseinanderzusetzen.
+Nach der Analyse der diversen Frameworks und der verschiedenen Migrationspfade sind nun genügend
+Informationen vorhanden, um eine Entscheidung treffen zu können. Bei dieser muss allerdings auch
+bedacht werden, dass sie dauerhaft ist. Sobald die Migration abgeschlossen bzw. weit fortgeschritten
+ist, wäre es nicht wirtschaftlich, erneut die Technologie zu wechseln zumal damit auch die übrigen
+Entwickler dazu gezwungen würden, sich wieder mit einem neuen Framework auseinanderzusetzen.
 
 Die Idee, das Indico-Framework vollständig zu ersetzen, ist zwar diskussionswürdig, kann aber gerade
 bei einem von einer Vielzahl an Benutzern aktiv verwendeten System, bei dem es häufig kleinere
@@ -188,7 +187,7 @@ Sowohl bei Django als auch bei Flask handelt es sich um stabile und verbreitete 
 hinter denen jeweils große Entwicklercommunities stehen und für die es viele, ebenfalls meist unter
 einer kompatiblen Open-Source-Lizenz stehende, Erweiterungen gibt. Der Unterschied liegt jedoch
 darin, dass Django-Erweiterungen oftmals vollständige \emph{Apps} bereitstellen, die möglichst
-vollständig in eine eigene Anwendung integriert werden können und beispielsweise bereits eigene
+vollständig in eine eigene Anwendung integriert werden können und oftmals bereits eigene
 Templates mitliefern, während Flask-Extensions sich meist an Entwickler richten und Tools bzw. APIs
 bereitstellen. Sowohl diese Tatsache als auch der generelle Aufbau macht Django eher bei neuen
 Projekten zum Framework der Wahl, da man dort keine Altlasten hat und damit alle Features des
@@ -208,12 +207,12 @@ daher auch kein ORM oder sonstige Datenbankschichten enthält ist aufgrund der i
 ZODB von Vorteil; eine separate SQL-Datenbank für das Framework würde nur den Administrationsaufwand
 erhöhen.
 
-Django und Flask nutzen beide die \lstinline{dict}-API für Sessions. Allerdings hat Django den
+Django und Flask nutzen beide die \lstinline{dict}-API für Sessions. Dabei hat Django den
 Vorteil, bereits nativ einen In-Memory-Cache zum Speichern der Sessiondaten zu unterstützen, während
 Flask dazu ein separates Modul benötigt. Flask hingegen ist bei der Sessionklasse flexibler;
 zusätzlich zur \lstinline{dict}-API lässt sich die Session durch Subclassing einfach durch
 \emph{Properties} erweitern. Dabei handelt es sich um Attribute, die automatisch eine durch eine
-Getter- und Setterfunktion aufrufen und somit zusätzliche Logik enthalten können - gerade bei
+Getter- und Setterfunktion aufrufen und somit zusätzliche Logik enthalten können. Gerade bei
 Sessiondaten, die auf in der ZODB gespeicherte Elemente verweisen, ist dies nützlich, um nur bei
 Bedarf auf die Datenbank zuzugreifen.
 
@@ -224,8 +223,8 @@ den Lowlevel-APIs bieten jedoch beide Frameworks nahezu identische Funktionalit�
 Backends.
 
 Weder die Lizenz noch der Dokumentationsumfang bieten eine gute Basis um die Entscheidung für eines
-der Frameworks zu beeinflussen. Letzendlich kann Django in einer Anwendung wie Indico seine Vorteile
+der Frameworks zu beeinflussen. Letztendlich kann Django in einer Anwendung wie Indico seine Vorteile
 jedoch nicht ausspielen und würde durch das verglichen mit Flask kompliziertere Routingsystem den
-Aufwand während der Migration erhöhen. Im Gegensatz dazu ist Flask als Microframework, das möglichst
-keine bestimmten Technologien voraussetzt, sehr einfach integrierbar. Daher ist die Entscheidung auf
-\textbf{Flask} gefallen.
+Aufwand während der Migration erhöhen. Im Gegensatz dazu ist Flask als Microframework, das keine
+bestimmten Technologien voraussetzt, sehr einfach integrierbar. Daher ist die Entscheidung
+zugunsten von \textbf{Flask} erfolgt.

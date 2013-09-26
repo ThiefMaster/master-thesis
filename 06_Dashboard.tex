@@ -9,9 +9,9 @@ relevante Vorschläge erweitert werden.
 Derzeit zeigt das Dashboard aktuelle Events an, mit denen der User verbunden ist, d.h. an denen er
 teilnimmt, die er organisiert oder an deren \emph{Paper-Reviewing}-Prozess er beteiligt ist. Neben
 diesen Events sieht er eine Liste aller Kategorien, in denen er Manager-Rechte hat oder die auf
-seiner Favoritenliste sind, und welche Events aktuell in diesen Kategorien stattfinden. Bei dem
+seiner Favoritenliste stehen, und welche Events aktuell in diesen Kategorien stattfinden. Bei dem
 gesamten Dashboard handelt es sich um ein noch sehr neues Feature, welches aber bereits großen
-Zuspruch seitens der Indico-Benutzer findet.
+Zuspruch durch die Indico-Benutzer findet.
 
 Zusätzlich zu diesen Informationen wäre es hilfreich, wenn dem Benutzer sowohl potenziell
 interessante Kategorien als auch weitere Events vorgeschlagen werden könnten. Benutzer sind solche
@@ -32,7 +32,7 @@ ist, wird die Kategorie im Dashboard als Vorschlag angezeigt.
 Da Kategorien in Indico sehr unterschiedliche Events enthalten können, macht es wenig Sinn, komplett
 neue Kategorien vorzuschlagen. Stattdessen bieten sich Kategorien an, mit denen der Benutzer bereits
 in Kontakt gekommen ist, weil er an einem darin enthaltenen Event teilgenommen hat. Dies alleine ist
-jedoch nicht ausreichend, um eine Kategorie vorzuschlagen - gerade bei Benutzern, die Indico schon
+jedoch nicht ausreichend, um eine Kategorie vorzuschlagen. Gerade bei Benutzern, die Indico schon
 länger verwenden, ist die Chance groß, dass sie in einigen Kategorien an einem Event teilgenommen
 haben und seitdem nichts mehr mit dieser Kategorie zu tun hatten. Solch eine Kategorie vorzuschlagen
 würde also letzendlich nur dazu führen, dass der Benutzer sich über die schlechten Vorschläge ärgert
@@ -44,11 +44,11 @@ im aktuellsten Block als frühstes Teilnahmedatum zählt. Um Kategorien, in dene
 an Event teilgenommen hat, dies nun aber nicht mehr tut, auszufiltern, kann der Score abhängig von
 der Anzahl Events, die nach der letzten Teilnahme stattfinden, verringert oder erhöht werden.
 
-Damit zeigen sich bereits relativ gute Ergebnisse, allerdings tauchen weiterhin Kategorien auf, die
+Damit zeigen sich bereits ziemlich gute Ergebnisse, allerdings tauchen weiterhin Kategorien auf, die
 die bisherigen Kriterien erfüllen, aber nicht mehr aktiv genutzt werden und somit keine neuen Events
 enthalten. Um diese nicht mehr vorzuschlagen, kann der Score abhängig davon, wie weit das neueste
-Event in der Vergangenheit liegt, verringert werden - je länger das ist, desto weniger relevant ist
-die Kategorie für den Benutzer.
+Event in der Vergangenheit liegt, verringert werden. Je älter das Event ist, desto weniger relevant
+ist die Kategorie für den Benutzer.
 
 Unabhängig von der vergangenen Aktivität des Benutzers ist eine Kategorie, an deren Events man
 bereits lange im Voraus teilnimmt, ein sehr guter Kandidat. Daher erhöht jedes solche Event den
@@ -65,26 +65,26 @@ vorzuschlagen. Diese Ähnlichkeit kann auf verschiedene Wege bestimmt werden. Da
 bereits einige fertige Lösungen. Es bietet sich also an, zu überprüfen, ob eine solche Lösung für
 Indico Sinn macht und somit den mit einer Eigenentwicklung verbundenen Aufwand zu vermeiden.
 
-Da das Backend von Indico selbst komplett in Python geschrieben ist sollte auch die Recommendation
+Da das Backend von Indico selbst komplett in Python geschrieben ist, sollte auch die Recommendation
 Engine entweder auf Python basieren oder entsprechende Python-Bindings besitzen, sodass sie einfach
-integriert werden kann. Ebenfalls ist es wichtig, dass sie genau wie Indico Open Source ist und
-keine Systemanforderungen hat, die schwierig zu erfüllen sind. Ein Beispiel dafür wäre eine
-Software, die zwingend eine kommerzielle Oracle-Datenbank benötigt.
+integriert werden kann. Ebenfalls ist es wichtig, dass sie, genau wie Indico, Open Source ist und
+keine schwierig zu erfüllenden Systemanforderungen hat. Ein Beispiel dafür wäre eine Software, die
+zwingend eine kommerzielle Oracle-Datenbank benötigt.
 
 
 \subsection{Crab}
 
 \emph{Crab}\footnote{\href{https://github.com/muricoca/crab/}{https://github.com/muricoca/crab/}}
-ist ein \emph{Recommender Framework}, welches auf Libraries \emph{numpy} und \emph{scipy} basiert.
-Dabei handelt es sich um Python-Bibliotheken, die diverse mathematische Standardalgorithmen und
-Hilfsfunktionen zur Verfügung stellen und dank in C geschriebenen Erweiterungen auch in einer
+ist ein \emph{Recommender Framework}, welches auf den Libraries \emph{numpy} und \emph{scipy}
+basiert. Dabei handelt es sich um Python-Bibliotheken, die diverse mathematische Standardalgorithmen
+und Hilfsfunktionen zur Verfügung stellen und dank in C geschriebenen Erweiterungen auch in einer
 Scriptsprache wie Python sehr hohe Performance bieten.
 
 Auf die verwendeten Algorithmen näher einzugehen würde den Umfang dieses Kapitels sprengen. Daher
 wird nur die eigentliche Funktionalität von Crab betrachtet und inwiefern sie für Indico geeignet
 ist. Als Datenbasis wird ein Mapping benötigt, welches Benutzer mit Events verknüpft, wobei jede
-Verknüpfung ein bestimmtes Gewicht hat. Anhand diesen Daten berechnet Crab nun die Ähnlichkeit
-zwischen den einzelnen Usern. Der Recommender kann schlussendlich mithilfe dieser Ähnlichkeiten und
+Verknüpfung ein bestimmtes Gewicht hat. Anhand dieser Daten berechnet Crab nun die Ähnlichkeit
+zwischen den einzelnen Usern. Der Recommender kann schlussendlich mithilfe dieser Daten und
 den Initialdaten Events vorschlagen, mit denen ein ähnlicher Benutzer eine Verbindung hat.
 
 Die API von Crab ist sehr einfach zu nutzen, allerdings spricht ein wichtiger Faktor gegen eine
@@ -97,27 +97,27 @@ Durchläufen erneut ausgeführt werden und somit genauso rechen- und speicherint
 
 \subsection{Probleme}
 
-Wenn man einmal näher betrachtet, wie größere Indico-Installationen meist genutzt werden und was für
-Events sind relevant, bemerkt man schnell, dass sich das Problem relativ stark von dem zuvor
-erwähnten Use-Case in einem Onlineshop unterscheidet:
+Wenn man einmal näher betrachtet, wie größere Indico-Installationen meist genutzt werden und welche
+Events relevant sind, bemerkt man schnell, dass sich das Problem stark von dem zuvor erwähnten
+Use-Case in einem Onlineshop unterscheidet:
 
 \begin{itemize}
 
 \item In einem Shop kann ein Benutzer oftmals Artikel bewerten oder entscheidet sich dafür, einen
 Artikel zu kaufen oder ihn in den Warenkorb zu legen bzw. vor dem Kauf wieder daraus zu entfernen.
-Mit diesen Informationen lässt sich relativ einfach eine Gewichtung zwischen Kunden und Artikel
-aufbauen. In Indico ist dies jedoch nicht der Fall - bei Events vom Typ \enquote{Lecture} oder
-\enquote{Meeting} wird häufig noch nichtmal eine Teilnehmerliste geführt, weshalb nur aktiv
-teilnehmende Benutzer, beispielsweise durch einen im Zeitplan festgehaltenen Beitrag, eine sichtbare
-Verknüpfung mit dem Event haben.
+Mit diesen Informationen lässt sich verhältnismäßig einfach eine Gewichtung zwischen Kunden und
+Artikeln aufbauen. In Indico ist dies jedoch nicht der Fall - bei Events vom Typ \enquote{Lecture}
+oder \enquote{Meeting} wird häufig nicht einmal eine Teilnehmerliste geführt, weshalb nur aktiv
+teilnehmende Benutzer, die beispielsweise durch einen im Zeitplan festgehaltenen Beitrag eine
+sichtbare Verknüpfung mit dem Event haben.
 
 \item Prinzipiell sind erstmal alle Artikel in einem Shop für einen Benutzer relevant bzw könnten es
 sein. Eine große Indico-Installation enthält jedoch sehr viele unterschiedliche Events. Im Beispiel
 der CERN-Installation geht das von Human-Resources-Meetings über Meetings der diversen
 Physik-Experimente bishin zu Meetings der Systemadministratoren. Obwohl es durchaus möglich sein
-kann, dass jemand dort an mehreren Meetings teilnimmt, weil er beispielsweise Systemadministrator
-bei einem der Experimente ist, führt dies nicht zwangsläufig dazu, dass Events aus beiden Kategorien
-relevant für seine Kollegen sind.
+kann, dass jemand dort an mehreren Meetings teilnimmt, weil er z.B. Systemadministrator bei einem
+der Experimente ist, führt dies nicht zwangsläufig dazu, dass Events aus beiden Kategorien relevant
+für seine Kollegen sind.
 
 \end{itemize}
 
@@ -128,32 +128,32 @@ ist.
 
 \subsection{Alternative}
 
-Deutlich hilfreicher sind Vorschläge zu Konferenzen. Diese finden in der Regel höchstens jährlich
-statt und dementsprechend hilfreich ist ein Hinweis, dass ein Nachfolger einer bestimmten Konferenz
-stattfindet, an der man zuvor bereits einmal teilgenommen hat. Oftmals haben solche jährlich
-stattfindenen Konferenzen jeweils denselben Titel mit der entsprechenden Jahreszahl am Ende.
+Deutlich sinnvoller sind Vorschläge zu Konferenzen. Diese finden in der Regel höchstens jährlich
+statt und dementsprechend nützlich ist ein Hinweis, dass eine bestimmten Konferenz, an der man zuvor
+bereits einmal teilgenommen hat, wieder stattfindet. Oftmals haben solche jährlich stattfindenen
+Konferenzen jeweils denselben Titel mit der entsprechenden Jahreszahl am Ende.
 
 Technisch lassen sich auf ähnlichen Titeln basierende Vorschläge sehr einfach realisieren. Indico
 enthält bereits Plugins, um alle Events einer externen Suchmaschine zugänglich zu machen. Wenn man
 nun also automatisiert nach Events mit Titeln sucht, die Ähnlichkeit mit den Titeln bereits
-besuchter Events bzw. Konferenzen haben und noch nicht stattgefunden haben, ist die Chance gut, dass
-es sich um genau die gewünschten Vorschläge handelt. Die einzige Schwierigkeit liegt daran, die
+besuchter Events bzw. Konferenzen haben und noch nicht stattgefunden haben, ist die Chance groß,
+dass es sich um genau die gewünschten Vorschläge handelt. Die einzige Schwierigkeit liegt daran, die
 Titel der bestehenden Events auszulesen ohne alle mit dem Benutzer verbundenen Events einbeziehen zu
 müssen. Während dies zwar problemlos möglich ist, wenn man Meetings grundsätzlich nicht einbezieht,
 hat diese Lösung den Nachteil, einen Großteil des Datenbestandes zu ignorieren. Einfacher ist es,
 die Liste der Events des Users zu filtern und ähnliche Events zusammenzufassen bzw. Duplikate zu
 entfernen. Insbesondere regelmäßige Meetings haben meist denselben Namen, da sie einfach nur kopiert
 werden, und sofern Jahreszahlen oder andere Datumsangaben im Titel sind, kann man sie ebenfalls
-leicht entfernen. Schlussendlich hat man eine Liste mit einzigartigen Eventtiteln, die man an die
+leicht entfernen. Damit hat man eine Liste mit einzigartigen Eventtiteln, die man an die
 Suchmaschine übergeben kann.
 
 Die Ergebnisse dieser Suche sind jedoch noch nicht sofort für Vorschläge geeignet. Jede Fuzzy-Suche
 enthält Ergebnisse, die man nicht erwarten würde, da kein Suchalgorithmus unfehlbar ist. Während an
-sich einzelne schlechte Vorschläge kein Problem sind, dürfen beispielsweise grundsätzlich keine
-Events angezeigt werde, auf die der Benutzer keinen Zugriff hat - je nach Event könnte bereits
-der Titel und eine eventuell vorhandene Beschreibung sensible Informationen enthalten. Darüberhinaus
-hat die Suchmaschine keine Kenntisse darüber, an welchen Events der Benutzer bereits teilnimmt.
-Diese müssen daher ebenfalls anwendungsseitig ausgefiltert werden.
+sich einzelne schlechte Vorschläge kein Problem sind, dürfen grundsätzlich keine Events angezeigt
+werde, auf die der Benutzer keinen Zugriff hat - je nach Event könnte bereits der Titel und eine
+eventuell vorhandene Beschreibung sensible Informationen enthalten. Darüberhinaus hat die
+Suchmaschine keine Kenntisse darüber, an welchen Events der Benutzer bereits teilnimmt. Diese
+müssen daher ebenfalls in Indico ausgefiltert werden.
 
 
 \section{Aktueller Stand}
@@ -173,5 +173,5 @@ als wenig hilfreich herausgestellt, da sie hauptsächlich regelmäßig stattfind
 Ergebnisliste hatten, die aber bereits aufgrund der favorisierten Kategorie im bestehenden Dashboard
 angezeigt werden.
 
-Manuelle Tests mit der am CERN genutzten Indico-Suchmaschine lassen jedoch darauf schließen,
+Manuelle Tests mit der am CERN genutzten Indico-Suchmaschine lassen jedoch darauf schließen, dass
 titelbasierte Vorschläge nützlich sind und der Entwicklungsaufwand sich daher lohnt.
