@@ -8,9 +8,9 @@ ist.
 
 Den Kern des Frameworks bildet das Package \lstinline{indico.web.wsgi}, welches das in
 \autoref{wsgi-interface} beschriebene WSGI-Interface implementiert und eine Emulationsschicht für
-\emph{mod\_python} bereitstellt. Neben dem Bereitstellen der entsprechenden APIs und Objekte ist due
+\emph{mod\_python} bereitstellt. Neben dem Bereitstellen der entsprechenden APIs und Objekte ist die
 wichtigste Aufgabe dieser Schicht, Requests auf die entsprechenden Python-Dateien zu mappen.
-Beispielsweise führt ein Aufruf von \emph{/index.py/foo} zum Aufruf der Funktion \lstinline{foo()}
+Der Aufruf von \emph{/index.py/foo} führt zum Aufruf der Funktion \lstinline{foo()}
 in der Datei \emph{index.py} im \emph{htdocs}-Ordner. Da diese Dateien jedoch, um das Verhalten von
 \emph{mod\_python} beizubehalten, erst dann geladen werden, wenn ein entsprechender Request
 empfangen wird, können sie nicht beim Initialisierung der Anwendung importiert und in einem Mapping
@@ -135,8 +135,8 @@ stark mit Anwendungscode vermischt.
 Das Modulsystem von Indico nutzt die Datenbank sowohl zum Speichern der Konfigurationseinstellungen
 als auch für die Metadaten der verschiedenen Module, sodass sie nicht bei jedem Aufruf neu über die
 \emph{entry points} geladen werden müssen. Dabei wird massiv darauf gesetzt, dass es sich bei ZODB
-um eine Python-Objektdatenbank handelt. Dies erlaubt es, auch komplexe Datentypen wie Python-Module
-direkt in der Datenbank zu speichern statt explizit den Pfad zur dazugehörigen Python-Datei
+um eine Python-Objektdatenbank handelt. Damit können auch komplexe Datentypen wie Python-Module
+direkt in der Datenbank gespeichert werden statt nur den Pfad zur dazugehörigen Python-Datei
 abzulegen.
 
 

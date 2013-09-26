@@ -17,7 +17,7 @@ Sessions, Templates oder der Aufbau einer Datenbankverbindung - keine dieser Ber
 normalerweise anwendungsspezifischen Code sondern ausschließlich Konfigurationsdaten wie z.B. die
 Logindaten für die Datenbank oder die Lebensdauer einer Session.
 
-Ein weiterer Vorteil der meisten Frameworks ist die Entkopplung von URLs und dem Dateisystem.
+Ein weiterer Vorteil der meisten Frameworks ist die Entkopplung von URLs und Dateisystem.
 Während in den zuvor erwähnten CGI- oder PHP-Lösungen der Pfad in der URL so gut wie immer einem
 Pfad im Dateisystem entspricht, erlauben Frameworks normalerweise ein Mapping von URLs
 (einschließlich dynamischer Elemente) zu Funktionen oder Klassen, sodass der Code der Anwendung
@@ -33,14 +33,14 @@ WSGI zuständige Entwickler darauf aufbauenden Code nicht verändern wollte, ent
 eine Kompatibilitätsschicht, die die von \emph{mod\_python} bereitgestellten APIs emuliert. Diese
 APIs sind weder entwicklerfreundlich noch unterstützen sie performancerelevante Funktionen wie das
 Übergeben eines Dateideskriptors an den Webserver, ohne den kompletten
-Dateiinhalt in den Speicher einzulesen. Bei der Migration zu einem modernen Framework bietet es sich
-an, diese Schicht vollständig zu entfernen und den Code, der sie nutzt, einem Refactoring zu
-unterziehen.
+Dateiinhalt in den Speicher einzulesen. Bei der Migration zu einem modernen Framework sollte diese
+Kompatibilitätsschicht vollständig entfernt werden und der Code, der sie nutzt, einem Refactoring
+unterzogen werden.
 
 Vor der Auswahl eines neuen Frameworks muss zuerst analysiert werden, welche Funktionalität das
 bestehende Framework zur Verfügung stellt und welche Probleme es dort gibt, damit beim neuen
 Framework darauf geachtet werden kann, dass diese Probleme dort nicht ebenfalls vorhanden sind.
-Falls das Framework eine eigene Datenbankschicht enthält muss geprüft werden, inwiefern diese mit
+Falls das Framework eine eigene Datenbankschicht enthält muss geprüft werden, wie weit diese mit
 der in Indico genutzten Objektdatenbank kompatibel ist.
 
 Nachdem ein Framework ausgewählt wurde, muss es zunächst in Indico integriert werden. Der erste
@@ -54,19 +54,19 @@ ersetzen.
 
 \section{Aufbau der Arbeit}
 
-Im Einleitungskapitel wird kurz auf die Aufgabenstellung eingegangen und die groben Schritte zum
+Im Einleitungskapitel wird auf die Aufgabenstellung eingegangen und die groben Schritte zum
 Ziel beschrieben. Dann wird kurz auf die Firma eingegangen, an der das Projekt durchgeführt
 wurde.
 Ebenfalls wird die Indico-Software, die im Rahmen dieser Arbeit um ein Framework erweitert wird,
-kurz vorgestellt, sodass man sich einen Überblick über ihre Funktion verschaffen kann.
+vorgestellt, sodass man sich einen Überblick über ihre Funktion verschaffen kann.
 
 Im Grundlagenkapitel werden die genutzen Technologien und ihre Besonderheiten vorgestellt. Nach
-einem kurzen Überblick über die Programmiersprache Python werden ihre Besonderheiten kurz
+einem Überblick über die Programmiersprache Python werden ihre Besonderheiten kurz
 vorgestellt und das WSGI-Interface näher betrachtet.
 
-Auf die Funktionen des bestehenden Frameworks wird im dritten Kapitel kurz eingegangen. Desweiteren
+Auf die Funktionen des bestehenden Frameworks wird im dritten Kapitel eingegangen. Desweiteren
 werden dort die in Frage kommenden Frameworks vorgestellt und anhand verschiedener Kriterien
-analysiert, sodass die Entscheidung für ein Framework später besser begründet werden kann.
+analysiert, sodass die Entscheidung für ein Framework später gut begründet werden kann.
 
 Im vierten Kapitel wird die Entscheidung für das Flask-Microframework begründet, nachdem die
 verschiedenen Migrationspfade erläutert und die jeweiligen Vor- und Nachteile diskutiert wurden.
@@ -78,7 +78,7 @@ zukünftig möglich sind.
 Zusätzlich zur Frameworkmigration soll das Benutzerdashboard durch automatische Vorschläge erweitert
 werden. Lösungsansätze zu diesem Teilprojekt werden im sechsten Kapitel vorgestellt.
 
-Kapitel sieben schließt diese Arbeit mit einem kurzen Rückblick ab.
+Kapitel sieben schließt diese Arbeit mit einem Rückblick ab.
 
 
 \section{CERN}

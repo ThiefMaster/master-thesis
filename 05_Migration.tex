@@ -62,7 +62,7 @@ bereits im Hinblick auf die Migration und zukünftige Entwicklungen zu strukturi
 notwendigen Code enthält.
 
 Bei der \emph{Application Factory} handelt es sich um eine Funktion, die eine Flask-Instanz
-erstellt, konfiguriert zurückgibt. Diese Kapselung hat den Vorteil, dass jegliche Initialisierung an
+erstellt, konfiguriert und zurückgibt. Diese Kapselung hat den Vorteil, dass jegliche Initialisierung an
 einigen wenigen Stellen stattfindet und z.B. für Unittests eine Instanz mit anderen
 Konfigurationsoptionen erstellt werden kann. Ohne Nutzung einer Factory-Funktion würde die
 Flask-Instanz zur Importzeit des Moduls erstellt werden und jedes andere Modul könnte das Objekt von
@@ -336,7 +336,7 @@ class UHAbout(URLHandler):
 Man könnte nun denken, dass es sehr einfach ist, die URLHandler-Klasse anzupassen, sodass statt der
 relativen URL der Flask-Endpoint übergeben wird und die URL-Instanz die mittels
 \lstinline{url_for()} zum Endpoint gehörende URL erhält. Mit den bestehenden Routingregeln
-funktioniert dies auch ohne Probleme. Problematisch wird es allerdings, sobald eine Regel eine
+funktioniert dies auch ohne Schwierigkeiten. Problematisch wird es allerdings, sobald eine Regel eine
 Variable in der URL enthält. In diesem Fall schlägt \lstinline{url_for()} fehl, sofern die Variable
 nicht übergeben wurde. Da die in Indico jedoch nicht immer alle Variablen an \lstinline{getURL()}
 übergeben werden sondern teilweise erst über die Methoden der URL-Klasse hinzugefügt werden, darf
@@ -425,7 +425,7 @@ unerwartete Nebeneffekte hatten.
 
 Ein weiterer ursprünglich nicht bedachter Sonderfall machte sich beim Testen von Indico mit dem
 \emph{nginx}-Webserver bemerkbar: Bei statischen Dateien, die im Dateisystem existieren, ist es
-deutlich effizienter, wenn der Webserver die Datei ausliefen kann, als wenn die Webanwendung dies
+deutlich effizienter, wenn der Webserver die Datei ausliefern kann, als wenn die Webanwendung dies
 tun muss. Dazu unterstützen die meisten Webserver den \emph{X-Sendfile}-Header, der den Pfad zu der
 Datei enthält, die der Webserver an den Client senden soll. Aus Sicherheitsgründen unterstützt nginx
 jedoch nur \emph{X-Accel-Redirect}, der sich zwar fast identisch verhält, allerdings statt eines

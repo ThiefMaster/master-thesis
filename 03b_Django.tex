@@ -141,14 +141,14 @@ mehr, da fast jede Website spätestens beim Login Cookies voraussetzt.
 \item[Caching] \hfill \\
 Wie zuvor schon erwähnt, eignet sich Djangos Middleware-System unter anderem ideal dafür, ganze
 Seiten zu cachen. Dementsprechend ist es nur logisch, dass Django eine entsprechende Middleware
-mitliefert.  Diese realisiert Caching erwartetermaßen auf Seitenebene, d.h. jede via GET aufgerufene
+mitliefert.  Diese realisiert Caching wie zu erwarten auf Seitenebene, d.h. jede via GET aufgerufene
 Seite wird gecacht, sofern es nicht durch entsprechende Header unterbunden wird. Insbesondere auf
 Seiten, deren Content nicht extrem oft aktualisiert wird, bietet sich diese Cachemethode an, da sie
 mit minimalem Aufwand realisierbar ist.
 
 Eine flexiblere Cachemethode ist der Decorator-basierte View-Cache. Dieser ermöglicht es, einzelne
 Views zu cachen, sodass z.B. die Startseite gecacht werden kann aber andere, häufiger
-aktualisierte, Seiten wie ein Gästebuch nicht gecacht werden. Sofern die Granularität
+aktualisierte Seiten wie ein Gästebuch, nicht gecacht werden. Sofern die Granularität
 immernoch nicht ausreicht, erlaubt Django es auch, einzelne Templatefragmente zu cachen. Dies bietet
 sich an, wenn Teile eines Templates zu dynamisch zum cachen sind, andere jedoch nur relativ selten
 aktualisiert werden.
@@ -167,9 +167,9 @@ benutzerdefiniertes Cache-Backend zu verwenden.
 
 \item[Integrierbarkeit] \hfill \\
 Da es sich bei Django um ein Full-Stack-Framework handelt ist es darauf ausgelegt, von Anfang an
-verwendet zu werden. Es ist zwar prinzipiell möglich, Teile von Django wie das Routingsystem zu
-nutzen, ohne die fortgeschritteneren Features wie das ORM zu verwenden, allerdings muss man dabei in
-der Regel auf viele Vorteile des Frameworks verzichten. So müssten z.B. alle Templates der
+verwendet zu werden. Es ist zwar prinzipiell möglich, Teile von Django, wie das Routingsystem, zu
+nutzen, ohne die fortgeschritteneren Features, wie das ORM, zu verwenden, allerdings muss man dabei
+in der Regel auf viele Vorteile des Frameworks verzichten. So müssten z.B. alle Templates der
 bestehenden Anwendung angepasst werden, um die URL-Generierung des Routingsystems zu verwenden.
 
 Explizit unterstützt wird jedoch die Nutzung einer bereits existierenden Datenbank: Wie bereits

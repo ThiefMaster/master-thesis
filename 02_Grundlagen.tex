@@ -8,10 +8,10 @@ Python wurde 1989 von Guido van Rossum am \emph{CWI}\footnote{Centrum Wiskunde \
 nationale niederländische Forschungsinstitut für Mathematik und Informatik} entwickelt und 1991 als
 Betaversion in der Usenet-Newsgroup \emph{alt.sources} veröffentlicht.
 
-Seitdem wurde die Sprache kontinuierlich weiterentwickelt und 1994 in der Version 1.0 released. Die
-erste Version von Python 2.0 erschien im Herbst 2000 und legte den Grundstein für die heute weit
-verbreiteten Versionen 2.6 und 2.7, wobei es sich bei letzterer um die letzte Version von Python 2
-handelt.
+Seitdem wurde die Sprache kontinuierlich weiterentwickelt und 1994 in der Version 1.0
+veröffentlicht. Die erste Version von Python 2.0 erschien im Herbst 2000 und legte den Grundstein
+für die heute weit verbreiteten Versionen 2.6 und 2.7, wobei es sich bei letzterer um die letzte
+Version von Python 2 handelt.
 
 Version 3 der Programmiersprache ist seit 2008 verfügbar, wobei sie in der Verbreitung bisher noch
 nicht an Python 2 anknüpfen konnte. Dies liegt hauptsächlich an den teilweise nicht zu Python 2
@@ -370,8 +370,8 @@ frameworkspezifischen Daten wie z.B. eine Routingtabelle für URLs enthalten kan
 Alle für WSGI nötigen Daten werden als Parameter übergeben. \lstinline{environ} enthält dabei die
 bereits aus CGI bekannten Umgebungsvariablen wie \emph{REQUEST\_METHOD} für die HTTP-Methode
 (\emph{GET}, \emph{POST}, \ldots) und \emph{QUERY\_STRING} für die GET-Parameter in der URL. Neben
-diesen Variablen sind weitere, WSGI-spezifische, Variablen enthalten. Diese übermitteln unter
-Anderem neben der verwendete Version der WSGI-Spezifikation auch die Datenstreams für den
+diesen Variablen sind weitere, WSGI-spezifische, Variablen enthalten. Diese übermitteln u.a. neben
+der verwendete Version der WSGI-Spezifikation auch die Datenstreams für den
 \emph{Request Body} (in CGI: \emph{stdin}) und Fehlermeldungen (in CGI: \emph{stderr}).
 
 Beim zweiten Parameter, \lstinline{start_response}, handelt es sich genau wie beim
@@ -423,5 +423,5 @@ sind wie \emph{Gunicorn} direkt in Python geschrieben und unterstützen WSGI nat
 Der große Vorteil eines Containers wie \emph{uWSGI} ist die strikte Trennung zwischen Webserver und
 Python, sodass jeglicher interaktive Code problemlos unter einem anderen Systemuser laufen kann als
 der Webserver selbst und unabhängig voneinander sind. Letzteres hat den Vorteil, dass besseres
-Performance-Tuning möglich ist als wenn Webserver und Python-Interpreter eng miteinander verknüpft
-sind.
+Performance-Tuning möglich ist, wenn Webserver und Python-Interpreter nicht eng miteinander
+verknüpft sind.
