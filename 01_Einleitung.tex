@@ -30,9 +30,9 @@ Die \emph{Indico}-Software nutzt WSGI\footnote{\href{http://www.python.org/dev/p
 Server Gateway Interface} \citep{wsgi}} zur Kommunikation mit dem Webserver. Da jedoch ursprünglich
 das inzwischen veraltete \emph{mod\_python} eingesetzt wurde, und der für die Implementierung von
 WSGI zuständige Entwickler darauf aufbauenden Code nicht verändern wollte, enthält Indico noch immer
-eine Kompatibilitätsschickt, die die von \emph{mod\_python} bereitgestellten APIs emuliert. Diese
-APIs sind weder entwicklerfreundlich noch unterstützen sie performancerelevante Funktionen wie
-beispielsweise das Übergeben eines Dateideskriptors an den Webserver, ohne den kompletten
+eine Kompatibilitätsschicht, die die von \emph{mod\_python} bereitgestellten APIs emuliert. Diese
+APIs sind weder entwicklerfreundlich noch unterstützen sie performancerelevante Funktionen wie das
+Übergeben eines Dateideskriptors an den Webserver, ohne den kompletten
 Dateiinhalt in den Speicher einzulesen. Bei der Migration zu einem modernen Framework bietet es sich
 an, diese Schicht vollständig zu entfernen und den Code, der sie nutzt, einem Refactoring zu
 unterziehen.
@@ -45,7 +45,7 @@ der in Indico genutzten Objektdatenbank kompatibel ist.
 
 Nachdem ein Framework ausgewählt wurde, muss es zunächst in Indico integriert werden. Der erste
 Schritt danach ist, die Anwendung wieder in einen vollständig lauffähigen Zustand zu bringen und
-Konflikte zwischen dem Framework und bestehendem Code zu beheben. Ab diesem Zeitpunkt kann
+eventuelle Konflikte zwischen dem Framework und bestehendem Code zu beheben. Ab diesem Zeitpunkt kann
 analysiert werden, welche Elemente des alten Frameworks neben dem WSGI-Kern ebenfalls durch das neue
 Framework ersetzt werden können bzw. ob es Teile der Anwendung gibt, in denen es sinnvoll ist,
 bereits vorhandenen Code zu nutzen statt sie durch eine entsprechende Lösung des neuen Frameworks zu
@@ -55,30 +55,30 @@ ersetzen.
 \section{Aufbau der Arbeit}
 
 Im Einleitungskapitel wird kurz auf die Aufgabenstellung eingegangen und die groben Schritte zum
-Ziel beschrieben. Desweiteren wird kurz auf die Firma eingegangen, an der das Projekt durchgeführt
+Ziel beschrieben. Dann wird kurz auf die Firma eingegangen, an der das Projekt durchgeführt
 wurde.
 Ebenfalls wird die Indico-Software, die im Rahmen dieser Arbeit um ein Framework erweitert wird,
-kurz vorgestellt, sodass man sich einen Überblick darüber verschaffen kann, was sie eigentlich tut.
+kurz vorgestellt, sodass man sich einen Überblick über ihre Funktion verschaffen kann.
 
 Im Grundlagenkapitel werden die genutzen Technologien und ihre Besonderheiten vorgestellt. Nach
 einem kurzen Überblick über die Programmiersprache Python werden ihre Besonderheiten kurz
 vorgestellt und das WSGI-Interface näher betrachtet.
 
 Auf die Funktionen des bestehenden Frameworks wird im dritten Kapitel kurz eingegangen. Desweiteren
-werden dort die in Frage kommenden Frameworks vorgestellt und anhand von verschiedenen Kriterien
+werden dort die in Frage kommenden Frameworks vorgestellt und anhand verschiedener Kriterien
 analysiert, sodass die Entscheidung für ein Framework später besser begründet werden kann.
 
 Im vierten Kapitel wird die Entscheidung für das Flask-Microframework begründet, nachdem die
 verschiedenen Migrationspfade erläutert und die jeweiligen Vor- und Nachteile diskutiert wurden.
 
 Die wichtigsten Schritte der eigentlichen Migration werden im fünften Kapitel näher beschrieben. Zum
-Schluss wird auf die Probleme dabei eingegangen und betrachtet, welche Erweiterungen zukünftig
-möglich sind.
+Schluss wird auf die dabei aufgetretenen Probleme eingegangen und betrachtet, welche Erweiterungen
+zukünftig möglich sind.
 
 Zusätzlich zur Frameworkmigration soll das Benutzerdashboard durch automatische Vorschläge erweitert
 werden. Lösungsansätze zu diesem Teilprojekt werden im sechsten Kapitel vorgestellt.
 
-Das siebte Kapitel schließt diese Arbeit mit einem kurzen Rückblick ab.
+Kapitel sieben schließt diese Arbeit mit einem kurzen Rückblick ab.
 
 
 \section{CERN}
@@ -92,7 +92,7 @@ Teilchenbeschleuniger am CERN} zum Einsatz kommt.
 Neben der physikalischen Forschung wird am CERN auch Software entwickelt, die zwar meist in erster
 Linie zur internen Nutzung dient, jedoch oftmals auch in Form von \emph{Open Source} der
 Allgemeinheit kostenfrei zur Verfügung gestellt wird. Diese Software erstreckt sich über viele
-Bereiche der IT, so werden am CERN beispielsweise Business-Software für den Human-Resources-Bereich,
+Bereiche der IT, so werden am CERN z.B. Business-Software für den Human-Resources-Bereich,
 Grid-Lösungen für die verteilte Datenverarbeitung, Steuersysteme für den Teilchenbeschleuniger und
 Webanwendungen für die Archivierung von Medien entwickelt.
 
@@ -100,7 +100,7 @@ Die Abteilung \emph{IT-CIS-AVC}\footnote{Collaboration \& Information Services -
 Collaborative Services} ist zuständig für die Verwaltung und Einrichtung von Videkonferenzsystemen,
 Aufzeichnung und Onlinestreaming von Vorträgen, Meetings und Konferenzen und die Software zu deren
 Planung. Ebenfalls im Zuständigkeitsbereich der Abteilung sind die Informationsbildschirme, die in
-verschiedenen Gebäuden des CERN aufgebaut sind und aktuelle Informationen zum nächstgelegenen
+verschiedenen Gebäuden des CERN installiert sind und aktuelle Informationen zum nächstgelegenen
 Konferenzraum oder aber den Status des \emph{Large Hadron Colliders} anzeigen.
 
 
@@ -110,7 +110,7 @@ Konferenzraum oder aber den Status des \emph{Large Hadron Colliders} anzeigen.
 Indico\footnote{Integrated Digital Conference - \href{http://indico-software.org/}{http://indico-software.org/}}
 ist eine von der Abteilung \emph{IT-CIS-AVC} am CERN entwickelte Webapplikation, die zum Planen und
 Organisieren von Events dient. Dabei kann es sich sowohl um einfache Vorträge handeln, aber auch um
-Meetings und mehrtägige Konferenzen mit mehreren Sessions und Beiträgen. Zur integration in eine
+Meetings und mehrtägige Konferenzen mit mehreren Sessions und Beiträgen. Zur Integration in eine
 bestehende Benutzerinfrastruktur unterstützt die Software außerdem externe
 Benutzerauthentifizierung. Insbesondere für Meetings und Konferenzen wichtig sind Features wie das
 \emph{Paper Reviewing}\footnote{Im Rahmen eines \emph{Call for Papers} oder \emph{Call for
@@ -130,8 +130,8 @@ die vor Ort dann mithilfe einer Smartphone-App eingescannt und auf Gültigkeit g
 Kategorien und Events in Indico sind in einer Baumstruktur organisiert: Auf der Rootebene finden
 sich in der Regel ausschließlich Kategorien, die jeweils entweder weitere Kategorien oder beliebige
 Events (Vorträge, Meetings und Konferenzen) enthalten können. Ein solches Event wiederum kann
-diverse Elemente enthalten, wobei es vom Typ des Events abhängt, welche das sind. So kann
-beispielsweise ein Vortrag oder Meeting kein Registrierungsformular enthalten.
+diverse Elemente enthalten, wobei deren Zusammensetzung vom Typ des Events abhängt. Ein Vortrag oder
+Meeting enthält in Indico z.B. grundsätzlich kein Registrierungsformular.
 
 Die folgende Auflistung beinhaltet die wichtigsten Bestandteile von Events:
 \begin{itemize}
@@ -146,7 +146,7 @@ Die folgende Auflistung beinhaltet die wichtigsten Bestandteile von Events:
 \end{itemize}
 
 \subsection{Architektur}
-Der serverseitige Code von Indico ist komplett in Python 2.6 geschrieben und nutzt als Datenbank die
+Der serverseitige Code von Indico ist komplett in Python 2.6 geschrieben und nutzt die
 ZODB\footnote{Zope Object Database, \href{http://www.zodb.org}{http://www.zodb.org}} als Datenbank.
 Der Code ist in einer mehrschichtigen Architektur organisiert: Die Anfrage des Benutzers wird vom
 Webserver über WSGI\footnote{\href{http://www.python.org/dev/peps/pep-0333/}{Web Server Gateway
@@ -154,7 +154,7 @@ Interface}} an die Anwendung weitergegeben, in der die \emph{Request Handler (RH
 Anwendungslogik ausführt. Diese baut die Datenbankverbindung auf, prüft die Zugangsberechtigung des
 Benutzers, verarbeitet vom Client übermittelte Daten und führt letztendlich auch die gewünschte
 Aktion aus. Um eine dynamische HTML-Seite auszugeben, nutzt der \emph{Request Handler} die
-\emph{Web Pages (WP)}-Ebene. Dort werden diverse Aktionen ausgeführt, welche die Anzeige der Daten
+\emph{Web Pages (WP)}-Ebene. Dort werden diverse Aktionen ausgeführt, die die Anzeige der Daten
 beeinflussen - insbesondere werden dort die benötigten JavaScript- bzw. CSS-Packages mithilfe der
 \emph{webassets}-Bibliothek geladen. Die eigentliche Erzeugung der HTML-Datei übernimmt die
 \emph{Components (W)}-Ebene. Bei dieser Ebene handelt es sich um ein Überbleibsel aus der

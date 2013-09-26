@@ -14,13 +14,13 @@ verschiedene Namespaces bereitstellen, wird zudem das Risiko von Namenskollision
 \item[URL-Routing] \hfill \\
 In modernen Webanwendungen erwartet man in der Regel saubere, semantische URLs. Dabei handelt es
 sich um URLs, aus deren Pfad weder Rückschlüsse auf die verwendete Technologie (z.B. \emph{help.php}
-oder \emph{conferenceDisplay.py}) gezeogen werden können noch ausschließlich nichtssagende Parameter
+oder \emph{conferenceDisplay.py}) gezogen werden können noch ausschließlich nichtssagende Parameter
 enthalten sind. Ein einfaches Beispiel für solche Parameter ist eine URL dieser Form:
 \emph{/view.py?type=3\&id=12345}. Während \emph{view} zwar aussagt, dass irgendein Objekt angezeigt
 wird und dieses Objekt die interne Identifikationsnummer \emph{12345} besitzt, kann man der URL
 nicht ansehen, worum es sich jetzt genau handelt. Im Gegensatz dazu steht eine URL der Form
 \emph{/view/event/12345-welcome}. An dieser sieht man sofort, dass es sich um ein Event handelt,
-welches höchstwahrscheinlicht den Titel \enquote{welcome} hat.
+welches höchstwahrscheinlich den Titel \enquote{welcome} hat.
 
 Um solche URLs zu realisieren, arbeiten Frameworks normalerweise mit einer Routingtabelle, die URLs
 auf Funktionen, Klassen, o.ä. mappt. Der Aufbau der URLs, insbesondere wenn dynamische Parameter
@@ -37,7 +37,7 @@ automatisiert in die Syntax der neuen Engine zu konvertieren, hat es Vorteile, w
 mit einer beliebigen Templateengine benutzt werden kann.
 
 \item[Datenbankanbindung] \hfill \\
-Viele Framework benötigen eine Datenbank, um frameworkspezifische Daten abzuspeichern oder um für
+Viele Frameworks benötigen eine Datenbank, um frameworkspezifische Daten abzuspeichern oder um für
 den möglicherweise vorhandenen Administrationsbereich eine Benutzer- und Rechteliste zu führen. Da
 die in Indico genutzte ZODB, nicht sehr verbreitet ist, ist insbesondere darauf zu achten, ob zur
 Nutzung des Frameworks eine separate Datenbank benötigt wird.
@@ -49,9 +49,9 @@ Sessionsystem bietet.
 
 \item[Caching] \hfill \\
 Insbesondere bei häufig aufgerufenen Seiten und komplexen Datenbankzugriffen kann die Performance
-einer Anwendung massiv gesteigert werden, indem entweder ganze Seiten oder Teile der zur Generierung
-selbiger notwendigen Daten in einem Cache abgelegt werden. Ein Framework mit einer integrierten
-Caching-Lösung kann dabei behilflich sein, indem es beispielsweise bestimmte Seiten automatisch
+einer Anwendung massiv gesteigert werden, wenn entweder ganze Seiten oder Teile der dort
+angezeigten Daten in einem Cache abgelegt werden. Ein Framework mit einer integrierten
+Caching-Lösung kann dabei behilflich sein, indem es bestimmte Seiten automatisch
 cacht und dabei Parameter und evtl. vorhandene Berechtigungen des Benutzers beachtet.
 
 \item[Integrierbarkeit] \hfill \\
@@ -74,7 +74,7 @@ nicht vorhanden sind. Je nach Feature können diese für Indico nützlich sein.
 Die unterschiedlichen Frameworks sind bei der Abarbeitung von Requests möglicherweise
 unterschiedlich schnell. Dies ist darauf zurückzuführen, dass komplexere Frameworks mehr Dinge
 implizit bei jedem Request tun, während dieselbe Funktionalität in einem kompakten Framework
-entweder überhaupt nicht enthalten ist oder optional ist. Allerdings spielt dieser Performanceaspekt
+entweder überhaupt nicht enthalten oder optional ist. Allerdings spielt dieser Performanceaspekt
 im Rahmen dieser Arbeit nur eine untergeordnete Rolle, da Indico zwar große Datenmengen enthält und
 dabei performant sein muss, jedoch der Overhead des Frameworks verglichen mit Datenbankzugriffen
 minimal ist und somit für den Endbenutzer in der Regel nicht spürbar ist.

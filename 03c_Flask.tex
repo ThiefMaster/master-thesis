@@ -6,10 +6,10 @@ verfügbar ist. Neben Python 2.6 und 2.7 unterstützt die aktuellste Version des
 Python 3.3.
 
 Der Begriff \enquote{Microframework} bedeutet bei Flask, dass das Framework dem Entwickler die
-größtmögliche Flexibilität lässt, welche Technologien er für verschiedene Bestandteile seiner
+größtmögliche Flexibilität lässt, welche Technologien er für die einzelnen Bestandteile seiner
 Anwendung nutzt.
 
-Kern von Flask ist das WSGI-Tookit \emph{Werkzeug}, welches die Lowlevel-Funktionen für das
+Kern von Flask ist das WSGI-Tookit \emph{Werkzeug}, das die Lowlevel-Funktionen für das
 WSGI-Interface und alle HTTP-spezifischen Utilityfunktionen bereitstellt. Auch das URL-Routingsystem
 ist Teil von Werkzeug, wobei Flask die High-Level-APIs dazu bereitstellt und dadurch den in einem
 Framework erwarteten Komfort bietet.
@@ -19,10 +19,11 @@ Framework erwarteten Komfort bietet.
 \item[Modularität] \hfill \\
 Flask ermöglicht modulare Anwendungen mithilfe von \emph{Blueprints}. Diese verhalten sich ähnlich
 wie eine vollwertige Flask-Anwendung, allerdings fehlt die gesamte für eine Flask-Anwendung
-notwendige Logik - stattdessen werden Blueprints einer Anwendung hinzugefügt, und fügen die
-enthaltenen Elemente der Anwendung hinzu. Im Gegensatz zu mehreren kleineren Anwendungen haben
-Blueprints den Vorteil, dass sie weder für die anwendungsweite Fehlerbehandlung noch für Dinge wie
-die Datenbankverbindung zuständig sind, sondern all diese Dinge von der Anwendung selbst übernehmen.
+notwendige Logik. Stattdessen fügen Blueprints ihre Bestandteile der Anwendung hinzu, sobald sie bei
+der Anwendung registriert werden. Im Gegensatz zu mehreren kleineren Anwendungen haben
+Blueprints den Vorteil, dass sie weder für die anwendungsweite Fehlerbehandlung noch für
+Funktionalität wie die Datenbankverbindung zuständig sind, sondern all diese Dinge von der Anwendung
+selbst übernehmen.
 Ein Blueprint kann Templates, statische Daten, URL-Routingdaten und Viewfunktionen enthalten.
 Darüberhinaus ist es möglich, Exceptions auf Blueprintebene abzufangen statt sie grundsätzlich an
 das Errorhandling der Anwendung selbst weiterzureichen.
@@ -31,21 +32,21 @@ Allerdings hat das Blueprint-System auch einen Nachteil: Dadurch, dass es sich g
 vollwertige Anwendung handelt, eignen sie sich nur bedingt dazu, komplett wiederverwendbare Module
 zu entwickeln, die auch von Dritten \emph{as-is} verwendet werden können. Diesem Problem kann jedoch
 bei Bedarf entgegengewirkt werden, indem man entsprechende Voraussetzungen an die Anwendung stellt,
-die den Blueprint nutzen soll, oder problematische Teile entsprechend abstrahiert. Beispielsweise
-könnte eine Klasse, die auf Benutzerdaten zugreift, abstrakte Methoden enthalten, die in der
-jeweiligen Anwendung dann überschrieben werden müssen.
+die den Blueprint nutzen soll, oder problematische Teile entsprechend abstrahiert. Eine Klasse, die
+auf Benutzerdaten zugreift, könnte z.B. abstrakte Methoden enthalten, die in der jeweiligen
+Anwendung dann überschrieben werden müssen.
 
 
 \item[URL-Routing] \hfill \\
-Wie jedes moderne Framework setzt auch Flask auf saubere URLs. Dazu nutzt es von Werkzeug
+Wie jedes moderne Framework setzt auch Flask auf saubere URLs. Dazu nutzt es das von Werkzeug
 bereitgestellte URL-Routing-System und erweitert es um eine einfachere API, die insbesondere bei der
 Registrierung von Routingregeln mittels Decorators und beim Generieren von URLs ihre Vorteile zeigt.
 
-Die einfachste Möglichkeit, eine Routingregel hinzuzufügen ist mit dem Decorator
+Die einfachste Möglichkeit, eine Routingregel hinzuzufügen, ist mit dem Decorator
 \lstinline{app.route}. Dieser akzeptiert als Parameter die Routingregel und optional die erlaubten
 HTTP-Methoden. Die damit dekorierte Funktion wird daraufhin automatisch mit der Regel verknüpft und
 der Funktionsname als Endpoint benutzt. Natürlich sind in einer größeren Anwendung nur wenige URLs
-komplett statisch sondern enthält auch diverse Variablen. Da es sich bei diesen in den meisten
+komplett statisch, sondern enthält auch diverse Variablen. Da es sich bei diesen in den meisten
 Fällen um einfache Strings oder Zahlen handelt, werden diese durch einfache Platzhalter in der Form
 \lstinline{'<type:name>'} bzw. bei Strings \lstinline{'<name>'} angegeben statt über oftmals eher
 kryptische reguläre Ausdrücke. Standardmäßig unterstützt Flask die Typen \lstinline{string},
@@ -57,12 +58,12 @@ definiert. Die Übergabe der Parameter an die Viewfunktion erfolgt über Keyword
 optionale Parameter sind möglich; in diesem Fall muss die Funktion mindestens eine Routingregel
 besitzen, die den entsprechenden Parameter nicht enthält.
 
-Sofern Decorators keine Option sind - beispielsweise weil der Code über viele Dateien verstreut ist
+Sofern Decorators keine Option sind - z.B. weil der Code über viele Dateien verstreut ist
 und man die Routingregeln an einem zentralen Ort haben will - bietet Flask die Methode
-\lstinline{app.add_url_rule}. Diese entspricht prinzipiell dem Decorator, allerdings wird die
-Viewfunktion ebenfalls als Parameter übergeben.
+\lstinline{app.add_url_rule}. Diese entspricht prinzipiell dem Decorator, wobei die Viewfunktion
+ebenfalls als Parameter übergeben wird.
 
-Neben dem Pfad und dem HTTP-Verb kann das Routingsystem auch die aktuelle Subdomain berücksichtigen;
+Neben dem Pfad und dem HTTP-Verb kann das Routingsystem auch die aktuelle Subdomain berücksichtigen,
 sowohl als festen Wert als auch als dynamische Variable. Für komplexere Fälle kann auch direkt auf
 die \lstinline{Map} des Werkzeug-Routingsystems zugegriffen werden statt die Flask-API zu nutzen.
 Dies ist jedoch gerade dank Blueprints nur in den wenigstens Fällen notwendig.
@@ -111,11 +112,11 @@ unterstützt wird die XML-basierte Templateengine \emph{Genshi}.
 
 
 \item[Datenbankanbindung] \hfill \\
-Flask selbst nutzt keine Datenbank und enthält Microframework-typisch keinen Datenbankcode. Es gibt
-mit \emph{Flask-SQLAlchemy} jedoch eine offizielle Flask-Erweiterung, die das SQLAlchemy-ORM-System
-in Flask integriert und dabei denselben Komfort bietet wie er auch bei allen anderen Features von
-Flask üblich ist. Neben den ORM-Features kann alternativ auch nur die Datenbankabstraktionsschicht
-von SQLAlchemy genutzt werden.
+Flask selbst nutzt keine Datenbank und enthält, Microframework-typisch, keinen Datenbankcode. Es
+exisiert mit \emph{Flask-SQLAlchemy} jedoch eine offizielle Flask-Erweiterung, die das
+SQLAlchemy-ORM-System in Flask integriert und dabei denselben Komfort bietet, der auch bei allen
+anderen Features von Flask üblich ist. Neben den ORM-Features kann alternativ auch nur die
+Datenbankabstraktionsschicht von SQLAlchemy genutzt werden.
 
 Mit \emph{Flask-MongoKit}, \emph{Flask-PyMongo} und \emph{Flask-MongoAlchemy} existieren auch
 verschiedene Erweiterungen, um die NoSQL-Datenbank \emph{MongoDB} in Flask zu integrieren. Der Grund
@@ -149,9 +150,9 @@ von Pickle im Falle eines Leaks des geheimen Schlüssels nicht nur die Manipulat
 ermöglichen sondern auch das Ausführen beliebigen Codes.
 
 Sofern cookiebasierte Sessions nicht ausreichen, kann das \lstinline{session_interface} des
-Anwendungsobjekts auf eine benutzerdefinierte Klasse verweisen, die die Sessiondaten beispielsweise
-in Redis oder einer SQL-Datenbank abspeichert. Das Interface ist dabei sehr einfach gehalten; eine
-Redis-basierende Implementierung ist beispielsweise mit weniger als 70 Zeilen Code möglich.
+Anwendungsobjekts auf eine benutzerdefinierte Klasse verweisen, die die Sessiondaten z.B. in Redis
+oder einer SQL-Datenbank abspeichert. Das Interface ist dabei sehr einfach gehalten; eine
+Redis-basierende Implementierung ist mit weniger als 70 Zeilen Code möglich.
 
 Standardmäßig enthält Flask jedoch nur das Cookie-Interface, allerdings hat der Maintainer von Flask
 mit dem \lstinline{RedisSessionInterface} ein entsprechendes Interface für serverseitige Sessions
@@ -180,9 +181,9 @@ Nicht-Decorator-API genauso mächtig und ähnlich komfortabel. Daher ist es sehr
 eine existierende Anwendung zu integrieren.
 
 Selbstverständlich kann eine größere Anwendung, in der Flask nachträglich integriert wurde, nicht
-alle Vorteile des Frameworks ausnutzen ohne dass der gesamte Code modifiziert werden muss,
-allerdings ist Flask sehr flexibel und so ist es kein Problem, bestehende Views so in Flask
-einzubinden, dass sie funktionieren, und neuen Code im \enquote{Flask-Stil} zu schreiben.
+alle Vorteile des Frameworks ausnutzen ohne dass der gesamte Code modifiziert werden muss.
+Nichtsdestotrotz ist Flask sehr flexibel und so ist es kein Problem, bestehende Views funktionsfähig
+in Flask einzubinden und neuen Code im \enquote{Flask-Stil} zu schreiben.
 
 
 \item[Erweiterbarkeit] \hfill \\
@@ -190,7 +191,7 @@ Flask bietet mit \emph{Signals} eine API, um Callbacks zu registrieren, die zu v
 Zeitpunkten ausgeführt werden. Diese sind unter anderem das Rendern eines Templates und vor bzw.
 nach einem Request. Sofern dies nicht ausreicht, kann die \lstinline{Flask}-Klasse subclassed
 werden. Dies bietet die Möglichkeit, bestehende Funktionalität zu erweitern bzw. zu ersetzen und
-beispielsweise die \lstinline{Request}-Klasse durch eine eigene Subklasse davon zu ersetzen.
+z.B. die \lstinline{Request}-Klasse durch eine eigene Subklasse davon zu ersetzen.
 
 Flask-Extensions nutzen in der Regel ausschließlich die Callbacks, sodass sie einfach zu einer
 Anwendung hinzugefügt werden können und unabhängig von anderen Extensions sind. Um eine Extension zu
@@ -200,27 +201,27 @@ definieren. Diese akzeptiert als ersten Parameter die Flask-Anwendung und regist
 Callbacks und führt sonstigen Initialisierungscode aus. Komplexere Extensions enthalten in der Regel
 eine Klasse, über die vom vom Entwickler auf die Extension zugegriffen werden kann. Dabei wird das
 Applikationsobjekt über einen optionalen Parameter an den Konstruktor übergeben; sofern er nicht
-genutzt wird, sollte die Klasse die zuvor erwähnte Methode \lstinline{init_app(app)} besitzen. Sinn
-davon ist, die Nutzung von \emph{application factories} zu ermöglichen, d.h. Funktionen, die die
-Applikation erst erstellen und damit möglicherweise nie global verfügbar machen. In diesem Fall ist
-es möglicherweise notwendig, die Instanz der Extensionklasse zu erstellen, obwohl noch keine
+genutzt wird, sollte die Klasse die zuvor erwähnte Methode \lstinline{init_app(app)} besitzen. Der
+Zweck davon ist, die Nutzung von \emph{application factories} zu ermöglichen, d.h. Funktionen, die
+die Applikation erst erstellen und damit möglicherweise nie global verfügbar machen. In diesem Fall
+ist es möglicherweise notwendig, die Instanz der Extensionklasse zu erstellen, obwohl noch keine
 Flask-Instanz existiert.
 
-Sofern keine dieser Optionen mächtig genug sind, besteht auch die Option, eine der Werkzeug-Klassen
-zu subclassen um beispielsweise das URL-Routing-System direkt verändern zu können. Wie bei jedem
-Framework besteht darüber hinaus die Möglichkeit, das Framework zu forken und daraufhin den
-Frameworkcode selbst zu verändern.
+Sofern keine dieser Optionen mächtig genug sind, besteht auch die Möglichkeit, eine der
+Werkzeug-Klassen durch eine eigene Subklasse zu ersetzen um beispielsweise das URL-Routing-System
+direkt verändern zu können. Wie bei jedem Framework besteht darüberhinaus die Möglichkeit, das
+Framework zu forken und daraufhin den Frameworkcode selbst zu verändern.
 
 
 \item[Sonstige Features] \hfill \\
 Flask nutzt Proxy-Objekte um \lstinline{request}, \lstinline{session} und \lstinline{g} global
 verfügbar zu machen und trotzdem jeweils - auch bei mehreren Threads - auf das richtige Objekt zu
-verweisen. Dadurch müssen diese Objekte niemals als Funktionsparameter übergeben werden sondern
+verweisen. Dadurch müssen diese Objekte niemals als Funktionsparameter übergeben werden, sondern
 können einfach aus dem \lstinline{flask}-Package importiert werden.
 
-Während \lstinline{request} und \lstinline{session} relativ selbsterklärend sind, handelt es sich
+Während \lstinline{request} und \lstinline{session} ziemlich selbsterklärend sind, handelt es sich
 bei \lstinline{g} um ein von Flask selbst nicht genutztes Objekt, welches allerdings sowohl
-Anwendungscode als auch Flask-Erweiterung eine Möglichkeit bietet, requestspezifische Daten
+Anwendungscode als auch Flask-Erweiterungen eine Möglichkeit bietet, requestspezifische Daten
 abzulegen. Beispielsweise ist der aktuell eingeloggte User meist in \lstinline{g.user} gespeichert
 und oftmals nutzen Datenbank-Extensions das Objekt, um die gerade aufgebaute Datenbankverbindung
 beim nächsten Zugriff nicht erneut aufbauen zu müssen.
@@ -228,10 +229,9 @@ beim nächsten Zugriff nicht erneut aufbauen zu müssen.
 Für viele Standardfeatures existieren bereits fertige Erweiterungen, sodass man diese nicht selbst
 implementieren muss. Neben komplexen Erweiterungen wie einem Django-ähnlichen dynamischen
 CRUD-Administrationsbereich, ORM-Systemen und einer kompetten Benutzerverwaltung samt Rechtesystem
-gibt es auch viele kleinere Extensions, die hauptsächlich dem Entwicklerkomfort dienen und
-beispielsweise eine Redis-Verbindung anhand der Daten in der Flask-Konfiguration aufbauen oder
-das Verschicken von E-Mails über SMTP mithilfe verschiedener Python-Libraries mit einer intuitiven
-API vereinfachen.
+gibt es auch viele kleinere Extensions, die hauptsächlich dem Entwicklerkomfort dienen und z.B. eine
+Redis-Verbindung anhand der Daten in der Flask-Konfiguration aufbauen oder das Verschicken von
+E-Mails über SMTP mithilfe verschiedener Python-Libraries mit einer intuitiven API vereinfachen.
 
 Flask nutzt den von Werkzeug als WSGI-Middleware bereitgestellten webbasierten Debugger. Während
 dieser nicht den Funktionsumfang eines vollwertigen Debuggers bietet - insbesondere Stepping und
@@ -254,9 +254,9 @@ die nicht selbsterklärend sind.
 
 
 \item[Lizenz] \hfill \\
-Flask, Werkzeug und die übrigen zwingend notwendigen Python-Libraries stehen steht unter der
-BSD-Lizenz. Für Flask-Erweiterungen ist eine ähnlich freizügige Lizenz empfohlen bzw. im Falle von
-\emph{approved extensions} sogar zwingend notwendig. Die offizielle Dokumentation empfiehlt entweder
-die BSD-Lizenz, die MIT-Lizenz oder die größtenteils dem amerikanischen Public-Domain-Konzept
-entsprechende WTFPL\footnote{Do What the Fuck You Want to Public License}.
+Sowohl Flask als auch Werkzeug und die übrigen zwingend notwendigen Python-Libraries stehen steht
+unter der BSD-Lizenz. Für Flask-Erweiterungen ist eine ähnlich freizügige Lizenz empfohlen bzw. im
+Falle von \emph{approved extensions} sogar zwingend notwendig. Die offizielle Dokumentation
+empfiehlt entweder die BSD-Lizenz, die MIT-Lizenz oder die größtenteils dem amerikanischen
+Public-Domain-Konzept entsprechende WTFPL\footnote{Do What the Fuck You Want to Public License}.
 \end{description}

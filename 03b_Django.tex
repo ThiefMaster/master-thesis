@@ -24,39 +24,39 @@ handelt es sich - um bei der in der Django-Dokumentation genutzten Terminologie 
 Konfiguration sowohl für Django selbst, die genutzte Datenbank und die Anwendung enthält. Ein
 \emph{Project} enthält eine oder mehrere \emph{Apps}, wobei es sich bei jeder App um ein
 Python-Paket handelt, das Datenbankmodelle, Viewfunktionen, Templates und Anwendungslogik enthält.
-Der Vorteil darin, viele kleine Apps statt einer großen zu nutzen, liegt darin, dass in sich
-abgeschlossene Funktionalität wie beispielsweise Tagging oder auch ein Loginsystem sauber von dem
+Die Anwendung auf viele kleine Apps aufzuteilen hat den Vorteil, dass in sich
+abgeschlossene Funktionalität wie Tagging oder auch ein Loginsystem sauber von dem
 restlichen Projekt abgegrenzt ist und damit in der Regel wiederverwendbar ist. Dies wird von Django
 insofern unterstützt, dass auch problemlos Apps aus anderen Projekten eingebunden werden können und
 jede App in der Regel unabhängig von ihrem \emph{Project} ist sofern die nötigen Konfigurationsdaten
-vorhanden sind. Django selbst enthält diverse Apps für optionale Zusatzfunktionen wie beispielsweise
-eine Benutzerverwaltung und eine Kommentarfunktion.
+vorhanden sind. Django selbst enthält diverse Apps für optionale Zusatzfunktionen wie eine
+Benutzerverwaltung und Kommentarfunktion.
 
 Unabhängig von den installierten Apps bietet Django den Middleware-Stack, über den auf einer relativ
 niedrigen Ebene in die Abarbeitung von Requests eingegriffen werden kann.
 \lstinline{process_request} ermöglicht es der Middleware, vor dem Routing eines Requests
 einzugreifen und entweder die reguläre Verarbeitung fortsetzen oder sie mit einer HTTP-Antwort
-vorzeitig beenden. Dies bietet sich beispielsweise an, um Seiten anhand der aufgerufenen URL zu
-cachen. \lstinline{process_view} verhält sich ähnlich, allerdings ist zu dem Zeitpunkt, wo dieser
-Middleware-Hook ausgeführt wird, bereits bekannt, welche Viewfunktion den Request abarbeiten wird.
+vorzeitig beenden. Dies bietet sich z.B. an, um Seiten anhand der aufgerufenen URL zu cachen.
+\lstinline{process_view} verhält sich ähnlich, allerdings ist bei der Ausführung dieses
+Middleware-Hooks bereits bekannt, welche Viewfunktion den Request abarbeiten wird.
 
 Middleware hat außerdem die Möglichkeit, nach der Verarbeitung eines Requests einzugreifen. Dazu
 stehen die Methoden \lstinline{process_response} und \lstinline{process_exception} zur Verfügung.
-Diese könnten beispielsweise einen Cache aktualisieren oder einen webbasierten Debugger starten.
+Diese könnten z.B. einen Cache aktualisieren oder einen webbasierten Debugger starten.
 
 
 \item[URL-Routing] \hfill \\
 Django legt großen Wert auf saubere URLs, die weder Dateiendungen noch kryptische Elemente wie
-beispielsweise \emph{/0,2097,1-1-1928,00} enthalten. Aus diesem Grund bietet Django ein flexibles
+\emph{/0,2097,1-1-1928,00} enthalten. Aus diesem Grund bietet Django ein flexibles
 und mächtiges Routingsystem. Da der Kern des Routingsystems der Vergleich von definierten Mustern
-mit der aufgerufdenen URL ist bieten sich reguläre Ausdrücke perfekt dazu an und werden
-dementsprechend auch dazu verwendet.
+mit der aufgerufenen URL ist, bieten sich reguläre Ausdrücke perfekt an und werden dementsprechend
+auch verwendet.
 
 Der Entwickler definiert in seiner App dazu eine Liste mit \emph{Patterns}, wobei jedes Element aus
 einem regulären Ausdruck und der Viewfunktion, wobei es sich bei letzterem entweder direkt um die
 Funktion handeln kann oder aber um einen String der Form \lstinline{'myapp.views.somefunc'}. Für
 dynamische Elemente in der URL wird das Gruppierungs-Feature der Regex-Engine verwendet. Dies
-bedeutet, dass beispielsweise \lstinline{r'news/(\d+)'} eine URL nach dem Schema \emph{news/123}
+bedeutet, dass der Ausdruck \lstinline{r'news/(\d+)'} eine URL nach dem Schema \emph{news/123}
 matchen würde und die Zahl als positionalen Parameter an die Viewfunktion übergibt. Da dies gerade
 in komplexeren URLs mit mehreren Parametern schnell unübersichtlich würde, können auch Namen für die
 Parameter in der Form \lstinline{r'news/(?P<id>\d+)'} vergeben werden. Diese werden dann als Keyword
@@ -66,12 +66,12 @@ Es ist zu erwähnen, dass das Routing ausschließlich die regulären Ausdrücke 
 den Pfad in der URL berücksichtigt. Das HTTP-Verb, also meist \emph{GET} oder \emph{POST} und der
 Domainname sind also nicht Teil des Routings.
 
-Insbesondere mit Apps, die zusätzliche Funktionalität wie beispielsweise eine Kommentarfunktion
+Insbesondere mit Apps, die zusätzliche Funktionalität wie eine Kommentarfunktion
 bereitstellen, würde es dem Prinzip der sauberen URLs widersprechen, alle URLs auf der Rootebene zu
-registrieren. Dazu bietet Django die \lstinline{include()}-Funktion mit der eine anstelle auf eine
+registrieren. Dazu bietet Django die \lstinline{include()}-Funktion, mit der anstelle auf eine
 Viewfunktion auch auf eine andere URL-Routingtabelle verwiesen werden kann.
 
-Um anhand der Viewfunktion oder eines optionalen Identifiers eine URL zu generieren bietet Django
+Um anhand der Viewfunktion oder eines optionalen Identifiers eine URL zu generieren, bietet Django
 sowohl die Python-Funktion \lstinline{reverse()} als auch eine spezielle Syntax für Templates. Ganz
 im Sinne von DRY führt dies dazu, dass URLs niemals manuell erzeugt werden müssen und Änderungen
 keine toten internen Links zur Folge haben, da Dispatching und URL-Generierung beide auf dieselben
@@ -103,9 +103,8 @@ zu erstellen und im Anschluss auf diesen basierend die Tabellen zu erstellen, bi
 Möglichkeit, eine existierende Datenbank zu analysieren und die dazu passenden Klassen zu
 generieren.
 
-Teile von Django selbst benötigen eine mit dem Django-ORM kompatibel SQL-Datenbank. Allerdings gibt
-es beispielsweise die Django-Erweiterung \emph{Django-ZODB} um die ZODB für Anwendungsdaten nutzen
-zu können.
+Teile von Django selbst benötigen eine mit dem Django-ORM kompatible SQL-Datenbank. Allerdings gibt
+es die Django-Erweiterung \emph{Django-ZODB} um die ZODB für Anwendungsdaten nutzen zu können.
 
 
 \item[Sessions] \hfill \\
@@ -143,14 +142,14 @@ mehr, da fast jede Website spätestens beim Login Cookies voraussetzt.
 Wie zuvor schon erwähnt, eignet sich Djangos Middleware-System unter anderem ideal dafür, ganze
 Seiten zu cachen. Dementsprechend ist es nur logisch, dass Django eine entsprechende Middleware
 mitliefert.  Diese realisiert Caching erwartetermaßen auf Seitenebene, d.h. jede via GET aufgerufene
-Seite wird gecacht sofern es nicht durch entsprechende Header unterbunden wird. Insbesondere auf
+Seite wird gecacht, sofern es nicht durch entsprechende Header unterbunden wird. Insbesondere auf
 Seiten, deren Content nicht extrem oft aktualisiert wird, bietet sich diese Cachemethode an, da sie
 mit minimalem Aufwand realisierbar ist.
 
 Eine flexiblere Cachemethode ist der Decorator-basierte View-Cache. Dieser ermöglicht es, einzelne
-Views zu cachen, sodass beispielsweise die Startseite gecacht werden kann aber andere, häufiger
-aktualisierte, Seiten wie beispielsweise ein Gästebuch nicht gecacht werden. Sofern die Granularität
-immernoch nicht ausreicht erlaubt Django es auch, einzelne Templatefragmente zu cachen. Dies bietet
+Views zu cachen, sodass z.B. die Startseite gecacht werden kann aber andere, häufiger
+aktualisierte, Seiten wie ein Gästebuch nicht gecacht werden. Sofern die Granularität
+immernoch nicht ausreicht, erlaubt Django es auch, einzelne Templatefragmente zu cachen. Dies bietet
 sich an, wenn Teile eines Templates zu dynamisch zum cachen sind, andere jedoch nur relativ selten
 aktualisiert werden.
 
@@ -158,29 +157,29 @@ Neben diesen Methoden bietet Django auch eine Lowlevel-API, die direkten Cachezu
 Diese unterstützt mehrere Caches, die auch verschiedene Backends nutzen können, und bietet neben den
 üblichen Methoden \lstinline{get}, \lstinline{set}, \lstinline{delete} und den Varianten für mehrere
 Keys auch \lstinline{incr} und \lstinline{decr} zum Inkrementieren bzw. Dekrementieren von
-numerischen Werten. Dabei handelt es sich sofern es vom Backend unterstützt wird um atomare
+numerischen Werten. Dabei handelt es sich, sofern es vom Backend unterstützt wird, um atomare
 Operationen.
 
-Standardmäßig werden Memcached, Datenbanktabellen, Dateien und - insbesondere während der
-Entwicklung hilfreich - ein prozess-lokaler In-Memory-Cache unterstützt, allerdings kann auch ein
-benutzerdefiniertes Cache-Backend benutzt werden.
+Standardmäßig werden Memcached, Datenbanktabellen, Dateien und ein insbesondere während der
+Entwicklung hilfreicher prozess-lokaler In-Memory-Cache unterstützt. Es ist auch möglich, ein
+benutzerdefiniertes Cache-Backend zu verwenden.
 
 
 \item[Integrierbarkeit] \hfill \\
 Da es sich bei Django um ein Full-Stack-Framework handelt ist es darauf ausgelegt, von Anfang an
 verwendet zu werden. Es ist zwar prinzipiell möglich, Teile von Django wie das Routingsystem zu
-nutzen ohne die fortgeschritteneren Features wie das ORM zu verwenden, allerdings muss man dabei in
-der Regel auf viele Vorteile des Frameworks verzichten. Beispielsweise müssten alle Templates der
+nutzen, ohne die fortgeschritteneren Features wie das ORM zu verwenden, allerdings muss man dabei in
+der Regel auf viele Vorteile des Frameworks verzichten. So müssten z.B. alle Templates der
 bestehenden Anwendung angepasst werden, um die URL-Generierung des Routingsystems zu verwenden.
 
-Explizit unterstützt wird jedoch die Nutzung einer bereits existierenden Datenbank: Wie zuvor
-erwähnt kann Django die Model-Klassen anhand des Schemas der Datenbank generieren. Somit spart man
+Explizit unterstützt wird jedoch die Nutzung einer bereits existierenden Datenbank: Wie bereits
+erwähnt, kann Django die Model-Klassen anhand des Schemas der Datenbank generieren. Somit spart man
 sich den Aufwand, die Model-Klassen zu erstellen, und kann sich darauf konzentrieren, die
 Anwendungslogik neu zu implementieren.
 
 
 \item[Erweiterbarkeit] \hfill \\
-Der einfachste Weg, Django zu erweitern, ist mithilfe von Middleware. Sofern es nicht ausreicht,
+Der einfachste Weg, Django zu erweitern, ist durch Middleware. Sofern es nicht ausreicht,
 vor und nach der Abarbeitung eines Requests Code auszuführen, bietet Django mit \emph{Signals} ein
 Callback-System, welches insbesondere eine Reaktion auf verschiedene Datenbankereignisse ermöglicht.
 
@@ -192,18 +191,18 @@ offizielle Django-Version übernommen zu werden.
 
 \item[Sonstige Features] \hfill \\
 RAD-typisch kann Django für einfache CRUD-Aufgaben in der Administration einer Website sowohl die
-Logik als auch das Benutzerinterface dynamisch generieren. Dabei handelt es sich anders als um das
+Logik als auch das Benutzerinterface dynamisch generieren. Dabei handelt es sich nicht um das
 in vielen Frameworks übliche Scaffolding, bei dem der entsprechende Code einmalig generiert und
-danach falls nötig modifiziert wird. Stattdessen werden die Formulare anhang der Datenbankmodelle
+danach modifiziert wird. Stattdessen werden die Formulare anhand der Datenbankmodelle
 dynamisch generiert, wobei dieser Vorgang vom Entwickler beeinflusst werden kann, um auch komplexere
 Elemente wie One-To-Many-Beziehungen in der gewünschten Art und Weise in einem Formular
 repräsentieren zu können.
 
-Auch das wohl wichtigste Feature in den meisten Webapplikationen - Authentifikation von Benutzern -
-wird von Django standardmäßig unterstützt, sofern man die entsprechende App aktiviert. Neben der
-Benutzerverwaltung selbst und der Authentifikation mittels eines Passworts oder über einen
-Drittanbieter enthält das Benutzersystem ein Gruppen- und Rechtesystem und diverse Decorators um
-den Zugriff auf einzelne Views zu beschränken.
+Auch das wohl wichtigste Feature in den meisten Webapplikationen, die Authentifikation von
+Benutzern, wird von Django standardmäßig unterstützt, sofern man die entsprechende App aktiviert.
+Neben der Benutzerverwaltung selbst und der Authentifikation mittels eines Passworts oder über einen
+Drittanbieter enthält das Benutzersystem ein Gruppen- und Rechtesystem und diverse Decorators um den
+Zugriff auf einzelne Views zu beschränken.
 
 
 \item[Dokumentation] \hfill \\
@@ -213,10 +212,10 @@ einer allgemeinen Beschreibung der verschiedenen Bestandteile des Frameworks ent
 Step-By-Step-Tutorial und eine Beschreibung aller in Django genutzten Klassen und Funktionen.
 
 Der Code von Django ist größtenteils sauber dokumentiert bzw. kommentiert, wobei gerade im
-Django-Kern einige internen Funktionen für einen Außenstehenden, der nicht mit dem Code vertraut
-ist, nicht auf den ersten Blick verständlich sind. Allerdings ist es in der Regel nicht notwendig
-oder angebracht, Frameworkcode zu verändern und dank der guten Dokumentation der APIs muss man auch
-nur selten etwas direkt im Code nachschauen.
+Django-Kern einige interne Funktionen für einen Außenstehenden, der nicht mit dem Code vertraut ist,
+nicht selbsterklärend sind. Allerdings ist es in der Regel nicht notwendig oder angebracht,
+Frameworkcode zu verändern und dank der guten Dokumentation der APIs muss man auch nur selten etwas
+direkt im Code nachschauen.
 
 
 \item[Lizenz] \hfill \\

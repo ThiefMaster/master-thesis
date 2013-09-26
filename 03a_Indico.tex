@@ -2,17 +2,17 @@
 
 Das derzeit in Indico verwendete System kann zwar grob als Framework betrachtet werden, ist jedoch
 nicht wirklich ein Framework, da sehr viele Dinge speziell auf die Anwendung zugeschnitten sind,
-statt generischen bzw. wiederverwendbaren zu sein. Dies ist bereits daran zu erkennen, dass sich der
+statt generisch bzw. wiederverwendbar zu sein. Dies ist bereits daran zu erkennen, dass sich der
 Frameworkcode nicht in einem separaten Modul oder Package befindet sondern Teil der Indico-Codebasis
 ist.
 
 Den Kern des Frameworks bildet das Package \lstinline{indico.web.wsgi}, welches das in
-\autoref{wsgi-interface} beschriebene WSGI-Interface implementiert und Emulationsschicht für
+\autoref{wsgi-interface} beschriebene WSGI-Interface implementiert und eine Emulationsschicht für
 \emph{mod\_python} bereitstellt. Neben dem Bereitstellen der entsprechenden APIs und Objekte ist due
 wichtigste Aufgabe dieser Schicht, Requests auf die entsprechenden Python-Dateien zu mappen.
-Beispielsweise führt ein Aufruf von \emph{/index.py/foo} zum Aufruf der Function \lstinline{foo()}
-in der Datei \emph{index.py} im \emph{htdocs}-Ordner. Da diese Dateien jedoch - um das Verhalten von
-\emph{mod\_python} beizubehalten - erst dann geladen werden, wenn ein entsprechender Request
+Beispielsweise führt ein Aufruf von \emph{/index.py/foo} zum Aufruf der Funktion \lstinline{foo()}
+in der Datei \emph{index.py} im \emph{htdocs}-Ordner. Da diese Dateien jedoch, um das Verhalten von
+\emph{mod\_python} beizubehalten, erst dann geladen werden, wenn ein entsprechender Request
 empfangen wird, können sie nicht beim Initialisierung der Anwendung importiert und in einem Mapping
 abgelegt werden. Stattdessen wird der gesamte Code der entsprechenden Datei in einen String geladen
 und danach ausgeführt. \autoref{lst:mp-emulation} zeigt eine vereinfachte Version des dafür
@@ -30,18 +30,18 @@ Bekanntermaßen ist es schlechter Stil, Code aus Strings auszuführen. In Python
 noch den Nachteil, dass Debugger keinen Zugriff auf den Code haben, da sie nicht wissen, aus welcher
 Datei der Code stammt, und Python den Quelltext selbst nicht zusammen mit dem Bytecode im Speicher
 hält. In Indico ist dies allerdings kein größeres Problem, da die Dateien keine Logik enthalten
-sondern nur die entsprechende Handlerfunktion aufrufen, allerdings ist es dennoch unsauber.
+sondern nur die entsprechende Handlerfunktion aufrufen. Unsauber ist es dennoch.
 
 Neben diesen Legacy-Handlern, die jedoch für fast alle Bestandteile von Indico genutzt werden,
 existiert ein sehr einfaches Routingsystem, das Anfragen anhand des ersten Pfadsegments der URL an
-eine Handlerfunktion übergibt. Dies ist zwar prinzipiell besser, da so die Nutzung von
-\lstinline{exec} vermieden werden könnte, allerdings wird letzendlich genau dieselbe zuvor schon
+eine Handlerfunktion übergibt. Dies ist prinzipiell besser, da so die Nutzung von \lstinline{exec}
+vermieden werden könnte. Letzendlich wird jedoch genau dieselbe zuvor schon
 beschriebene Funktion verwendet, was leicht dazu verleitet, in der in \autoref{lst:lame-routing}
 gezeigten Routingtabelle direkt auf die Handlerfunktion mit der eigentlichen Logik zu verweisen.
-Dies führt dann allerdings dazu, dass das mit \lstinline{exec} verbundene Debuggingproblem plötzlich
+Dies führt dann dazu, dass das mit \lstinline{exec} verbundene Debuggingproblem plötzlich
 auch relevanten Code betrifft statt nur einen einfachen Funktionsaufruf. Umgangen werden kann das
-zum Glück sehr einfach, indem eine separate Python-Datei nur den Aufruf der eigentlichen
-Handlerfunktion enthält und diese Datei in der Routingtabelle referenziert wird.
+zum Glück sehr einfach, indem ein separates Python-Modul nur den Aufruf der eigentlichen
+Handlerfunktion enthält und dieses Modul in der Routingtabelle referenziert wird.
 
 \begin{lstlisting}[caption=Einfaches URL-Routing,label=lst:lame-routing]
 {'': ((self.htdocs_dir, 'index.py'), 'index', '', None),
@@ -67,14 +67,14 @@ Menüpunkt in der Administrationsoberfläche, über den das Modul aktiviert bzw.
 konfiguriert werden kann. Dies hat den großen Vorteil, dass die Konfiguration bei den meisten
 Modulen sehr einfach ist - sowohl für die Administratoren als auch für den Entwickler.
 
-Einige Module, beispielsweise das Interface zum CERN-Paymentsystem und zur CERN-Suchmaschine, sind
+Einige Module (z.B. das Interface zum CERN-Paymentsystem und zur CERN-Suchmaschine) sind
 nicht Teil des Open-Source-Projekts. Daher muss es für solche Module eine Möglichkeit geben, auch
 ohne direkt im Indico-Code referenziert zu werden, auf Datenstrukturen zugreifen und bei bestimmten
 Ereignissen Code ausführen zu können. Dies wurde in Indico mithilfe von \emph{entry points}
 realisiert. Dabei handelt es sich um ein Feature des Paketsystems von Python, über das ein Paket
-Objekte für einen bestimmten \emph{entry point} zentral registrieren kann. Indico dann dann mit der
-Funktion \lstinline{pkg_resources.iter_entry_points('indico.ext')} über diese Objekte iterieren und
-die entsprechenden Plugins laden.
+Objekte für einen bestimmten \emph{entry point} zentral registrieren kann. Indico kann dann unter
+Verwendung der Funktion \lstinline{pkg_resources.iter_entry_points('indico.ext')} über diese Objekte
+iterieren und die entsprechenden Plugins laden.
 
 Plugins können über reguläre Ausdrücke Code für bestimmte URLs ausführen, sodass sie auch eigene
 Seiten hinzufügen können; in der Regel folgt die URL-Struktur dabei den \emph{mod\_python}-URLs,
@@ -83,17 +83,17 @@ Funktionen für die JSON-RPC-API als auch Endpoints für die REST-basierte Expor
 
 
 \item[URL-Routing] \hfill \\
-Wie oben bereits beschrieben emuliert Indico \emph{mod\_python} und
+Wie oben bereits beschrieben, emuliert Indico \emph{mod\_python} und
 verwendet daher das bereits aus CGI-Anwendungen Mapping zwischen URLs und Dateisystem. Der WSGI-Kern
 von Indico kann Anfragen anhand des ersten Pfadsegments routen, allerdings ist dies für die
-wenigsten Use-Cases ausreichend - für \emph{clean URLs} sind in der Regel alle Pfadsegmente relevant
-und es müssen dynamische Segmente unterstützt werden, um beispielsweise IDs in den Pfad einbauen zu
-können.
+wenigsten Use-Cases ausreichend. Für \emph{clean URLs} sind in der Regel alle Pfadsegmente relevant
+und es müssen dynamische Segmente unterstützt werden, um IDs und sonstige Parameter in den Pfad
+einbauen zu können.
 
 Indico-Plugins haben die Möglichkeit, über einen regulären Ausdruck beliebige URLs zu mappen und
-über Regex-Gruppen auch auf einzelne Pfadelemente zuzugreifen, um beispielsweise eine ID zu
-extrahieren. Dieses Feature ist allerdings ausschließlich in Plugins verfügbar und nicht für Code,
-der Teil des Indico-Kerns ist. Darüberhinaus müssen die regulären Ausdrücke jeweils in der
+über Regex-Gruppen auch auf einzelne Pfadelemente zuzugreifen, um z.B. eine ID zu
+extrahieren. Dieses Feature ist jedoch ausschließlich in Plugins verfügbar und nicht für Code,
+der Teil des Indico-Kerns ist. Zusätzlich müssen die regulären Ausdrücke jeweils in der
 \lstinline{RH}-Klasse definiert werden, wodurch die URL-Mappings über den gesamten Plugincode
 verstreut sind statt übersichtlich in einer einzelnen Datei aufgelistet zu sein.
 
@@ -135,16 +135,17 @@ stark mit Anwendungscode vermischt.
 Das Modulsystem von Indico nutzt die Datenbank sowohl zum Speichern der Konfigurationseinstellungen
 als auch für die Metadaten der verschiedenen Module, sodass sie nicht bei jedem Aufruf neu über die
 \emph{entry points} geladen werden müssen. Dabei wird massiv darauf gesetzt, dass es sich bei ZODB
-um eine Python-Objektdatenbank handelt - dies erlaubt es beispielsweise, ein Python-Modul direkt in
-der Datenbank zu speichern statt explizit den Pfad zur dazugehörigen Python-Datei abzulegen.
+um eine Python-Objektdatenbank handelt. Dies erlaubt es, auch komplexe Datentypen wie Python-Module
+direkt in der Datenbank zu speichern statt explizit den Pfad zur dazugehörigen Python-Datei
+abzulegen.
 
 
 \item[Sessions] \hfill \\
 Indico speichert Sessions in der ZODB-Datenbank ab. Dies erlaubt es, neben beliebigen anderen
 Objekten, auch bereits in der Datenbank gespeicherte Objekte in der Session abzulegen, ohne
-zusätzlichen Speicher zu benötigen. Um Daten in der Session zu speichern, gibt es zwei
-Möglichkeiten. Häufig genutzte Elemente wie beispielsweise der aktuelle User sind direkt im
-Sessionobjekt abgelegt und dementsprechend über ihre Gettermethode oder direkt über die
+zusätzlichen Speicher zu benötigen. Zum Speichern von Daten in der Session existieren zwei
+Möglichkeiten. Häufig genutzte Elemente wie der aktuelle User oder seine Spracheinstellung sind
+direkt im Sessionobjekt abgelegt und dementsprechend über ihre Gettermethode oder direkt über die
 darunterliegende Eigenschaft des Objekts abrufbar. Darüberhinaus können beliebige Daten ähnlich wie
 in einem \lstinline{dict} abgelegt werden. Dies geschieht über die Methoden \lstinline{setVar()},
 \lstinline{getVar()} und \lstinline{removeVar()}.
@@ -157,7 +158,7 @@ verwerfen, müssen alte Sessions regelmäßig manuell bzw. über ein zeitgesteue
 Datenbank gelöscht zu werden.
 
 Während eines Requests, wird die Session als Eigenschaft im \emph{mod\_python}-Request-Objekt
-gespeichert. Das für Sessions zwingend notwendige Cookie wird ebenfalls mithilfe von diesem Objekt
+gespeichert. Das für Sessions zwingend notwendige Cookie wird ebenfalls über dieses Objekt
 gesetzt. Dies hat zur Folge, dass das Sessionsystem stark von der \emph{mod\_python}-Emulation
 abhängig ist.
 
@@ -173,10 +174,10 @@ für jeden Cache-Eintrag eine Expire-Zeit angegeben werden. Dies hat bei der Nut
 Datei-Backends jedoch zur Folge, dass abgelaufene Einträge nur gelöscht werden, wenn versucht wird,
 auf sie zuzugreifen.
 
-Zur besseren Strukturierung des Codes kann jeder Instanze des \lstinline{GenericCache}-Objekts ein
+Zur besseren Strukturierung des Codes kann jeder Instanz des \lstinline{GenericCache}-Objekts ein
 Namespace zugewiesen werden, der automatisch mit dem jeweiligen Cache-Key kombiniert wird. Dies hat
 ebenfalls den Vorteil, dass nicht eine einzelne Instanz der Klasse global verfügbar sein muss
-sondern beispielsweise in einer Klasse, die den Cache nutzen will, eine neue Instanz erstellt wird.
+sondern z.B. in einer Klasse, die den Cache nutzen will, eine neue Instanz erstellt wird.
 Bei nicht-lokalen Caches wie Redis und Memcached wird dabei instanzübergreifend eine bestehende
 Verbindung verwendet, sodass auch bei vielen Instanzen nicht übermäßig viele Verbindungen aufgebaut
 werden müssen.
@@ -184,9 +185,8 @@ werden müssen.
 
 \item[Integrierbarkeit] \hfill \\
 Da das derzeitige Framework ein Teil von Indico ist, ist dieser Punkt nicht relevant. Der
-Vollständigkeit halber ist allerdings zu erwähnen, dass es nicht praktikabel wäre, das
-Indico-Framework von der Indico-Anwendung zu trennen um es beispielsweise in einer anderen Anwendung
-nutzen zu können.
+Vollständigkeit halber sei erwähnt, dass es nicht praktikabel wäre, das Indico-Framework von der
+Indico-Anwendung zu trennen um es in einer anderen Anwendung nutzen zu können.
 
 
 \item[Erweiterbarkeit] \hfill \\
@@ -207,7 +207,7 @@ benötigt jederzeit verfügbar ist, ohne immer nicht explizit übergeben zu werd
 Es existiert keine echte externe Dokumentation. Der Code ist teilweise kommentiert, wobei der
 Kommentarstil nicht einheitlich ist und man kann deutlich erkennen, dass mehrere Entwickler daran
 gearbeitet haben. Dementsprechend sind einige Teile sehr ausführlich kommentiert, während andere
-fast überhaupt nicht kommentiert sind.
+fast garnicht kommentiert sind.
 
 Die Dokumention im Indico-Wiki\footnote{\href{http://indico-software.org/wiki/Dev}{http://indico-software.org/wiki/Dev}}
 geht hauptsächlich auf anwendungsspezifische Dinge ein, weshalb sie insbesondere auch für einen
