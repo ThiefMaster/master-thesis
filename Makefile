@@ -19,4 +19,4 @@ slides:
 
 clean:
 	@echo Cleaning up
-	@rm -f $(NAME).pdf $(SLIDES).pdf *.aux *.log *.out *.toc *.lof *.lot *.blg *.bbl
+	@rm -f $(NAME).pdf $(SLIDES).pdf *.aux *.log *.out *.toc *.lof *.lot *.lol *.blg *.bbl
