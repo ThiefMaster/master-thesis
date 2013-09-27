@@ -9,7 +9,7 @@ Der Begriff \enquote{Microframework} bedeutet bei Flask, dass das Framework dem 
 größtmögliche Flexibilität lässt, welche Technologien er für die einzelnen Bestandteile seiner
 Anwendung nutzt.
 
-Kern von Flask ist das WSGI-Tookit \emph{Werkzeug}, das die Lowlevel-Funktionen für das
+Kern von Flask ist das WSGI-Toolkit \emph{Werkzeug}, das die Lowlevel-Funktionen für das
 WSGI-Interface und alle HTTP-spezifischen Utilityfunktionen bereitstellt. Auch das URL-Routingsystem
 ist Teil von Werkzeug, wobei Flask die High-Level-APIs dazu bereitstellt und dadurch den in einem
 Framework erwarteten Komfort bietet.
@@ -25,7 +25,7 @@ Blueprints den Vorteil, dass sie weder für die anwendungsweite Fehlerbehandlung
 Funktionalität wie die Datenbankverbindung zuständig sind, sondern all diese Dinge von der Anwendung
 selbst übernehmen.
 Ein Blueprint kann Templates, statische Daten, URL-Routingdaten und Viewfunktionen enthalten.
-Darüberhinaus ist es möglich, Exceptions auf Blueprintebene abzufangen statt sie grundsätzlich an
+Darüber hinaus ist es möglich, Exceptions auf Blueprintebene abzufangen statt sie grundsätzlich an
 das Errorhandling der Anwendung selbst weiterzureichen.
 
 Allerdings hat das Blueprint-System auch einen Nachteil: Dadurch, dass es sich gerade nicht um eine
@@ -199,7 +199,7 @@ benutzen, sind zwei Methoden verbreitet. Für einfache Extensions, die keine eig
 Entwickler relevante Klasse besitzen, wird empfohlen, eine Funktion \lstinline{init_app(app)} zu
 definieren. Diese akzeptiert als ersten Parameter die Flask-Anwendung und registriert relevante
 Callbacks und führt sonstigen Initialisierungscode aus. Komplexere Extensions enthalten in der Regel
-eine Klasse, über die vom vom Entwickler auf die Extension zugegriffen werden kann. Dabei wird das
+eine Klasse, über die vom Entwickler auf die Extension zugegriffen werden kann. Dabei wird das
 Applikationsobjekt über einen optionalen Parameter an den Konstruktor übergeben; sofern er nicht
 genutzt wird, sollte die Klasse die zuvor erwähnte Methode \lstinline{init_app(app)} besitzen. Der
 Zweck davon ist, die Nutzung von \emph{application factories} zu ermöglichen, d.h. Funktionen, die
@@ -209,7 +209,7 @@ Flask-Instanz existiert.
 
 Sofern keine dieser Optionen mächtig genug sind, besteht auch die Möglichkeit, eine der
 Werkzeug-Klassen durch eine eigene Subklasse zu ersetzen um beispielsweise das URL-Routing-System
-direkt verändern zu können. Wie bei jedem Framework besteht darüberhinaus die Möglichkeit, das
+direkt verändern zu können. Wie bei jedem Framework besteht darüber hinaus die Möglichkeit, das
 Framework zu forken und daraufhin den Frameworkcode selbst zu verändern.
 
 
@@ -228,7 +228,7 @@ beim nächsten Zugriff nicht erneut aufbauen zu müssen.
 
 Für viele Standardfeatures existieren bereits fertige Erweiterungen, sodass man diese nicht selbst
 implementieren muss. Neben komplexen Erweiterungen wie einem Django-ähnlichen dynamischen
-CRUD-Administrationsbereich, ORM-Systemen und einer kompetten Benutzerverwaltung samt Rechtesystem
+CRUD-Administrationsbereich, ORM-Systemen und einer kompletten Benutzerverwaltung samt Rechtesystem
 gibt es auch viele kleinere Extensions, die hauptsächlich dem Entwicklerkomfort dienen und z.B. eine
 Redis-Verbindung anhand der Daten in der Flask-Konfiguration aufbauen oder das Verschicken von
 E-Mails über SMTP mithilfe verschiedener Python-Libraries mit einer intuitiven API vereinfachen.
@@ -244,7 +244,7 @@ auszuführen, in dem die Exception verursacht wurde.
 Flask, Werkzeug und Jinja2 besitzen jeweils eine sehr ausführliche Online-Dokumentation, die sich
 jeweils auf die aktuellste Version bezieht. Features, die erst in einer bestimmten Version
 hinzugefügt wurde, sind entsprechend markiert, sodass die Dokumentation auch bei Nutzung einer
-älteren Version noch hilfreich ist. Darüberhinaus sind für jeden Versionssprung Updatehinweise
+älteren Version noch hilfreich ist. Darüber hinaus sind für jeden Versionssprung Updatehinweise
 verfügbar, die explizit auf potenziell problematische Änderungen hinweisen.
 
 Ein großer Teil der ausführlichen API-Dokumentation ist anhand der im Code verwendeten Docstrings

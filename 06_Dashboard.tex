@@ -35,9 +35,9 @@ in Kontakt gekommen ist, weil er an einem darin enthaltenen Event teilgenommen h
 jedoch nicht ausreichend, um eine Kategorie vorzuschlagen. Gerade bei Benutzern, die Indico schon
 länger verwenden, ist die Chance groß, dass sie in einigen Kategorien an einem Event teilgenommen
 haben und seitdem nichts mehr mit dieser Kategorie zu tun hatten. Solch eine Kategorie vorzuschlagen
-würde also letzendlich nur dazu führen, dass der Benutzer sich über die schlechten Vorschläge ärgert
-und sie daraufhin grundsätzlich nicht mehr beachtet. Ein gutes Relevanzkriterium ist also, an
-wievielen aktuellen Events in der jeweiligen Kategorie der User bereits teilgenommen hat. Da dies jedoch
+würde also letztendlich nur dazu führen, dass der Benutzer sich über die schlechten Vorschläge ärgert
+und sie daraufhin grundsätzlich nicht mehr beachtet. Ein gutes Relevanzkriterium ist also, an wie
+vielen aktuellen Events in der jeweiligen Kategorie der User bereits teilgenommen hat. Da dies jedoch
 durch längere Pausen ohne Teilnahme negativ beeinflusst wird, selbst wenn im aktuellsten Block 100\%
 Teilnahme herrscht, sollten dabei alle älteren Blöcke verworfen werden, sodass nur das erste Event
 im aktuellsten Block als frühstes Teilnahmedatum zählt. Um Kategorien auszufiltern, in denen der
@@ -54,14 +54,14 @@ Unabhängig von der vergangenen Aktivität des Benutzers ist eine Kategorie, an 
 bereits lange im Voraus teilnimmt, ein sehr guter Kandidat. Daher erhöht jedes solche Event den
 Score der Kategorie. Abhängig davon, wie weit das Event in der Zukunft liegt, wird der Score
 ebenfalls erhöht - ein in Kürze stattfindendes Event ist ein gutes Indiz dafür, dass der User Indico
-aktiver nutzt und evtl die Kategorie des Events seinen Favoriten hinzufügen will.
+aktiver nutzt und evtl. die Kategorie des Events seinen Favoriten hinzufügen will.
 
 
 \section{Events}
 
 Anders als bei Kategorien ist es bei Events durchaus sinnvoll, \enquote{ähnliche} Events
 vorzuschlagen. Diese Ähnlichkeit kann auf verschiedene Wege bestimmt werden. Da der Use-Case,
-ähnliche \enquote{Artikel} vorzuschladen, insbesondere in Onlineshops häufig auftritt, existieren
+ähnliche \enquote{Artikel} vorzuschlagen, insbesondere in Onlineshops häufig auftritt, existieren
 bereits einige fertige Lösungen. Es bietet sich also an, zu überprüfen, ob eine solche Lösung für
 Indico Sinn macht und somit den mit einer Eigenentwicklung verbundenen Aufwand zu vermeiden.
 
@@ -111,10 +111,10 @@ oder \enquote{Meeting} wird häufig nicht einmal eine Teilnehmerliste geführt, 
 teilnehmende Benutzer, die beispielsweise durch einen im Zeitplan festgehaltenen Beitrag eine
 sichtbare Verknüpfung mit dem Event haben.
 
-\item Prinzipiell sind erstmal alle Artikel in einem Shop für einen Benutzer relevant bzw könnten es
+\item Prinzipiell sind zunächst alle Artikel in einem Shop für einen Benutzer relevant bzw könnten es
 sein. Eine große Indico-Installation enthält jedoch sehr viele unterschiedliche Events. Im Beispiel
 der CERN-Installation geht das von Human-Resources-Meetings über Meetings der diversen
-Physik-Experimente bishin zu Meetings der Systemadministratoren. Obwohl es durchaus möglich sein
+Physik-Experimente bis hin zu Meetings der Systemadministratoren. Obwohl es durchaus möglich sein
 kann, dass jemand dort an mehreren Meetings teilnimmt, weil er z.B. Systemadministrator bei einem
 der Experimente ist, führt dies nicht zwangsläufig dazu, dass Events aus beiden Kategorien relevant
 für seine Kollegen sind.
@@ -130,7 +130,7 @@ ist.
 
 Deutlich sinnvoller sind Vorschläge zu Konferenzen. Diese finden in der Regel höchstens jährlich
 statt und dementsprechend nützlich ist ein Hinweis, dass eine bestimmten Konferenz, an der man zuvor
-bereits einmal teilgenommen hat, wieder stattfindet. Oftmals haben solche jährlich stattfindenen
+bereits einmal teilgenommen hat, wieder stattfindet. Oftmals haben solche jährlich stattfindenden
 Konferenzen jeweils denselben Titel mit der entsprechenden Jahreszahl am Ende.
 
 Technisch lassen sich auf ähnlichen Titeln basierende Vorschläge sehr einfach realisieren. Indico
@@ -151,8 +151,8 @@ Die Ergebnisse dieser Suche sind jedoch noch nicht sofort für Vorschläge geeig
 enthält Ergebnisse, die man nicht erwarten würde, da kein Suchalgorithmus unfehlbar ist. Während an
 sich einzelne unpassende Vorschläge kein Problem sind, dürfen grundsätzlich keine Events angezeigt
 werde, auf die der Benutzer keinen Zugriff hat - je nach Event könnte bereits der Titel und eine
-eventuell vorhandene Beschreibung sensible Informationen enthalten. Darüberhinaus hat die
-Suchmaschine keine Kenntisse darüber, an welchen Events der Benutzer bereits teilnimmt. Diese
+eventuell vorhandene Beschreibung sensible Informationen enthalten. Darüber hinaus hat die
+Suchmaschine keine Informationen darüber, an welchen Events der Benutzer bereits teilnimmt. Diese
 müssen daher ebenfalls in Indico ausgefiltert werden.
 
 \section{Aktueller Stand}
@@ -162,7 +162,7 @@ allerdings ist das auf dem in \autoref{categorysuggest} beschriebenen Algorithmu
 Vorschlagssystem für Kategorien fertiggestellt und kann nach weiteren Tests in \emph{master}
 übernommen werden. Die Implementation ist dabei darauf ausgelegt, auch mit sehr vielen Benutzern
 performant zu arbeiten.  Dies wurde dadurch realisiert, dass nur Benutzer, die das Dashboard auch
-nutzen, Vorschläge erhalten. Darüberhinaus werden die Vorschläge nachts in einem separaten Prozess
+nutzen, Vorschläge erhalten. Darüber hinaus werden die Vorschläge nachts in einem separaten Prozess
 generiert, sodass sie nicht während der Hauptarbeitszeit tagsüber die Datenbank belasten.
 
 Für Event-Vorschläge existiert ein einfacher Prototyp, der aktuelle Events in den favorisierten

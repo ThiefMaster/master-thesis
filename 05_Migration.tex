@@ -42,7 +42,7 @@ Werkzeug==0.9
 Flask==0.10
 \end{lstlisting}
 
-\autoref{lst:indicoreqtxt} zeigt einen Ausschnit aus der \emph{requirements.txt}, wobei unter
+\autoref{lst:indicoreqtxt} zeigt einen Ausschnitt aus der \emph{requirements.txt}, wobei unter
 anderem Flask und das zugrundeliegende Werkzeug-Toolkit in der gerade aktuellen Version eingebunden
 werden. Flask selbst setzt zwar bereits \lstinline{'Werkzeug>=0.7'} voraus, allerdings erlaubt dies
 dem Paketmanager, eine beliebige Version ab 0.7 zu installieren. Meist ist dies kein Problem, da
@@ -67,7 +67,7 @@ einigen wenigen Stellen stattfindet und z.B. für Unittests eine Instanz mit and
 Konfigurationsoptionen erstellt werden kann. Ohne Nutzung einer Factory-Funktion würde die
 Flask-Instanz zur Importzeit des Moduls erstellt werden und jedes andere Modul könnte das Objekt von
 dort importieren und verändern. Zur \enquote{Laufzeit}, also während der Abarbeitung eines Requests,
-macht sich der Unterschied nicht mehr bemerktbar, da Flask mit \lstinline{current_app} ein
+macht sich der Unterschied nicht mehr bemerkbar, da Flask mit \lstinline{current_app} ein
 Proxy-Objekt bereitstellt, welches jeweils auf die gerade aktive Flask-Instanz verweist.
 
 Derzeit wird der in Indico integrierte Webserver mittels \emph{indico\_shell --web-server}
@@ -350,11 +350,11 @@ Mako-Templateengine zeigt in Tracebacks nicht den im Template vorhandenen Code a
 dem Template generierten Python-Code.
 
 Ein weiteres Problem zeigt sich in clientseitgem JavaScript-Code, der URLs generieren muss. Zuvor
-konnten dort einfach Parameter mittels mittels Stringoperationen angehängt werden. Dies ist jedoch
+konnten dort einfach Parameter mittels Stringoperationen angehängt werden. Dies ist jedoch
 nicht mehr möglich, da die URL ohne alle notwendigen Parameter überhaupt nicht generiert werden
 kann. Die Lösung dazu liegt im Package \lstinline{werkzeug.contrib.jsrouting}. Dabei handelt es sich
 um eine JavaScript-Implementierung des URL-Generators von Flask/Werkzeug. Während diese nicht direkt
-in Indico nutzbar ist, da eine Liste mit allen ca. 700 Routingregeln und später nochmal ebensovielen
+in Indico nutzbar ist, da eine Liste mit allen ca. 700 Routingregeln und später nochmal ebenso vielen
 Kompatibilitätsregeln die an den Browser gesendeten Daten unnötig aufblähen würde, bietet es eine
 sehr gute Basis für eine vereinfachte Version, die nicht die komplette Routingtabelle clientseitig
 verfügbar macht, sondern nur einige ausgewählte Regeln. Implementiert ist dies mit einer Eigenschaft
@@ -442,7 +442,7 @@ konfigurierten Mappingtabelle den Pfad in eine URL konvertiert und diese im
 Bei der Entwicklung neuer Features kann Flask deutlich stärker genutzt werden als es beim
 bestehenden Code der Fall ist. Insbesondere bei der Generierung von URLs macht es Sinn, direkt auf
 \lstinline{url_for()} zuzugreifen, statt den Umweg über eine neue URLHandler-Subklasse zu gehen.
-Darüberhinaus kann strenger darauf geachtet werden, dass GET und POST korrekt eingesetzt werden.
+Darüber hinaus kann strenger darauf geachtet werden, dass GET und POST korrekt eingesetzt werden.
 Ein normaler Seitenaufruf, der keinerlei Daten verändert, sollte grundsätzlich GET nutzen während
 die Veränderung von Daten ausschließlich mit POST möglich sein sollte. Dies kann durch das
 Routingsystem von Indico einfach durchgesetzt werden, allerdings hätte es im bestehenden Code

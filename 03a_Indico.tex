@@ -35,7 +35,7 @@ sondern nur die entsprechende Handlerfunktion aufrufen. Unsauber ist es dennoch.
 Neben diesen Legacy-Handlern, die jedoch für fast alle Bestandteile von Indico genutzt werden,
 existiert ein sehr einfaches Routingsystem, das Anfragen anhand des ersten Pfadsegments der URL an
 eine Handlerfunktion übergibt. Dies ist prinzipiell besser, da so die Nutzung von \lstinline{exec}
-vermieden werden kann. Letzendlich wird jedoch genau dieselbe zuvor schon
+vermieden werden kann. Letztendlich wird jedoch genau dieselbe zuvor schon
 beschriebene Funktion verwendet, was leicht dazu verleitet, in der in \autoref{lst:lame-routing}
 gezeigten Routingtabelle direkt auf die Handlerfunktion mit der eigentlichen Logik zu verweisen.
 
@@ -153,7 +153,7 @@ in einem \lstinline{dict} abgelegt werden. Dies geschieht über die Methoden \ls
 
 Eine Session wird nur dann in der Datenbank abgespeichert, wenn sie auch Daten enthält. Dies hat den
 Vorteil, dass insbesondere für nicht eingeloggte Benutzer kein Sessionobjekt in der Datenbank
-abgespeichert werden muss. Nichsdestotrotz sammeln sich mit der Zeit sehr viele alte Session an;
+abgespeichert werden muss. Nichtsdestotrotz sammeln sich mit der Zeit sehr viele alte Session an;
 mangels einer Möglichkeit, einzelne Objekte in der ZODB automatisch nach einer gewissen Zeit zu
 verwerfen, müssen alte Sessions regelmäßig manuell bzw. über ein zeitgesteuertes Script aus der
 Datenbank gelöscht zu werden.
@@ -208,7 +208,7 @@ benötigt jederzeit verfügbar ist, ohne immer nicht explizit übergeben zu werd
 Es existiert keine echte externe Dokumentation. Der Code ist teilweise kommentiert, wobei der
 Kommentarstil nicht einheitlich ist und man kann deutlich erkennen, dass mehrere Entwickler daran
 gearbeitet haben. Dementsprechend sind einige Teile sehr ausführlich kommentiert, während andere
-fast garnicht kommentiert sind.
+fast überhaupt nicht kommentiert sind.
 
 Die Dokumention im Indico-Wiki\footnote{\href{http://indico-software.org/wiki/Dev}{http://indico-software.org/wiki/Dev}}
 geht hauptsächlich auf anwendungsspezifische Dinge ein, weshalb sie insbesondere auch für einen

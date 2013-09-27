@@ -52,7 +52,7 @@ Django-Infrastruktur im weiteren Verlauf möglichst effizient benutzt werden kan
 der ZODB abgespeichert werden, muss diese Datenbank auch in Django integriert werden; dazu bietet
 sich evtl. \emph{Django-ZODB} an - dies muss jedoch genauer untersucht werden, da unter
 anderem Datenbankkonflikte während eines Commits sauber abgefangen werden sollten. Eine Alternative
-wäre natürlich der Umstieg auf eine relationale Datenbank unter Verwendund des ORM-Systems von
+wäre natürlich der Umstieg auf eine relationale Datenbank unter Verwendung des ORM-Systems von
 Django, allerdings würde dies die bereits sehr aufwändige Migration noch komplexer machen.
 
 Sobald der Kern der Django-Version von Indico funktionsfähig ist, kann die eigentliche Anwendung
@@ -67,7 +67,7 @@ jedoch manuell umgeschrieben werden.
 
 Für das URL-Routing müssen entsprechende Regeln in Form regulärer Ausdrücke geschrieben werden.
 Indico besitzt ca. 700 verschiedene URLs, die zwar oftmals dieselben Parameter wie die ID des Events
-nethalten und damit dank der \lstinline{include()}-Funktion des Routingsystems vereinfacht werden
+enthalten und damit dank der \lstinline{include()}-Funktion des Routingsystems vereinfacht werden
 können, aber dennoch manuell in \emph{clean URLs} umgeschrieben werden müssen - die Entscheidung,
 statt \emph{/conferenceTimetable.py/pdf} die URL \emph{/event/123/timetable.pdf} zu
 nutzen, kann keine Software übernehmen. Zusätzlich zu den neuen URLs müssen für alle direkt
@@ -104,7 +104,7 @@ konvertiert. Durch die Weiterverwendung des Mako-Templatesystems kann ebenfalls 
 Entwicklungsaufwand gespart werden, wobei eine externe Templateengine bei weitem nicht so
 gut mit dem Framework zusammenspielt wie die frameworkeigene Engine.
 
-Letzendlich lässt sich bei diesem Migrationspfad sehr viel Entwicklungszeit einsparen, allerdings
+Letztendlich lässt sich bei diesem Migrationspfad sehr viel Entwicklungszeit einsparen, allerdings
 stellt sich die Frage, welchen Nutzen man außer den schöneren URLs am Ende hat. Immerhin handelt es
 sich bei Django um ein sehr mächtiges und komplexes Framework, welches man bei dieser Lösung nur zu
 einem Bruchteil nutzen würde - und ein mit Django vertrauter Entwickler müsste sich dennoch erst
