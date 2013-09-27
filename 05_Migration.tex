@@ -46,7 +46,7 @@ Flask==0.10
 anderem Flask und das zugrundeliegende Werkzeug-Toolkit in der gerade aktuellen Version eingebunden
 werden. Flask selbst setzt zwar bereits \lstinline{'Werkzeug>=0.7'} voraus, allerdings erlaubt dies
 dem Paketmanager, eine beliebige Version ab 0.7 zu installieren. Meist ist dies kein Problem, da
-gute Libraries API-Inkompatibilitäten möglichst vermeiden, allerdings ist es sicherer, dennoch von
+gute Libraries API-Inkompatibilitäten möglichst vermeiden. Allerdings ist es sicherer, dennoch von
 allen genutzten Abhängigkeiten die Version festzulegen, sodass ein Benutzer exakt dieselben
 Versionen nutzt, mit denen die Anwendung auch getestet wurde.
 
@@ -142,7 +142,7 @@ First-Class-Objekte handelt, die ja wie in \autoref{firstclass} erwähnt zur Lau
 von anderen Funktionen zurückgegeben werden können, ist dies wie man in
 \autoref{lst:flask-mp-wrapper} erkennen kann sehr einfach möglich.
 
-\begin{lstlisting}[caption=mod\_python-Wrapper-Facatory,label=lst:flask-mp-wrapper]
+\begin{lstlisting}[caption=mod\_python-Wrapper-Factory,label=lst:flask-mp-wrapper]
 def create_flask_mp_wrapper(func):
     def wrapper():
         args = request.args.copy()
@@ -190,9 +190,9 @@ auch erst in der durch \lstinline{make_app()} erstellten Instanz überschrieben 
 Ebenfalls mit Flask inkompatibel ist das Sessionsystem. Dies war aufgrund der starken Integration
 mit der \emph{mod\_python}-Emulation zu erwarten und es sollte sowieso durch eine auf Flask
 basierende Neuentwicklung ersetzt werden. Da Flask standardmäßig nur auf signierten Cookies
-basierende Session unterstützt, was die dort speicherbare Datenmenge auf ca. 4096 Bytes beschränkt
-und insbesondere im Zusammenhang AJAX-Requests, die in der JSON-RPC-API massiv genutzt werden,
-oftmals problematisch ist, muss dazu ein neues Sessioninterface entwickelt werden. Aufgrund des in
+basierende Sessions unterstützt, ist die dort speicherbare Datenmenge auf ca. 4096 Bytes beschränkt.
+Ebenfalls treten insbesondere im Zusammenhang mit den in der JSON-RPC-API massiv genutzten AJAX-Requests,
+oftmals Probleme auf. Daher muss ein neues Sessioninterface entwickelt werden. Aufgrund des in
 Indico bereits vorhandenen Cache-Systems bietet es sich an, dieses zum Speichern der Sessiondaten zu
 verwenden. Gerade bei der empfohlenen Nutzung von Memcached oder Redis als Cache-Backend hat dies
 den Vorteil, dass für jeden Datensatz eine Time-To-Live angegeben werden kann und er nach Ablauf
@@ -226,7 +226,7 @@ komplett gelöscht werden kann. Danach müssen alle darauf verweisenden Importe 
 Code, der die alte Session initialisiert und im \lstinline{RH}-Objekt ablegt, entfernt werden.
 Zugriffe auf explizit implementierte Funktionen der Session - also \lstinline{getUser()} und
 ähnliche Methoden - lassen sich relativ leicht mit der Suchfunktion des Editors finden und auch fast
-automatisch durch ihre neue Variante in der Form \lstinline{session.user} ersetzen. Nur Imports und
+automatisch durch ihre neue Variante in der Form \lstinline{session.user} ersetzen. Nur Importe und
 Funktionsparameter müssen manuell angepasst bzw. entfernt werden. Sessionzugriffe über
 \lstinline{getVar()} bzw. \lstinline{setVar()} könnten zwar prinzipiell mit regulären
 Ausdrücken in die Dict-Syntax umgeschrieben werden, jedoch könnten in diesem Fall weder direkt in
@@ -242,8 +242,8 @@ funktioniert.
 Erste Tests zeigen an dieser Stelle, dass Indico nun schon prinzipiell auf Flask-Basis funktioniert.
 Allerdings schlagen alle Requests fehl, die eine im Dateisystem existierende Datei an den Client
 senden sollen, da dort \emph{mod\_python}-spezifische Funktionen genutzt werden statt der
-komfortablen \lstinline{send_file()}-Funktion von Flask. Diese Stellen lassen sich allerdings
-relativ leicht finden und anpassen.
+komfortablen \lstinline{send_file()}-Funktion von Flask. Diese Stellen lassen sich jedoch leicht
+finden und anpassen.
 
 
 \subsection{Trial and Error}
@@ -408,8 +408,8 @@ ursprüngliche Zielseite verweisen, sondern mit einem \emph{301 Moved Permanentl
 neue URL weiterleiten.
 
 Aufgrund der in \autoref{routingrulegen} gewählten Endpoint-Namen sind keine weiteren Informationen
-notwendig, um aus diesem Namen die ursprüngliche URL zu generieren. Daher kann einfach eine Funktion
-implementiert werden, die zu einem existierenden Blueprint einen Kompatibilitäts-Blueprint
+notwendig, um aus diesem Namen die ursprüngliche URL zu generieren. Daher wird einfach eine Funktion
+implementiert, die zu einem existierenden Blueprint einen Kompatibilitäts-Blueprint
 generiert, der die alten URLs nutzt und auf die neuen weiterleitet. Der einzige zu beachtende
 Sonderfall ist bei POST-Requests. Diese werden laut HTTP-Standard bei einer Weiterleitung mit GET
 wiederholt, was nicht gewollt ist. Daher muss in diesem Fall auf die Weiterleitung verzichtet werden

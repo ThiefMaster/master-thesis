@@ -10,8 +10,8 @@ Betaversion in der Usenet-Newsgroup \emph{alt.sources} veröffentlicht.
 
 Seitdem wurde die Sprache kontinuierlich weiterentwickelt und 1994 in der Version 1.0
 veröffentlicht. Die erste Version von Python 2.0 erschien im Herbst 2000 und legte den Grundstein
-für die heute weit verbreiteten Versionen 2.6 und 2.7, wobei es sich bei letzterer um die letzte
-Version von Python 2 handelt.
+für die heute weit verbreiteten Versionen 2.6 und 2.7, wobei es sich bei 2.7 um die letzte Version
+von Python 2 handelt.
 
 Version 3 der Programmiersprache ist seit 2008 verfügbar, wobei sie in der Verbreitung bisher noch
 nicht an Python 2 anknüpfen konnte. Dies liegt hauptsächlich an den teilweise nicht zu Python 2
@@ -39,7 +39,7 @@ der Python-Community häufig genutzt werden und dementsprechend stabil sind.
 
 Ein weiteres Gebiet, in dem Python häufig verwendet wird, ist das Scripting von diversen Tools.
 Populäre Editoren wie \emph{Vim} können Python-Scripts zur Automatisierung von Aufgaben nutzen oder
-auch um beliebige andere Aktionen im Editor auszufühen.
+auch um beliebige andere Aktionen im Editor auszuführen.
 
 Wie die meisten Open-Source-Programmiersprachen ist Python insbesondere in der Linux-Welt weit
 verbreitet und wird dort auch oftmals für einfache Systemtools eingesetzt, wo eine Implementierung
@@ -100,7 +100,7 @@ WinForms-GUI-Framework und andere .NET-APIs zugreifen.
 
 Neben diesen Implementierungen existieren noch weitere, die auf spezielle Anwendungen zugeschnitten
 sind: \emph{Stackless Python} bietet extrem speicherschonende Pseudo-Threads, während \emph{PyPy}
-ein in Python selbst geschriebener Python-Interpreter ist, der einen
+ein in Python geschriebener Python-Interpreter ist, der einen
 JIT-Maschinencode-Compiler enthält und somit teilweise bessere Performance als CPython erzielen
 kann. Ein eher unbekannter Python-Interpreter ist \emph{PyMite}, bei dem es sich um eine für
 8-Bit-Mikrocontroller optimierte Python-Version handelt, die zwar weder die
@@ -129,8 +129,8 @@ Klassen einzusetzen ohne dass sie für die Strukturierung der Anwendung nützlic
 
 
 \item[Objektorientierte Programmierung] \hfill \\
-Eine objektorientierte Programmiersprache unterstützt Klassen und Objekte, wobei anders als bei
-einer nur objekt\emph{basierenden} Programmiersprache auch komplexere Konzepte wie Vererbung und
+Eine objektorientierte Programmiersprache unterstützt Klassen und Objekte, wobei, anders als bei
+einer nur objekt\emph{basierenden} Programmiersprache, auch komplexere Konzepte wie Vererbung und
 Polymorphie genutzt werden können.
 \citep[Kap. 1.3.1]{progsprachen}
 
@@ -170,8 +170,8 @@ Attribute und damit auch Methoden besitzen können. Details zu den verschiedenen
 sich in der Python-Dokumentation\footnote{\href{http://docs.python.org/2/reference/datamodel.html}{http://docs.python.org/2/reference/datamodel.html}}.
 
 \emph{First-Class} beschreibt Eigenschaften die man bei Objekten, d.h. meist Instanzen von Klassen,
-im Allgemeinen erwartet, im Zusammenhang mit Funktionen, Klassen und anderen Datentypen allerdings
-durchaus ungewöhnlich sind:
+i.a. erwartet, aber im Zusammenhang mit Funktionen, Klassen und anderen Datentypen durchaus
+ungewöhnlich sind:
 
 \begin{itemize}
 \item Sie können in Variablen und anderen Datenstrukturen gespeichert werden.
@@ -245,10 +245,10 @@ class Test(object):
 \end{lstlisting}
 
 Wie zuvor schon erwähnt sind Klassen in Python First-Class-Objekte und können zur Laufzeit erstellt
-werden. Dies ist natürlich auch bei unserer Beispielklasse möglich, der Code dazu ist
+werden. Dies ist natürlich auch bei der Beispielklasse möglich, der Code dazu ist
 \lstinline{type('Test', (object,), dict(a=1))}.
-Auch ohne Blick in die Dokumentation ist die Funktionsweise von \lstinline{type()} offensichtlich;
-die Funktion erwartet als Parameter den Namen der Klasse, die Liste der Superklassen und das
+Auch ohne Blick in die Dokumentation ist die Funktionsweise von \lstinline{type()} offensichtlich:
+Die Funktion erwartet als Parameter den Namen der Klasse, die Liste der Superklassen und das
 \emph{dict} der Klasse, d.h. ein Mapping, welches alle Variablen und Methoden der Klasse enthält.
 
 Bekanntermaßen sind die meisten Objekte Instanzen von Klassen. Dies trifft in Python auch für
@@ -267,8 +267,8 @@ einer Liste hinzuzufügen.
 Die Sprache legt großen Wert auf lesbaren Code, was insbesondere daran zu erkennen ist, dass Blöcke
 nicht wie in den meisten anderen Sprachen durch geschweifte Klammern oder
 \emph{begin}/\emph{end}-Statements definiert werden, sondern einzig und allein durch die Einrückung.
-Dementsprechend führt inkonsistente Einrückung auch zu einer entsprechenden Fehlermeldung wie man in
-\autoref{lst:python-ident} sehen kann.
+Dementsprechend führt inkonsistente Einrückung auch zu einer entsprechenden Fehlermeldung, wie man
+in \autoref{lst:python-ident} sehen kann.
 
 Während die erzwungene Einrückung insbesondere bei Python-Anfängern oftmals negativ aufgenommen
 wird, ist der Sinn dahinter klar zu erkennen: Gerade bei Projekten mit mehreren Entwicklern wird so
@@ -421,7 +421,6 @@ separate Prozesse für den Python-Interpreter.
 Andere Webserver wie \emph{nginx} setzen auf einen externen WSGI-Container wie \emph{uWSGI} oder
 sind wie \emph{Gunicorn} direkt in Python geschrieben und unterstützen WSGI nativ.
 Der große Vorteil eines Containers wie \emph{uWSGI} ist die strikte Trennung zwischen Webserver und
-Python, sodass jeglicher interaktive Code problemlos unter einem anderen Systemuser laufen kann als
-der Webserver selbst und unabhängig voneinander sind. Letzteres hat den Vorteil, dass besseres
-Performance-Tuning möglich ist, wenn Webserver und Python-Interpreter nicht eng miteinander
-verknüpft sind.
+Python, sodass interaktiver Code problemlos unter einem separaten Systemuser ausgeführt werden kann.
+Dies hat den Vorteil, dass besseres Performance-Tuning möglich ist, wenn Webserver und
+Python-Interpreter nicht eng miteinander verknüpft sind.

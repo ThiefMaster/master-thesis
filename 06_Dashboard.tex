@@ -37,11 +37,11 @@ länger verwenden, ist die Chance groß, dass sie in einigen Kategorien an einem
 haben und seitdem nichts mehr mit dieser Kategorie zu tun hatten. Solch eine Kategorie vorzuschlagen
 würde also letzendlich nur dazu führen, dass der Benutzer sich über die schlechten Vorschläge ärgert
 und sie daraufhin grundsätzlich nicht mehr beachtet. Ein gutes Relevanzkriterium ist also, an
-wievielen aktuellen Events in der jeweiligen Kategorie der User teilgenommen hat. Da dies jedoch
+wievielen aktuellen Events in der jeweiligen Kategorie der User bereits teilgenommen hat. Da dies jedoch
 durch längere Pausen ohne Teilnahme negativ beeinflusst wird, selbst wenn im aktuellsten Block 100\%
 Teilnahme herrscht, sollten dabei alle älteren Blöcke verworfen werden, sodass nur das erste Event
-im aktuellsten Block als frühstes Teilnahmedatum zählt. Um Kategorien, in denen der User regelmäßig
-an Event teilgenommen hat, dies nun aber nicht mehr tut, auszufiltern, kann der Score abhängig von
+im aktuellsten Block als frühstes Teilnahmedatum zählt. Um Kategorien auszufiltern, in denen der
+User regelmäßig an Event teilgenommen hat, dies nun aber nicht mehr tut, kann der Score abhängig von
 der Anzahl Events, die nach der letzten Teilnahme stattfinden, verringert oder erhöht werden.
 
 Damit zeigen sich bereits ziemlich gute Ergebnisse, allerdings tauchen weiterhin Kategorien auf, die
@@ -149,13 +149,12 @@ Suchmaschine übergeben kann.
 
 Die Ergebnisse dieser Suche sind jedoch noch nicht sofort für Vorschläge geeignet. Jede Fuzzy-Suche
 enthält Ergebnisse, die man nicht erwarten würde, da kein Suchalgorithmus unfehlbar ist. Während an
-sich einzelne schlechte Vorschläge kein Problem sind, dürfen grundsätzlich keine Events angezeigt
+sich einzelne unpassende Vorschläge kein Problem sind, dürfen grundsätzlich keine Events angezeigt
 werde, auf die der Benutzer keinen Zugriff hat - je nach Event könnte bereits der Titel und eine
 eventuell vorhandene Beschreibung sensible Informationen enthalten. Darüberhinaus hat die
 Suchmaschine keine Kenntisse darüber, an welchen Events der Benutzer bereits teilnimmt. Diese
 müssen daher ebenfalls in Indico ausgefiltert werden.
 
-\newpage
 \section{Aktueller Stand}
 
 Der derzeitig \emph{master}-Entwicklungszweig von Indico enthält noch keinerlei Code für Vorschläge,

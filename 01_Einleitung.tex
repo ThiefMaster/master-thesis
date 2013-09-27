@@ -5,8 +5,8 @@ Ein Webframework ist in einer modernen Webanwendung schon fast Pflicht. Während
 Jahren noch Technologien wie \emph{CGI}\footnote{Common Gateway Interface -
 \href{http://www.ietf.org/rfc/rfc3875}{RFC 3875}\citep{rfc3875}} oder die Nutzung von PHP in seiner
 einfachsten Form, d.h. eine Datei pro Seite, die sowohl HTML als auch Geschäftslogik enthält, weit
-verbreitet waren, so setzen inzwischen immer mehr Entwickler sowohl von komplexen Webanwendungen als
-auch von einfachen Websites mit wenigen dynamischen Elementen auf ein Framework. Dabei stellt sich
+verbreitet waren, so setzen inzwischen immer mehr Entwickler, sowohl von komplexen Webanwendungen als
+auch von einfachen Websites mit wenigen dynamischen Elementen, auf ein Framework. Dabei stellt sich
 natürlich die Frage, welche Vorteile ein Framework bietet - schließlich macht es keinen Sinn, ein
 Framework zu nutzen, nur weil Frameworks \enquote{in} sind.
 
@@ -38,14 +38,14 @@ Kompatibilitätsschicht vollständig entfernt werden und der Code, der sie nutzt
 unterzogen werden.
 
 Vor der Auswahl eines neuen Frameworks muss zuerst analysiert werden, welche Funktionalität das
-bestehende Framework zur Verfügung stellt und welche Probleme es dort gibt, damit beim neuen
+bestehende Framework zur Verfügung stellt und welche Probleme existieren, damit beim neuen
 Framework darauf geachtet werden kann, dass diese Probleme dort nicht ebenfalls vorhanden sind.
 Falls das Framework eine eigene Datenbankschicht enthält muss geprüft werden, wie weit diese mit
 der in Indico genutzten Objektdatenbank kompatibel ist.
 
-Nachdem ein Framework ausgewählt wurde, muss es zunächst in Indico integriert werden. Der erste
-Schritt danach ist, die Anwendung wieder in einen vollständig lauffähigen Zustand zu bringen und
-eventuelle Konflikte zwischen dem Framework und bestehendem Code zu beheben. Ab diesem Zeitpunkt kann
+Nachdem ein Framework ausgewählt wurde, muss es zunächst in Indico integriert werden. Danach muss
+die Anwendung wieder in einen vollständig lauffähigen Zustand gebracht werden, um eventuelle
+Konflikte zwischen dem Framework und bestehendem Code zu beheben. Ab diesem Zeitpunkt kann
 analysiert werden, welche Elemente des alten Frameworks neben dem WSGI-Kern ebenfalls durch das neue
 Framework ersetzt werden können bzw. ob es Teile der Anwendung gibt, in denen es sinnvoll ist,
 bereits vorhandenen Code zu nutzen statt sie durch eine entsprechende Lösung des neuen Frameworks zu
@@ -58,7 +58,7 @@ Im Einleitungskapitel wird auf die Aufgabenstellung eingegangen und die groben S
 Ziel beschrieben. Dann wird kurz auf die Firma eingegangen, an der das Projekt durchgeführt
 wurde.
 Ebenfalls wird die Indico-Software, die im Rahmen dieser Arbeit um ein Framework erweitert wird,
-vorgestellt, sodass man sich einen Überblick über ihre Funktion verschaffen kann.
+vorgestellt, um einen Überblick über ihre Funktion zu geben.
 
 Im Grundlagenkapitel werden die genutzen Technologien und ihre Besonderheiten vorgestellt. Nach
 einem Überblick über die Programmiersprache Python werden ihre Besonderheiten kurz
@@ -72,11 +72,12 @@ Im vierten Kapitel wird die Entscheidung für das Flask-Microframework begründe
 verschiedenen Migrationspfade erläutert und die jeweiligen Vor- und Nachteile diskutiert wurden.
 
 Die wichtigsten Schritte der eigentlichen Migration werden im fünften Kapitel näher beschrieben. Zum
-Schluss wird auf die dabei aufgetretenen Probleme eingegangen und betrachtet, welche Erweiterungen
-zukünftig möglich sind.
+Schluss wird auf die dabei aufgetretenen Probleme eingegangen und ein Ausblick auf mögliche
+Erweiterungen gegeben.
 
-Zusätzlich zur Frameworkmigration soll das Benutzerdashboard durch automatische Vorschläge erweitert
-werden. Lösungsansätze zu diesem Teilprojekt werden im sechsten Kapitel vorgestellt.
+Zusätzlich zur Frameworkmigration soll das Benutzerdashboard durch automatische Vorschläge zu
+Kategorien und Events erweitert werden. Lösungsansätze zu diesem Teilprojekt werden im sechsten
+Kapitel vorgestellt.
 
 Kapitel sieben schließt diese Arbeit mit einem Rückblick ab.
 
@@ -89,7 +90,7 @@ Genf. Der Hauptaufgabenbereich liegt in der Erforschung von Grundlagen der Teilc
 weltgrößte Teilchenbeschleuniger \emph{LHC}\footnote{Large Hadron Collider, der
 Teilchenbeschleuniger am CERN} zum Einsatz kommt.
 
-Neben der physikalischen Forschung wird am CERN auch Software entwickelt, die zwar meist in erster
+Neben der physikalischen Forschung wird am CERN auch Software entwickelt, die zwar in erster
 Linie zur internen Nutzung dient, jedoch oftmals auch in Form von \emph{Open Source} der
 Allgemeinheit kostenfrei zur Verfügung gestellt wird. Diese Software erstreckt sich über viele
 Bereiche der IT, so werden am CERN z.B. Business-Software für den Human-Resources-Bereich,

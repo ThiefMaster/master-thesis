@@ -72,10 +72,9 @@ können, aber dennoch manuell in \emph{clean URLs} umgeschrieben werden müssen 
 statt \emph{/conferenceTimetable.py/pdf} die URL \emph{/event/123/timetable.pdf} zu
 nutzen, kann keine Software übernehmen. Zusätzlich zu den neuen URLs müssen für alle direkt
 verlinkbaren Seiten auch die alten URLs weiterhin unterstützt werden, um Links von
-anderen Seiten oder Suchmaschinen nicht in einer Fehlermeldung enden zu lassen. Da Indico bisher die
-\lstinline{URLHandler}-Klassen zur URL-Generierung nutzt, existiert eine zentrale Stelle, die
-angepasst werden muss, um die neuen URLs nicht nur zu unterstützen sondern auch überall, wo Indico
-eine URL generiert, auch zu erzeugen.
+anderen Seiten oder Suchmaschinen nicht in einer Fehlermeldung enden zu lassen. Indico nutzt derzeit
+die \lstinline{URLHandler}-Klassen zur URL-Generierung. Daher existiert eine zentrale Stelle, die
+angepasst werden muss, um die neuen URLs auch überall zu erzeugen, wo Indico eine URL generiert.
 
 Zusammenfassend kann man sagen, dass es sich bei dieser Migration um ein extrem aufwändiges und
 zeitintensives Unterfangen handelt, das schon eher ein Rewrite als eine Migration ist - insbesondere
@@ -150,7 +149,7 @@ Teilmigration einen guten Ausgangspunkt, da am Ende ein funktionierendes Indico 
 bereits an verschiedenen Stellen Flask-Features nutzt. Die verbleibenden Bereiche, insbesondere
 Templates und \lstinline{RH}-Klassen, können zwar relativ unabhängig voneinander migriert werden,
 allerdings müssen in beiden Fällen diese Klassen bzw. ihre Nachfolger angepasst werden, weshalb es
-sinnvoll ist, diese schrittweise zusammen zu migrieren, d.h. jeweils eine Klasse und die von dieser
+sinnvoll ist, diese schrittweise gemeinsam zu migrieren, d.h. jeweils eine Klasse und die von dieser
 genutzten Templates. Die Templatemigration kann größtenteils automatisiert werden, allerdings
 enthalten einige Templates Python-Code, der manuell entfernt bzw. in die dazugehörige Python-Klasse
 verschoben werden muss. Bei den weiteren Änderungen an den Klassen gibt es mehrere Möglichkeiten,
@@ -169,7 +168,7 @@ Flask nutzen können.
 \section{Entscheidung für ein Framework}
 Nach der Analyse der diversen Frameworks und der verschiedenen Migrationspfade sind nun genügend
 Informationen vorhanden, um eine Entscheidung treffen zu können. Bei dieser muss allerdings auch
-bedacht werden, dass sie dauerhaft ist. Sobald die Migration abgeschlossen bzw. weit fortgeschritten
+bedacht werden, dass sie dauerhaft sein muss. Sobald die Migration abgeschlossen bzw. weit fortgeschritten
 ist, wäre es nicht wirtschaftlich, erneut die Technologie zu wechseln zumal damit auch die übrigen
 Entwickler dazu gezwungen würden, sich wieder mit einem neuen Framework auseinanderzusetzen.
 
@@ -223,9 +222,11 @@ den Lowlevel-APIs bieten jedoch beide Frameworks nahezu identische Funktionalit�
 Backends.
 
 Weder die Lizenz noch der Dokumentationsumfang bieten eine gute Basis um die Entscheidung für eines
-der Frameworks zu beeinflussen. Letztendlich kann Django in einer Anwendung wie Indico seine Vorteile
-jedoch nicht ausspielen und würde durch das verglichen mit Flask kompliziertere Routingsystem den
-Aufwand während der Migration erhöhen. Im Gegensatz dazu ist Flask als Microframework, das keine
-bestimmten Technologien voraussetzt, sehr einfach integrierbar.
+der Frameworks zu beeinflussen.
+
+Letztendlich kann Django in einer Anwendung wie Indico seine Vorteile jedoch nicht ausspielen und
+würde durch das verglichen mit Flask kompliziertere Routingsystem den Aufwand während der Migration
+erhöhen. Im Gegensatz dazu ist Flask als Microframework, das keine bestimmten Technologien
+voraussetzt, sehr einfach integrierbar.
 
 \textbf{Daher ist die Entscheidung zugunsten von \emph{Flask} erfolgt.}

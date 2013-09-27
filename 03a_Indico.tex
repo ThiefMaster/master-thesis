@@ -35,7 +35,7 @@ sondern nur die entsprechende Handlerfunktion aufrufen. Unsauber ist es dennoch.
 Neben diesen Legacy-Handlern, die jedoch für fast alle Bestandteile von Indico genutzt werden,
 existiert ein sehr einfaches Routingsystem, das Anfragen anhand des ersten Pfadsegments der URL an
 eine Handlerfunktion übergibt. Dies ist prinzipiell besser, da so die Nutzung von \lstinline{exec}
-vermieden werden könnte. Letzendlich wird jedoch genau dieselbe zuvor schon
+vermieden werden kann. Letzendlich wird jedoch genau dieselbe zuvor schon
 beschriebene Funktion verwendet, was leicht dazu verleitet, in der in \autoref{lst:lame-routing}
 gezeigten Routingtabelle direkt auf die Handlerfunktion mit der eigentlichen Logik zu verweisen.
 

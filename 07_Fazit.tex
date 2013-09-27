@@ -1,10 +1,10 @@
 \chapter{Fazit}
 
 Im Rahmen dieser Masterarbeit am CERN wurden nicht nur die beiden zunehmend verbreiteteren
-Python-Webframeworks \emph{Django} und \emph{Flask} unter die Lupe genommen, sondern auch den
-frameworkähnlichen Code von Indico untersucht. Bei allen Frameworks haben sich sowohl Stärken als
-auch Schwächen gezeigt, wobei klar erkennbar wurde, dass eine Schwäche in einer anderen Anwendung
-durchaus eine Stärke sein kann und umgekehrt. So ist das ORM-System von Django für eine Anwendung
+Python-Webframeworks \emph{Django} und \emph{Flask} unter die Lupe genommen, sondern auch der
+frameworkähnliche Code von Indico untersucht. Bei allen Frameworks haben sich sowohl Stärken als
+auch Schwächen gezeigt, wobei klar erkennbar wurde, dass der Nutzen vieler Features stark von der
+jeweiligen Anwendung abhängt. So ist das ORM-System von Django für eine Anwendung
 wie Indico nicht von Nutzen, sofern man sie nicht von Grund auf neu entwickelt, aber wenn man eine
 weniger umfangreiche Webapplikation von Anfang an auf Django basiert, ist ein integriertes
 Datenbankframework durchaus nützlich.
@@ -22,12 +22,12 @@ jedoch ausgesprochen wahrscheinlich und müssen jeweils manuell behoben werden. 
 erwünscht, die Migration möglichst schnell soweit abzuschließen, sodass der Code in den
 \emph{master}-Branch integriert werden konnte.
 
-Ebenfalls gezeigt hat sich, wie hilfreich eine vollständige Testabdeckung ist. Eine große Anwendung
+Ebenfalls hat sich gezeigt, wie hilfreich eine vollständige Testabdeckung ist. Eine große Anwendung
 wie Indico manuell zu testen ist sehr aufwändig.
 
 Langfristig wäre es aus Entwicklersicht natürlich angenehm, wenn alle Bestandteile von Indico
 Flask-Features nutzen würden und jeglicher alte Code entfernt würde. Dies ist jedoch aufgrund des
-enormen Aufwands, der damit verbunden ist, sehr unwahrscheinlich.
+enormen Aufwands, der damit verbunden ist, nicht zu erwarten.
 
 Die Entwicklung der \emph{Recommendation Engine} für Kategorien und die Planung einer solchen für
 Events hat gezeigt, dass ein gerade aus Onlineshops eigentlich als alltäglich erscheinendes Feature
