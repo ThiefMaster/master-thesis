@@ -149,10 +149,11 @@ mächtigere \emph{Pickle} zu nutzen. Während die Signatur die Sessiondaten sch�
 von Pickle im Falle eines Leaks des geheimen Schlüssels nicht nur die Manipulation der Sessiondaten
 ermöglichen sondern auch das Ausführen beliebigen Codes.
 
-Sofern cookiebasierte Sessions nicht ausreichen, kann das \lstinline{session_interface} des
-Anwendungsobjekts auf eine benutzerdefinierte Klasse verweisen, die die Sessiondaten z.B. in Redis
-oder einer SQL-Datenbank abspeichert. Das Interface ist dabei sehr einfach gehalten; eine
-Redis-basierende Implementierung ist mit weniger als 70 Zeilen Code möglich.
+Sofern der Funktionsumfang von cookiebasierten Sessions nicht ausreichen sollte, kann die
+Eigenschaft \lstinline{session_interface} des Anwendungsobjekts auf eine benutzerdefinierte Klasse
+verweisen, die die Sessiondaten z.B. in Redis oder einer SQL-Datenbank abspeichert. Das Interface
+ist dabei sehr einfach gehalten; eine Redis-basierende Implementierung ist mit weniger als 70 Zeilen
+Code möglich.
 
 Standardmäßig enthält Flask jedoch nur das Cookie-Interface, allerdings hat der Maintainer von Flask
 mit dem \lstinline{RedisSessionInterface} ein entsprechendes Interface für serverseitige Sessions
@@ -214,7 +215,7 @@ Framework zu forken und daraufhin den Frameworkcode selbst zu verändern.
 
 
 \item[Sonstige Features] \hfill \\
-Flask nutzt Proxy-Objekte um \lstinline{request}, \lstinline{session} und \lstinline{g} global
+Flask nutzt Proxy-Objekte um \lstinline{request}, \lstinline{g} und \lstinline{session} global
 verfügbar zu machen und trotzdem jeweils - auch bei mehreren Threads - auf das richtige Objekt zu
 verweisen. Dadurch müssen diese Objekte niemals als Funktionsparameter übergeben werden, sondern
 können einfach aus dem \lstinline{flask}-Package importiert werden.

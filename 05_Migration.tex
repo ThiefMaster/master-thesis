@@ -391,7 +391,7 @@ nach Kategorien aufzuteilen, sodass \emph{/event/123/} auf die Startseite des Ev
 von selbigem. Der Administrationsbereich der Anwendung ist komplett unabhängig davon und somit über
 \emph{/admin/} erreichbar.
 
-Die eigentliche Implementierung der sauberen URLs sind prinzipiell einfach, aber sehr zeitaufwändig,
+Die eigentliche Implementierung der sauberen URLs ist prinzipiell einfach, aber sehr zeitaufwändig,
 da jede URL manuell definiert werden muss. Die generierten Legacy-Routen vereinfachen die Aufgabe
 jedoch etwas, da nach dem Erstellen der Flask-Blueprints nur die entsprechenden Legacy-Routen via
 Cut\&Paste im entsprechend Modul eingefügt und die URL und die erlauben HTTP-Methoden angepasst
@@ -461,5 +461,5 @@ neuem Code weniger Zwischenschichten zu haben. Voraussetzung dafür ist aber, da
 der \lstinline{RH}-Klasse übernommenen Aufgaben anderweitig gelöst werden können. Insbesondere die
 oftmals überschriebene Methode zum Überprüfen, ob der Benutzer die notwendigen Berechtigungen hat,
 könnte sich dabei als problematisch erweisen. Typischerweise werden in Flask dafür Decorators
-genutzt, was aber nur Sinn macht, wenn dieselbe Logik für möglichst vielen Funktionen verwendet
+genutzt, was aber nur Sinn macht, wenn dieselbe Logik für möglichst viele Funktionen verwendet
 werden kann.
